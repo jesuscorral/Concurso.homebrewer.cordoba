@@ -160,7 +160,7 @@
     // margin-bottom: 10px;
 }
 .title-brand{
-    max-width: 730px;
+    max-width: 850px;
     margin: 0 auto;
     position: relative;
     text-align: center;
@@ -181,7 +181,7 @@
 }
 
 .presentation-title{
-    font-size: 8em;
+    font-size: 5em;
     font-weight: 700;
     margin: 0;
     color: #FFFFFF;
@@ -287,6 +287,6 @@
 
 @media (max-width: 500px){
     .presentation-title{
-        font-size: 5em;
+        font-size: 2em;
     }
 }
