@@ -7,9 +7,8 @@ import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
 import { RouterModule } from '@angular/router';
 
 import { NavigationComponent } from './navigation/navigation.component';
-import { NucleoiconsComponent } from './nucleoicons/nucleoicons.component';
-import { ComponentsComponent } from './components.component';
 import { NotificationComponent } from './notification/notification.component';
+import { HomeComponent } from 'app/home/home.component';
 
 @NgModule({
     imports: [
@@ -21,11 +20,10 @@ import { NotificationComponent } from './notification/notification.component';
         JwBootstrapSwitchNg2Module
     ],
     declarations: [
-        ComponentsComponent,
+        HomeComponent,
         NavigationComponent,
-        NucleoiconsComponent,
         NotificationComponent,
     ],
-    exports:[ ComponentsComponent ]
+    exports:[ HomeComponent ]
 })
 export class ComponentsModule { }

@@ -1,0 +1,18 @@
+.colLeft {
+    flex-grow: 1; /* allows the column to grow*/
+   max-width: 100%;
+}
+
+.colCenter {
+   min-width: 440px;
+}
+
+.colRight {
+   flex-grow: 1;  /* allows the column to grow*/
+   max-width: 100%;
+
+}
+
+.mat-panel-title-style {
+   font-size: large;
+}

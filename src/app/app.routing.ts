@@ -3,20 +3,22 @@ import { CommonModule, } from '@angular/common';
 import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ComponentsComponent } from './components/components.component';
-import { ProfileComponent } from './examples/profile/profile.component';
-import { SignupComponent } from './examples/signup/signup.component';
-import { LandingComponent } from './examples/landing/landing.component';
-import { NucleoiconsComponent } from './components/nucleoicons/nucleoicons.component';
+import { HomeComponent } from './home/home.component';
+import { RulesComponent } from './rules/rules.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { OrganizationComponent } from './organization/organization.component';
+import { ContactComponent } from './contact/contact.component';
 
 const routes: Routes =[
     { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home',             component: ComponentsComponent },
-    { path: 'user-profile',     component: ProfileComponent },
-    { path: 'signup',           component: SignupComponent },
-    { path: 'landing',          component: LandingComponent },
-    { path: 'nucleoicons',      component: NucleoiconsComponent }
-];
+    { path: 'home',             component: HomeComponent },
+    { path: 'rules',            component: RulesComponent },
+    { path: 'registration',     component: RegistrationComponent },
+    { path: 'organization',     component: OrganizationComponent },
+    { path: 'contact',          component: ContactComponent }
+    //   // Other routes...
+    //  { path: '**',  component: NotfoundComponent }
+  ];
 
 @NgModule({
   imports: [

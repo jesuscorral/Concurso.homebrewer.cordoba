@@ -10,14 +10,21 @@ import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
 
 import { ComponentsModule } from './components/components.module';
-import { ExamplesModule } from './examples/examples.module';
+import { RulesComponent } from './rules/rules.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { OrganizationComponent } from './organization/organization.component';
+import { ContactComponent } from './contact/contact.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    RulesComponent,
+    RegistrationComponent,
+    OrganizationComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +32,6 @@ import { ExamplesModule } from './examples/examples.module';
     FormsModule,
     RouterModule,
     ComponentsModule,
-    ExamplesModule,
     AppRoutingModule,
   ],
   providers: [],
