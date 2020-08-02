@@ -9,15 +9,16 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
 
-import { ComponentsModule } from './components/components.module';
 import { RulesComponent } from './rules/rules.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactComponent } from './contact/contact.component';
+import { HomeComponent } from './home/home.component';
 
 
 @NgModule({
   declarations: [
+    HomeComponent,
     AppComponent,
     NavbarComponent,
     FooterComponent,
@@ -31,7 +32,6 @@ import { ContactComponent } from './contact/contact.component';
     NgbModule,
     FormsModule,
     RouterModule,
-    ComponentsModule,
     AppRoutingModule,
   ],
   providers: [],
