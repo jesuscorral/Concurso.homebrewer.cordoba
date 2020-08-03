@@ -9,7 +9,7 @@
 
 .navbar{
     border: $none;
-    font-size: $font-size-base;
+    font-size: $font-size-medium;
     transition: all 0.4s;
     -webkit-transition: all 0.4s;
     padding: 0;
@@ -20,7 +20,7 @@
         font-weight: $font-weight-bold;
         margin: $navbar-margin-brand;
         padding: $navbar-padding-brand;
-        font-size: $font-size-base;
+        font-size: $font-size-medium;
         color: $default-color;
         text-transform: uppercase;
     }
@@ -53,7 +53,7 @@
             margin: $navbar-margin-a;
             padding: $navbar-padding-a;
             opacity: .8;
-            font-size: $font-size-small;
+            font-size: $font-size-medium;
             text-transform: uppercase;
             font-weight: 600;
             color: $default-color;
@@ -147,7 +147,7 @@
 .navbar.fixed-top{
     .nav-link{
         i{
-            top: 4px;
+            top: 0px;
         }
     }
 }
