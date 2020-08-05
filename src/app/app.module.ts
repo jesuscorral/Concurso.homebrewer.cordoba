@@ -14,6 +14,8 @@ import { RegistrationComponent } from './registration/registration.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './shared/material/material-module';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { HomeComponent } from './home/home.component';
     FormsModule,
     RouterModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
