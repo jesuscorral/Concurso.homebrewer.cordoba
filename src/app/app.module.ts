@@ -16,6 +16,8 @@ import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './shared/material/material-module';
+import { AwardsComponent } from './awards/awards.component';
+import { SponsorsComponent } from './sponsors/sponsors.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { MaterialModule } from './shared/material/material-module';
     RulesComponent,
     RegistrationComponent,
     OrganizationComponent,
-    ContactComponent
+    ContactComponent,
+    AwardsComponent,
+    SponsorsComponent
   ],
   imports: [
     BrowserModule,
