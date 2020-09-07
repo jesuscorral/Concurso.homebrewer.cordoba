@@ -31,7 +31,7 @@
     "ng2-nouislider": "1.7.12",
     "nouislider": "9.2.0",
     "popper.js": "1.14.4",
-    "rxjs": "~6.6.2",
+    "rxjs": "~6.6.3",
     "rxjs-compat": "6.5.4",
     "zone.js": "~0.10.2"
   },
