@@ -11,6 +11,7 @@
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
   },
   "dependencies": {
+    "@angular-devkit/build-angular": "^0.1102.6",
     "@angular/animations": "~11.2.7",
     "@angular/cdk": "^10.2.7",
     "@angular/common": "^11.2.7",
