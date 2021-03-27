@@ -6,18 +6,13 @@
 // Core CSS
 @import "styles/misc";
 @import "styles/buttons";
-@import "styles/alerts";
 @import "styles/labels";
 @import "styles/tooltips-and-popovers";
 @import "styles/sections";
-@import "styles/checkbox-radio";
 @import "styles/navbars";
 @import "styles/images";
 @import "styles/cards";
 @import "styles/footers";
-
-// Bootstrap Switch
-@import "styles/bootstrap-switch";
 
 // Fancy Stuff
 @import "styles/dropdown";
@@ -26,8 +21,7 @@
 @import "styles/icons";
 //
 @import "styles/tabs-navs-pagination";
-@import "styles/collapse";
-//
+
 @import "styles/responsive";
 @import "styles/plugins/datetimepicker";
 @import "styles/social-buttons";
