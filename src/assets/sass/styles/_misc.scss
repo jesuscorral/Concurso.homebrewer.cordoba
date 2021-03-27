@@ -70,53 +70,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     width: 18px;
     text-align: center;
 }
-.margin-top{
-    margin-top: 50px;
-}
 
-.iframe-container iframe{
-    box-shadow: 0 16px 38px -12px rgba(0,0,0,.56), 0 4px 25px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(0,0,0,.2);
-}
-
-/*       CT colors          */
-.ct-blue{
-    color: $primary-color;
-}
-.ct-azure{
-    color: $info-color;
-}
-.ct-green{
-    color: $success-color;
-}
-.ct-orange{
-    color: $warning-color;
-}
-.ct-red{
-    color: $danger-color;
-}
-
-// small changes
-
-.pagination .page-item .page-link .fa{
-    width: auto;
-    font-weight: $font-weight-bold;
-}
-
-.bg-primary{
-    @include navbar-color($bg-primary !important);
-}
-.bg-info{
-    @include navbar-color($bg-info !important);
-}
-.bg-success{
-    @include navbar-color($bg-success !important);
-}
-.bg-warning{
-    @include navbar-color($bg-warning !important);
-}
-.bg-danger{
-    @include navbar-color($bg-danger !important);
-}
 
 .navbar-transparent{
     background-color: transparent !important;
