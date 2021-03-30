@@ -24,8 +24,6 @@
               "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/sass/styles.scss",
-              "src/assets/css/demo.css",
-              "src/assets/css/nucleo-icons.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js"
@@ -81,8 +79,6 @@
               "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/assets/sass/styles.scss",
-              "src/assets/css/demo.css",
-              "src/assets/css/nucleo-icons.css"
             ],
             "assets": [
               "src/assets",
