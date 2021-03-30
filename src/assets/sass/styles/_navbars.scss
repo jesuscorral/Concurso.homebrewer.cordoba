@@ -113,9 +113,6 @@
     .btn-simple{
         font-size: $font-size-medium;
     }
-    .caret{
-       @include center-item();
-    }
     &.navbar-transparent{
         padding-top: 25px;
     }
@@ -160,12 +157,10 @@
 .navbar-transparent, [class*="bg"]{
     .navbar-brand{
         color: $white-color;
-        @include opacity(.9);
 
         &:focus,
         &:hover{
             background-color: transparent;
-            @include opacity(1);
             color: $white-color;
         }
     }
@@ -182,7 +177,6 @@
         .nav-item .nav-link:focus{
             background-color: transparent;
             color: $white-color;
-            @include opacity(1);
         }
         .nav .nav-item a.btn:hover{
             background-color: transparent;
@@ -200,14 +194,12 @@
         .open .nav-link:focus {
             background-color: transparent;
             color: $default-color;
-            @include opacity(1);
         }
     }
 
     .btn-default.btn-fill{
         color: $dark-gray;
         background-color: $white-color;
-        @include opacity(.9);
     }
     .btn-default.btn-fill:hover,
     .btn-default.btn-fill:focus,
@@ -215,7 +207,6 @@
     .btn-default.btn-fill.active,
     .open .dropdown-toggle.btn-fill.btn-default{
         border-color: $white-color;
-        @include opacity(1);
     }
 
 }
@@ -242,7 +233,6 @@
             background-color: transparent;
             border-radius: 3px;
             color: $info-color;
-            @include opacity(1);
         }
 
         .dropdown .nav-link:hover .caret,
@@ -301,9 +291,7 @@
 }
 
 .navbar-form{
-   @include box-shadow(none);
    .form-control{
-        @include light-form();
         height: 22px;
         font-size: $font-size-navbar;
         line-height: $line-height-general;
