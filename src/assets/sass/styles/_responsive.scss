@@ -15,7 +15,6 @@
     .navbar .container{
          left: 0;
           width: 100%;
-         @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
          position: relative;
     }
     .navbar .navbar-nav .dropdown-menu{
@@ -61,52 +60,7 @@
         width: 40px;
         height: 40px;
     }
-    .bar1,
-    .bar2,
-    .bar3 {
-      outline: 1px solid transparent;
-    }
-    .bar1 {
-      top: 0px;
-      @include bar-animation($topbar-back);
-    }
-    .bar2 {
-      opacity: 1;
-    }
-    .bar3 {
-      bottom: 0px;
-      @include bar-animation($bottombar-back);
-    }
-    .toggled .bar1 {
-      top: 6px;
-      @include bar-animation($topbar-x);
-    }
-    .toggled .bar2 {
-      opacity: 0;
-    }
-    .toggled .bar3 {
-      bottom: 6px;
-      @include bar-animation($bottombar-x);
-    }
-
-    @include topbar-x-rotation();
-    @include topbar-back-rotation();
-    @include bottombar-x-rotation();
-    @include bottombar-back-rotation();
-
-    @-webkit-keyframes fadeIn {
-      0% {opacity: 0;}
-      100% {opacity: 1;}
-    }
-    @-moz-keyframes fadeIn {
-      0% {opacity: 0;}
-      100% {opacity: 1;}
-    }
-    @keyframes fadeIn {
-      0% {opacity: 0;}
-      100% {opacity: 1;}
-    }
-
+   
     .navbar-nav {
         margin: 1px -15px;
 
@@ -375,8 +329,6 @@
         padding-left: 40px;
         padding-top: 15px;
 
-        @include transform-translate-x(230px);
-        @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
         ul {
             position: relative;
             z-index: 3;
@@ -414,24 +366,10 @@
             content: "";
             z-index: 1;
         }
-        &.has-image::after{
-            @include black-filter(.8);
-        }
+       
     }
-    .nav-open{
-        & .navbar-collapse{
-            @include transform-translate-x(0px);
-            display: block;
-        }
-        & .wrapper{
-            left: 0;
-            @include transform-translate-x(-230px);
-        }
-        & .navbar-translate{
-            @include transform-translate-x(-230px);
-        }
+   
 
-    }
     .wrapper .navbar-collapse{
         display: none;
     }
@@ -489,12 +427,8 @@
         align-items: center;
         width: 100%;
         position: relative;
-        @include transform-translate-x(0);
-        @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
     }
     .wrapper{
-    //    @include transform-translate-x(0px);
-       @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
        left: 0;
        background-color: white;
     }
@@ -510,7 +444,6 @@
                     margin-top: 50px;
                     margin-right: -120px;
                     margin-left: -15px;
-                    @include transform-translate-x(-80px);
                 }
                 &:nth-of-type(2){
                     margin-left: -100px;
@@ -552,9 +485,7 @@
             padding-right: 0px;
             padding-left: 40px;
             padding-top: 15px;
-            @include transform-translate-x(230px);
-            @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
-
+        
             .navbar-nav .nav-item{
                 &:last-child {
                     border-bottom: 0;
@@ -587,9 +518,6 @@
                 content: "";
                 z-index: 1;
             }
-            &.has-image::after{
-                @include black-filter(.8);
-            }
         }
         .navbar{
             .container{
@@ -603,13 +531,9 @@
         .navbar-translate{
             width: 100%;
             position: relative;
-            @include transform-translate-x(0);
-            @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
         }
 
         .wrapper{
-            //    @include transform-translate-x(0px);
-            @include transition (0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1));
             left: 0;
             background-color: white;
         }
@@ -625,19 +549,6 @@
             &:after{
                 display: table;
                 content: " ";
-            }
-        }
-
-        .nav-open &{
-            .navbar-collapse.collapse{
-                @include transform-translate-x(0px);
-            }
-            .wrapper{
-                left: 0;
-                @include transform-translate-x(-230px);
-            }
-            .navbar-translate{
-                @include transform-translate-x(-230px);
             }
         }
 

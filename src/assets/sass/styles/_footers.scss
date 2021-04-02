@@ -161,9 +161,6 @@
         }
     }
 
-    &::after{
-        @include black-filter(.5);
-    }
 }
 .footer-gray{
     background-color: #F3F2EE;
