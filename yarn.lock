@@ -140,6 +140,7 @@
   version "11.2.7"
   resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-11.2.7.tgz#1ddcd71cba2506e53beb51a6be7c6a766f7af05e"
   integrity sha512-18h7dyXHl/h+rsXFoNpqxiFCDhqewXVPpLG/WWeiFXKdtHeIk1yzfoSjo7nBzclicFFN/A+M2IQSIt21doJ0aA==
+
   dependencies:
     tslib "^2.0.0"
   optionalDependencies:
@@ -238,10 +239,12 @@
     glob "7.1.2"
     yargs "^16.1.1"
 
+
 "@angular/material@^11.2.7":
   version "11.2.7"
   resolved "https://registry.yarnpkg.com/@angular/material/-/material-11.2.7.tgz#7985f86f1659b4fa2219bdcf878873ae6a74cbc4"
   integrity sha512-mNIGKxBzZGlOEezprInTiQIwktiz9XSJuxZ2fp6rtJ7jqpSrUprCwBECRl6X62JWrDVwIFTDQO1FxS3mrBIZ2Q==
+
   dependencies:
     tslib "^2.0.0"
 
@@ -3582,6 +3585,7 @@ fast-json-stable-stringify@2.1.0, fast-json-stable-stringify@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
+
 
 fast-xml-parser@^3.19.0:
   version "3.19.0"
