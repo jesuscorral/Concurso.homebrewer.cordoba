@@ -42,7 +42,7 @@ export class RulesService  implements OnInit{
                   Hay dos categorías a concurso:
                   <ol  type="1">
                     <li>
-                        <b>Categoría Libre: Estilos cásicos.</b> <br/>
+                        <b>Categoría Libre: Estilos clásicos.</b> <br/>
                         Comprende los estilos clásicos de cerveza recogidos en el BJCP en las categorías
                         1 a la 26 (ver anexo 1)
                     </li>
@@ -156,7 +156,7 @@ export class RulesService  implements OnInit{
   
         <br/>
         Sobre esta cuota se aplicarán los siguientes descuentos: <br/><br>
-        - 4 € de descuento a quienes presentando 3 cervezas, sean socios ACCE o bien participantes de la edición anterior. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
+        - 4 € de descuento a quienes presenten 3 cervezas y sean socios ACCE. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
   
         Nº cuenta: <b>ES34 2100 4887 2622 0004 9961 </b>  (Indicar: Concurso y Nombre + Apellidos)<br/><br/>   
 
@@ -316,7 +316,7 @@ export class RulesService  implements OnInit{
       }),
       new Rule({
         icon:"file_present",
-        title:"Anexo I - Categoría Libre: Estilos cásicos.",
+        title:"Anexo I - Categoría Libre: Estilos clásicos.",
         content:` Comprende los estilos clásicos de cerveza recogidos en el BJCP en las categorías 1 a la 26:
         <ul>
             <li><b>1. STANDARD AMERICAN BEER </b></li>
@@ -545,7 +545,7 @@ export class RulesService  implements OnInit{
       }),
       new Rule({
         icon:"file_present",
-        title:`Anexo II - Categoría: "Historical &amp; Specialty beers`,
+        title:`Anexo II - Categoría: "Historical & Specialty beers`,
         content:`Comprende los estilos clásicos de cerveza recogidos en el BJCP en las categorías 27 a la 34, que se detallan a continuación:
         <ul>
           <li><b>27. HISTORICAL BEER  </b></li>
