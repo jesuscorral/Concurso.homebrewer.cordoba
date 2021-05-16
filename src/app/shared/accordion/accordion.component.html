@@ -1,0 +1,14 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let row of rows; index as i"> 
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-icon class="material-icons">{{row.icon}}</mat-icon>
+              </mat-panel-title>
+              <mat-panel-description>
+                 {{row.title}}
+                </mat-panel-description>
+        </mat-expansion-panel-header>
+        <p >
+            <span [innerHTML]="row.content"></span>
+        </p>
+    </mat-expansion-panel>
