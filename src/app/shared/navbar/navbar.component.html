@@ -1,34 +1,32 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" color-on-scroll="500">
-    <div class="container">
-        <div class="navbar-translate">
-            <a class="navbar-brand" routerLink="/home">Concurso homebrewer Córdoba</a>
-            <button class="navbar-toggler navbar-burger" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation" (click)="sidebarToggle()">
-                <span class="navbar-toggler-bar"></span>
+    <a class="navbar-brand" routerLink="/home">Concurso homebrewer Córdoba</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-bar"></span>
                 <span class="navbar-toggler-bar"></span>
                 <span class="navbar-toggler-bar"></span>
             </button>
-        </div>
-        <div class="navbar-collapse" id="navbarToggler">
-            <ul class="navbar-nav ml-auto">
+       
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
 
-               <li class="nav-item">
-                    <a class="nav-link" routerLink="/rules">BASES</a>
+               <li class="nav-item active">
+                <a class="nav-link" routerLink="/rules" data-toggle="collapse" data-target=".navbar-collapse.show">BASES</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" routerLink="/awards">PREMIOS</a>
-                </li>  --> 
-                <!-- <li class="nav-item">
-                    <a class="nav-link" routerLink="/sponsors">PATROCINADORES</a>
-                </li>   -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link" routerLink="/registration">INSCRIPCIÓN</a>
-                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/awards" data-toggle="collapse" data-target=".navbar-collapse.show">PREMIOS</a>
+                </li> 
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/sponsors" data-toggle="collapse" data-target=".navbar-collapse.show">PATROCINADORES</a>
+                </li>  
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/registration" data-toggle="collapse" data-target=".navbar-collapse.show">INSCRIPCIÓN</a>
+                </li>
                
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/organization">ORGANIZACIÓN</a>
+                    <a class="nav-link" routerLink="/organization" data-toggle="collapse" data-target=".navbar-collapse.show">ORGANIZACIÓN</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/contact">CONTACTO</a>
+                    <a class="nav-link" routerLink="/contact" data-toggle="collapse" data-target=".navbar-collapse.show">CONTACTO</a>
                 </li> 
 
                 <li class="nav-item">
@@ -38,12 +36,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" rel="tooltip" title="Siguenos Instagram" data-placement="bottom" href="mailto:homebrewercordoba@gmail.com" target="_blank">
+                    <a class="nav-link" rel="tooltip" title="Envíanos un email" data-placement="bottom" href="mailto:homebrewercordoba@gmail.com" target="_blank">
                         <i class="fa fa-envelope"></i>
                         <p class="d-lg-none">Email</p>
                     </a>
                 </li>
             </ul>
         </div>
-    </div>
 </nav>
