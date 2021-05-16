@@ -1,4 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
+import { GlobalConstants } from 'app/shared/global-constants';
 import { Rule } from './rule.model';
 
 @Injectable({
@@ -6,18 +7,18 @@ import { Rule } from './rule.model';
 })
 export class RulesService  implements OnInit{
    rules: Rule[] = [];
-   
+
   constructor() { 
     this.rules = [ 
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b>IV Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
+              content: `El "<b> V Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro.`}),
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `La cata del jurado se celebrará el fin de semana del 17 y 18 de octubre de 2020 y la entrega de premios
+              content: `La cata del jurado se celebrará el fin de semana del 16 y 17 de octubre de 2021 y la entrega de premios
                         tendrá lugar el fin de semana siguiente dentro del marco de actividades del Córdoba Bier Fest.`}),
       new Rule({
               icon:"drive_file_rename_outline",
@@ -163,15 +164,16 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        content:`<ul>
-        <li>
-            Plazo de inscripción hasta el 30/09/2020
-        </li>
-        <br/>
-        <li>
-            Plazo de envío del 5/10/2020 hasta el 11/10/2020
-        </li>
-      </ul>`
+        content: `PENDIENTES DE DEFINIR` 
+      //   content:`<ul>
+      //   <li>
+      //       Plazo de inscripción hasta el 30/09/2020
+      //   </li>
+      //   <br/>
+      //   <li>
+      //       Plazo de envío del 5/10/2020 hasta el 11/10/2020
+      //   </li>
+      // </ul>`
       }),
       new Rule({
         icon:"supervisor_account",
@@ -265,7 +267,7 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"military_tech",
         title:"Rally ACCE",
-        content:` El "IV Concurso Homebrewer de Córdoba" es prueba puntuable del 
+        content:` El "V Concurso Homebrewer de Córdoba" es prueba puntuable del 
         Rally ACCE: <a href="http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce"> http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce</a> `
       }),
       new Rule({
