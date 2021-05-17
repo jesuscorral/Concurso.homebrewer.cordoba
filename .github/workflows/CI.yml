@@ -4,25 +4,25 @@
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
 name: CI
 
-on: [push]
+on: 
+  push:
+    branches:
+      - master
 
 jobs:
   build:
-
-    # Machine environment:
-    # https://help.github.com/en/articles/software-in-virtual-environments-for-github-actions#ubuntu-1804-lts
-    # We specify the Node.js version manually below, and use versioned Chrome from Puppeteer.
-    runs-on: ubuntu-18.04
+    name: Build
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js 14.15
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.15
-    - name: Install dependencies
-      run: npm install
-   # - name: Lint
-   #   run: npm run lint
-    - name: Build
-      run: npm run build -- --prod
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build-prod
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: dist
