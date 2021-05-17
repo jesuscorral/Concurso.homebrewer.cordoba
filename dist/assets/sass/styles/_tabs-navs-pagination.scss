@@ -1,0 +1,12 @@
+.profile-content {
+  & .tab-content {
+    & .tab-pane {
+      min-height: 200px;
+    }
+    & #tweets,
+    #connections,
+    #media {
+      height: 100%;
+    }
+  }
+}

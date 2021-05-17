@@ -1,0 +1,8 @@
+.tooltip {
+  font-size: $font-size-small;
+  font-weight: $font-weight-normal;
+}
+
+.tooltip.show {
+  opacity: 1 !important;
+}
