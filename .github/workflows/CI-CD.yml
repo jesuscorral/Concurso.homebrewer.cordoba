@@ -2,7 +2,7 @@
 # GitHub Actions docs
 # https://help.github.com/en/articles/about-github-actions
 # https://help.github.com/en/articles/workflow-syntax-for-github-actions
-name: CI
+name: CI-CD_Firebase
 
 on: 
   push:
@@ -27,7 +27,8 @@ jobs:
           name: dist
           path: dist
   deploy:
-    name: deploy_to_firebase_hosting
+    name: Deploy_to_firebase_hosting
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
