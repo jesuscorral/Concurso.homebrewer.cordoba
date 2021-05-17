@@ -1,23 +1,24 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { AppRoutingModule } from './app.routing';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './shared/navbar/navbar.component';
-import { FooterComponent } from './shared/footer/footer.component';
-
-import { RulesComponent } from './rules/rules.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { OrganizationComponent } from './organization/organization.component';
+import { AppRoutingModule } from './app.routing';
+import { AwardsComponent } from './awards/awards.component';
 import { ContactComponent } from './contact/contact.component';
 import { HomeComponent } from './home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './shared/material/material-module';
-import { AwardsComponent } from './awards/awards.component';
+import { OrganizationComponent } from './organization/organization.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { RulesComponent } from './rules/rules.component';
+import { AccordionComponent } from './shared/accordion/accordion.component';
+import { FooterComponent } from './shared/footer/footer.component';
+import { NavbarComponent } from './shared/navbar/navbar.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+
 
 
 @NgModule({
@@ -31,8 +32,9 @@ import { SponsorsComponent } from './sponsors/sponsors.component';
     OrganizationComponent,
     ContactComponent,
     AwardsComponent,
-    SponsorsComponent
-  ],
+    SponsorsComponent,
+    AccordionComponent
+    ],
   imports: [
     BrowserModule,
     NgbModule,
@@ -40,8 +42,9 @@ import { SponsorsComponent } from './sponsors/sponsors.component';
     RouterModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
-  ],
+    MatExpansionModule,
+    MatIconModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

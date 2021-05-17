@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
             }else{
                 window.document.activeElement.scrollTop = 0;
             }
-            this.navbar.sidebarClose();
         });
         this.renderer.listen('window', 'scroll', (event) => {
             const number = window.scrollY;
@@ -50,14 +49,5 @@ export class AppComponent implements OnInit {
         }
 
     }
-    removeFooter() {
-        var titlee = this.location.prepareExternalUrl(this.location.path());
-        titlee = titlee.slice( 1 );
-        if(titlee === 'signup' || titlee === 'nucleoicons'){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
+
 }

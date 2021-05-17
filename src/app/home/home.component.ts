@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GlobalConstants } from 'app/shared/global-constants';
 
 @Component({
   selector: 'app-home',
@@ -6,4 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
+  year = GlobalConstants.year;
+  day = GlobalConstants.day;
+  month = GlobalConstants.month;
 }
