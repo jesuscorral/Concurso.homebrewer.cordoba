@@ -18,8 +18,10 @@ export class RulesService  implements OnInit{
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `La cata del jurado se celebrará el fin de semana del 16 y 17 de octubre de 2021 y la entrega de premios
-                        tendrá lugar el fin de semana siguiente dentro del marco de actividades del Córdoba Bier Fest.`}),
+              content: `Pendiente de definir fecha exacta. (Aproximadamente Octubre 2021)`}),
+
+              // content: `La cata se celebrará el fin de semana del 16 y 17 de octubre de 2021 y la entrega de premios
+              //           tendrá lugar el fin de semana siguiente dentro del marco de actividades del Córdoba Bier Fest.`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -95,9 +97,11 @@ export class RulesService  implements OnInit{
               </li>
               <br/>
               <li>
-                  Los interesados en participar deberán rellenar un <a href="https://www.concursohomebrewercordoba.es/registration"> formulario de inscripción</a>
-                  por cada entrada que presenten (máximo 3). Una vez relleno enviar justificante de pago de la inscripción a la siguiente dirección de correo
-                  electrónico <a href="mailto:homebrewercordoba@gmail.com" target="_blank">homebrewercordoba@gmail.com</a>.
+                  Los interesados en participar deberán rellenar un <a href="https://www.concursohomebrewercordoba.es/#/registration"> formulario de inscripción</a>
+                  por cada entrada que presenten (máximo 3). Al enviar el formulario recibirá en el correo electrónico con el que se ha inscrito un email con la etiqueta
+                  que deberá llevar adherida las botellas inscritas. Posteriormente deberá enviar el justificante de pago de la inscripción a la siguiente dirección de correo
+                  electrónico <a href="mailto:homebrewercordoba@gmail.com" target="_blank">homebrewercordoba@gmail.com</a>, la inscripción no se considerará completada hasta 
+                  haber recibido dicho justificante de pago.
               </li>
               <br/>
               <li>
@@ -106,7 +110,7 @@ export class RulesService  implements OnInit{
                   sí por cartones, en una caja adecuada, con la palabra FRÁGIL escrita en todos sus costados y
                   flechas indicando la posición vertical. <br/>
       
-                  Las botellas irán identificadas por un papel en el que conste nombre del cervecero y estilo participante, sujeto con una goma elástica en cada botella. <br/>
+                  Las botellas irán identificadas unicamente la etiqueta recibida en su email después de la inscripción, donde constará el numero de entrada asignado y el estilo de la cerveza. <br/>
       
                   La entrega de las botellas de cerveza deberá hacerse por correo o entrega física a la siguiente dirección:  <br/><br/>
       
@@ -164,7 +168,7 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        content: `PENDIENTES DE DEFINIR` 
+        content: `Pendientes de definir` 
       //   content:`<ul>
       //   <li>
       //       Plazo de inscripción hasta el 30/09/2020
@@ -214,10 +218,7 @@ export class RulesService  implements OnInit{
             los requisitos mínimos exigidos y/o no alcancen un nivel aceptable.
         </li>
         <br/>
-        <li>
-          La cata por parte del jurado se realizará el fin de semana del 17 y 18 de octubre de 2020
-        </li>
-        <br/>
+
         <li>
             Para optar a cualquiera de los premios del concurso, las cervezas evaluadas
             deberán alcanzar al menos una puntuación de 30 puntos en la escala del BJCP,
