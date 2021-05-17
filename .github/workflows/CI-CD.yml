@@ -7,7 +7,7 @@ name: CI-CD_Firebase
 on: 
   push:
     branches:
-      - master
+      - 'releases/**'
 
 jobs:
   build:
