@@ -18,10 +18,7 @@ export class RulesService  implements OnInit{
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `Pendiente de definir fecha exacta. (Aproximadamente Octubre 2021)`}),
-
-              // content: `La cata se celebrará el fin de semana del 16 y 17 de octubre de 2021 y la entrega de premios
-              //           tendrá lugar el fin de semana siguiente dentro del marco de actividades del Córdoba Bier Fest.`}),
+              content: `Sábado 9 de octubre de 2021 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -122,6 +119,8 @@ export class RulesService  implements OnInit{
                       (Indicar en el paquete: Concurso Homebrewer) <br/> <br/>
       
                       Los gastos de envío correrán a cargo del concursante. <br/><br/>
+
+                      Fechas de recepción: del 27/09/2021 hasta el 04/10/2021<br/><br/>
                     </li>
                   </ol>
       
@@ -168,16 +167,16 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        content: `Pendientes de definir` 
-      //   content:`<ul>
-      //   <li>
-      //       Plazo de inscripción hasta el 30/09/2020
-      //   </li>
-      //   <br/>
-      //   <li>
-      //       Plazo de envío del 5/10/2020 hasta el 11/10/2020
-      //   </li>
-      // </ul>`
+        // content: `Pendientes de definir` 
+        content:`<ul>
+        <li>
+            Plazo de inscripción del 20 de agosto al 20 de septiembre
+        </li>
+        <br/>
+        <li>
+            Plazo de envío del 27 de septiembre al 04 de octubre
+        </li>
+      </ul>`
       }),
       new Rule({
         icon:"supervisor_account",
@@ -265,12 +264,12 @@ export class RulesService  implements OnInit{
         al The Real CordobALE - CerveCataClub (que asumiría los gastos de envío de generarse), incluso se le ofrecería
         la posibilidad de dirigir una sesión del The Real CordobALE - CerveCataClub.`
       }),
-      new Rule({
-        icon:"military_tech",
-        title:"Rally ACCE",
-        content:` El "V Concurso Homebrewer de Córdoba" es prueba puntuable del 
-        Rally ACCE: <a href="http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce"> http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce</a> `
-      }),
+      // new Rule({
+      //   icon:"military_tech",
+      //   title:"Rally ACCE",
+      //   content:` El "V Concurso Homebrewer de Córdoba" es prueba puntuable del 
+      //   Rally ACCE: <a href="http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce"> http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce</a> `
+      // }),
       new Rule({
         icon:"toc",
         title:" Otros datos de interés",
