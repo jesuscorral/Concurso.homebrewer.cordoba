@@ -51,8 +51,7 @@ export class RulesService  implements OnInit{
                         Comprende los estilos de cerveza recogidos en el BJCP en las categorías 27 a la 34
                         (ver anexo 2).<br/>
       
-                        Cada concursante podrá presentar hasta 3 estilos (entradas) al concurso. Un máximo
-                        de 2 entradas en "Estilos clásicos" y un máximo de 1 en "Historical &amp; Specialty" <br/>
+                        Cada concursante podrá presentar hasta 3 estilos (entradas) al concurso, siempre que las 3 entradas no pertenezcan a la misma categoría. <br/>
       
                         La cata de las cervezas se realizará siempre en función del estilo declarado
                         (Tipo de cata "Fit to style"), pudiendo entregarse alguna mención honorífica a
