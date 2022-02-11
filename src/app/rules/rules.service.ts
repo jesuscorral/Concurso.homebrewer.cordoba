@@ -18,7 +18,7 @@ export class RulesService  implements OnInit{
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `Sábado 9 de octubre de 2021 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `Octubre de 2022 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -119,7 +119,7 @@ export class RulesService  implements OnInit{
       
                       Los gastos de envío correrán a cargo del concursante. <br/><br/>
 
-                      Fechas de recepción: del 27/09/2021 hasta el 04/10/2021<br/><br/>
+                      Fechas de recepción: -- Pendientes de definir -- <br/><br/>
                     </li>
                   </ol>
       
