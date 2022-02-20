@@ -13,7 +13,7 @@ export class RulesService  implements OnInit{
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b> V Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
+              content: `El "<b>VI Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro.`}),
       new Rule({
               icon:"date_range",
@@ -166,17 +166,17 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        // content: `Pendientes de definir` 
-        content:`<ul>
-        <li>
-            Plazo de inscripción del 20 de agosto al 20 de septiembre
-        </li>
-        <br/>
-        <li>
-            Plazo de envío del 27 de septiembre al 04 de octubre
-        </li>
-      </ul>`
-      }),
+        content: `Pendientes de definir`}), 
+      //   content:`<ul>
+      //   <li>
+      //       Plazo de inscripción del 20 de agosto al 20 de septiembre
+      //   </li>
+      //   <br/>
+      //   <li>
+      //       Plazo de envío del 27 de septiembre al 04 de octubre
+      //   </li>
+      // </ul>`
+      // }),
       new Rule({
         icon:"supervisor_account",
         title:"Jurado del concurso",
