@@ -13,12 +13,12 @@ export class RulesService  implements OnInit{
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b> V Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
+              content: `El "<b>VI Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro.`}),
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `Sábado 9 de octubre de 2021 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `Octubre de 2022 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -119,7 +119,7 @@ export class RulesService  implements OnInit{
       
                       Los gastos de envío correrán a cargo del concursante. <br/><br/>
 
-                      Fechas de recepción: del 27/09/2021 hasta el 04/10/2021<br/><br/>
+                      Fechas de recepción: -- Pendientes de definir -- <br/><br/>
                     </li>
                   </ol>
       
@@ -166,17 +166,17 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        // content: `Pendientes de definir` 
-        content:`<ul>
-        <li>
-            Plazo de inscripción del 20 de agosto al 20 de septiembre
-        </li>
-        <br/>
-        <li>
-            Plazo de envío del 27 de septiembre al 04 de octubre
-        </li>
-      </ul>`
-      }),
+        content: `Pendientes de definir`}), 
+      //   content:`<ul>
+      //   <li>
+      //       Plazo de inscripción del 20 de agosto al 20 de septiembre
+      //   </li>
+      //   <br/>
+      //   <li>
+      //       Plazo de envío del 27 de septiembre al 04 de octubre
+      //   </li>
+      // </ul>`
+      // }),
       new Rule({
         icon:"supervisor_account",
         title:"Jurado del concurso",
