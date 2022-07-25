@@ -14,11 +14,20 @@ export class RulesService  implements OnInit{
               icon: "pages",
               title: "Objeto del concurso", 
               content: `El "<b>VI Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
-                        The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro.`}),
+                        The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
+                        <br/><br/>
+                        Este concurso además se enmarca dentro de las actividades para el fomento de la cultura cervecera que fomenta 
+                        a parte de las actividades del Córdoba Fiest beer.
+                        <br/><br/>
+                        Esta edición del concurso "Pro Feedback" nace con la intención de poner como prioridad principal, 
+                        ofrecer al concursante el mejor feedback posible sobre la cerveza que ha presentado a concurso: 
+                        impresión general, puntos que podría mejorar, consejos sobre como conseguirlo...
+                        Haciendo uso para tal fin de medios adicionales que complementen la tradicional hoja de cata BJCP.
+                        `}),
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `Octubre de 2022 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `12 de Noviembre de 2022 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -30,11 +39,11 @@ export class RulesService  implements OnInit{
               </li>
               <br/>
               <li>
-                  El concurso se regirá en todo momento por las regulaciones y especificaciones del Beer
-                  Judge Certification Program (<a href="http://www.bjcp.org" target="_blank">http://www.bjcp.org</a>), en
-                  el que será inscrito como concurso oficial, y los estilos presentados se evaluarán siempre
-                  en base a la guía de estilos publicada en 2015.
-                  (<a href="http://www.bjcp.org/docs/2015_Guidelines_Beer.pdf" target="_blank">http://www.bjcp.org/docs/2015_Guidelines_Beer.pdf</a>).
+                El concurso se regirá en todo momento por las regulaciones y especificaciones del Beer 
+                Judge Certification Program (<a href="http://www.bjcp.org" target="_blank">http://www.bjcp.org</a>), 
+                en el que será inscrito como concurso oficial, y los estilos presentados se evaluarán en base a la guía de 
+                estilos publicada en 2021. 
+                (<a href="https://www.bjcp.org/download/2021_Guidelines_Beer.pdf" target="_blank">https://www.bjcp.org/download/2021_Guidelines_Beer.pdf</a>). 
               </li>
               <br/>
               <li>
@@ -57,6 +66,10 @@ export class RulesService  implements OnInit{
                         (Tipo de cata "Fit to style"), pudiendo entregarse alguna mención honorífica a
                         alguna cerveza que pese a no encontrarse dentro del estilo declarado, resalte por
                         sus características de entre las demás.
+                    </li>
+                    <li>
+                        De modo excepcional en esta edición la categoría 23G Gose quedará encuadrada dentro de la categoría Historical & Specialty beers,
+                        dada la reciente implantación de la clasificación de las cervezas que hace la guía 2021 y que la anterior guía la consideraba dentro de la categoría 27 historicas. 
                     </li>
                   </ol>
               </li>
@@ -151,14 +164,14 @@ export class RulesService  implements OnInit{
         title:"Cuota de inscripción",
         content:` La cuota de inscripción será: <br/>
         <ul>
-          <li>1 cerveza 7 €</li>
-          <li>2 cervezas 12 €</li>
-          <li>3 cervezas 14 €</li>
+          <li>1 cerveza 8 €</li>
+          <li>2 cervezas 14 €</li>
+          <li>3 cervezas 16 €</li>
         </ul>
   
         <br/>
         Sobre esta cuota se aplicarán los siguientes descuentos: <br/><br>
-        - 4 € de descuento a quienes presenten 3 cervezas y sean socios ACCE. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
+        - 2 € de descuento a quienes presenten 3 cervezas y sean socios ACCE. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
   
         Nº cuenta: <b>ES34 2100 4887 2622 0004 9961 </b>  (Indicar: Concurso y Nombre + Apellidos)<br/><br/>   
 
@@ -166,17 +179,17 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        content: `Pendientes de definir`}), 
-      //   content:`<ul>
-      //   <li>
-      //       Plazo de inscripción del 20 de agosto al 20 de septiembre
-      //   </li>
-      //   <br/>
-      //   <li>
-      //       Plazo de envío del 27 de septiembre al 04 de octubre
-      //   </li>
-      // </ul>`
-      // }),
+        // content: `Pendientes de definir`}), 
+        content:`<ul>
+          <li>
+              Plazo de inscripción del 1 de Agosto al 21 de Octubre.
+          </li>
+          <br/>
+          <li>
+              Plazo de envío del 21 de Octubre al 31 de Octubre
+          </li>
+        </ul>`
+        }),
       new Rule({
         icon:"supervisor_account",
         title:"Jurado del concurso",
@@ -256,19 +269,17 @@ export class RulesService  implements OnInit{
         Esta decisión se tomará en una habitación independiente de la que se celebre las mesas de
         los B.O.S. de cada categoría por parte de los jueces, de forma que las decisiones de una mesa
         no influyan en la otra. De este modo la cerveza que obtenga esta mención especial podrá
-        encontrarse entre las premiadas en alguna de las categorías o no estar entre ellas.<br/><br/>
-
-        El ganador recibirá un vale de 40€ de La Tienda del Cervecero a cambio de unos litros del
-        lote ganador o el compromiso de repetir un lote de su cerveza y hacer llegar parte de esta
-        al The Real CordobALE - CerveCataClub (que asumiría los gastos de envío de generarse), incluso se le ofrecería
-        la posibilidad de dirigir una sesión del The Real CordobALE - CerveCataClub.`
+        encontrarse entre las premiadas en alguna de las categorías o no estar entre ellas.<br/><br/>`
       }),
-      // new Rule({
-      //   icon:"military_tech",
-      //   title:"Rally ACCE",
-      //   content:` El "V Concurso Homebrewer de Córdoba" es prueba puntuable del 
-      //   Rally ACCE: <a href="http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce"> http://cerveceros-caseros.com/index.php/articulos/noticias/395-rally-acce</a> `
-      // }),
+        // El ganador recibirá un vale de 40€ de La Tienda del Cervecero a cambio de unos litros del
+        // lote ganador o el compromiso de repetir un lote de su cerveza y hacer llegar parte de esta
+        // al The Real CordobALE - CerveCataClub (que asumiría los gastos de envío de generarse), incluso se le ofrecería
+        // la posibilidad de dirigir una sesión del The Real CordobALE - CerveCataClub.
+      new Rule({
+        icon:"military_tech",
+        title:"Rally ACCE",
+        content:` El "VI Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
+      }),
       new Rule({
         icon:"toc",
         title:" Otros datos de interés",
@@ -357,7 +368,7 @@ export class RulesService  implements OnInit{
             <ul style="list-style-type:none">
               <li>  5A. German Leichtbier </li>
               <li> 5B. Kölsch </li>
-              <li> 5C. Helles Exportbier </li>
+              <li> 5C. German Helles Exportbier </li>
               <li> 5D. German Pils </li>
             </ul>
             <br/>
@@ -374,8 +385,6 @@ export class RulesService  implements OnInit{
             <ul style="list-style-type:none">
               <li> 7A. Vienna Lager </li>
               <li> 7B. Altbier </li>
-              <li> 7C. Kellerbier (Amber Kellerbier) </li>
-              <li> 7C. Kellerbier (Pale Kellerbier) </li>
             </ul>
             <br/>
   
@@ -453,10 +462,10 @@ export class RulesService  implements OnInit{
   
             <li><b> 17. STRONG BRITISH ALE </b></li>
             <ul style="list-style-type:none">
-              <li> 17A. British Strong Ale (17A Burton Ale) </li>
+              <li> 17A. British Strong Ale </li>
               <li> 17B. Old Ale </li>
               <li> 17C. Wee Heavy </li>
-              <li> 17D. English Barleywine </li>
+              <li> 17D. English Barley Wine </li>
             </ul>
             <br/>
   
@@ -475,7 +484,7 @@ export class RulesService  implements OnInit{
             </ul>
             <br/>
   
-            <li><b> 20. AMERICAN PORTER AND STO</b></li>
+            <li><b> 20. AMERICAN PORTER AND STOUT</b></li>
             <ul style="list-style-type:none">
               <li>  20A. American Porter</li>
               <li> 20B. American Stout </li>
@@ -486,7 +495,18 @@ export class RulesService  implements OnInit{
             <li><b> 21. IPA </b></li>
             <ul style="list-style-type:none">
               <li> 21A. American IPA  </li>
-              <li> 21B. Specialty IPA (todas) </li>
+              <li> 21B. Specialty IPA 
+                <ul style="list-style-type:none">
+                  <li>Specialty IPA: Belgian IPA </li>
+                  <li>Specialty IPA: Black IPA </li>
+                  <li>Specialty IPA: Brown IPA </li>
+                  <li>Specialty IPA: Red IPA </li>
+                  <li>Specialty IPA: Rye IPA </li>
+                  <li>Specialty IPA: White IPA </li>
+                  <li>Specialty IPA: Brut IPA </li>
+                </ul>
+              <li>21C. Hazy IPA </li> 
+              </li>
             </ul>
             <br/>
   
@@ -502,11 +522,12 @@ export class RulesService  implements OnInit{
             <li><b> 23. EUROPEAN SOUR ALE </b></li>
             <ul style="list-style-type:none">
               <li> 23A. Berliner Weisse  </li>
-              <li> 23B. Flanders Red </li>
+              <li> 23B. Flanders Red Ale</li>
               <li> 23C. Oud Bruin </li>
               <li> 23D. Lambic </li>
               <li> 23E. Gueuze </li>
               <li> 23F. Fruit Lambic </li>
+              <li> 23G. Gose </li>
             </ul>
             <br/>
   
@@ -528,7 +549,7 @@ export class RulesService  implements OnInit{
   
             <li><b> 26. TRAPPIST ALE </b></li>
             <ul style="list-style-type:none">
-              <li>  26A. Trappist Single </li>
+              <li> 26A. Trappist Single </li>
               <li> 26B. Belgian Dubbel </li>
               <li> 26C. Belgian Tripel </li>
               <li>26D. Belgian Dark Strong Ale  </li>
@@ -549,7 +570,7 @@ export class RulesService  implements OnInit{
         <ul>
           <li><b>27. HISTORICAL BEER  </b></li>
           <ul style="list-style-type:none">
-            <li> 27. Historical Beer (Gose)  </li>
+            <li> 27. Historical Beer (Kellerbier)  </li>
             <li> 27. Historical Beer (Kentucky Common) </li>
             <li> 27. Historical Beer (Lichtenhainer) </li>
             <li> 27. Historical Beer (London Brown Ale)  </li>
@@ -563,25 +584,28 @@ export class RulesService  implements OnInit{
 
           <li><b>28. AMERICAN WILD ALE  </b></li>
           <ul style="list-style-type:none">
-            <li>  28A. Brett Beer </li>
+            <li> 28A. Brett Beer </li>
             <li> 28B. Mixed-Fermentation Sour Beer </li>
             <li> 28C. Wild Specialty Beer </li>
+            <li> 28D. Wild Specialty Beer </li>
           </ul>
           <br/>
 
           <li><b> 29. FRUIT BEER </b></li>
           <ul style="list-style-type:none">
             <li> 29A. Fruit Beer  </li>
-            <li>29B. Fruit and Spice Beer  </li>
+            <li> 29B. Fruit and Spice Beer  </li>
             <li> 29C. Specialty Fruit Beer </li>
+            <li> 29D. Grape Ale </li>
           </ul>
           <br/>
 
           <li><b> 30. SPICED BEER </b></li>
           <ul style="list-style-type:none">
-            <li>  30A. Spice, Herb, or Vegetable Beer </li>
+            <li> 30A. Spice, Herb, or Vegetable Beer </li>
             <li> 30B. Autumn Seasonal Beer </li>
             <li> 30C. Winter Seasonal Beer </li>
+            <li> 30D. Specialty Spice Beer </li>
           </ul>
           <br/>
 
@@ -608,9 +632,9 @@ export class RulesService  implements OnInit{
 
           <li><b> 34. SPECIALTY BEER </b></li>
           <ul style="list-style-type:none">
-            <li>  34A. Clone Beer </li>
-            <li>34B. Mixed-Style Beer </li>
-            <li>34C. Experimental Beer </li>
+            <li> 34A. Commercial Specialty Beer </li>
+            <li> 34B. Mixed-Style Beer </li>
+            <li> 34C. Experimental Beer </li>
           </ul>
           <br/>
         </ul>`
