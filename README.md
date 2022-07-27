@@ -38,4 +38,6 @@ Install the dependencies
 cd Concurso.homebrewer.cordoba/
 yarn
 yarn start
+ng build --configuration production
+firebase deploy
 ```
