@@ -587,7 +587,7 @@ export class RulesService  implements OnInit{
             <li> 28A. Brett Beer </li>
             <li> 28B. Mixed-Fermentation Sour Beer </li>
             <li> 28C. Wild Specialty Beer </li>
-            <li> 28D. Wild Specialty Beer </li>
+            <li> 28D. Straight Sour Beer </li>
           </ul>
           <br/>
 
