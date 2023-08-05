@@ -10,4 +10,5 @@ export class HomeComponent {
   year = GlobalConstants.year;
   day = GlobalConstants.day;
   month = GlobalConstants.month;
+  editionNumber = GlobalConstants.editionNumber;
 }

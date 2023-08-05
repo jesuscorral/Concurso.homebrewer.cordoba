@@ -1,8 +1,8 @@
 export class GlobalConstants {
-    public static editionNumber: string = "VI";
-    public static day: string = "12";
+    public static editionNumber: string = "VII";
+    public static day: string = "25";
     public static month: string = "Noviembre";
-    public static year: string = "2022";
-    public static startReceptionDate: string = "31 de Octubre";
-    public static endReceptionDate: string = "5 de Noviembre";
+    public static year: string = "2023";
+    public static startReceptionDate: string = "10 de Noviembre";
+    public static endReceptionDate: string = "17 de Noviembre";
 }

@@ -1,5 +1,4 @@
 import { Injectable, OnInit } from '@angular/core';
-import { GlobalConstants } from 'app/shared/global-constants';
 import { Rule } from './rule.model';
 
 @Injectable({
@@ -13,21 +12,16 @@ export class RulesService  implements OnInit{
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b>VI Concurso Homebrewer de Córdoba</b>" está organizado por <a href="https://www.facebook.com/TheRealCordobALE">
-                        The Real CordobALE - CerveCataClub</a> con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
+              content: `El "<b>VII Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
                         <br/><br/>
-                        Este concurso además se enmarca dentro de las actividades para el fomento de la cultura cervecera que fomenta 
-                        a parte de las actividades del Córdoba Fiest beer.
+                        Este concurso se enmarca dentro de las actividades para el fomenta la asociación <a href="https://www.facebook.com/TheRealCordobALE">
+                        The Real CordobALE - CerveCataClub</a>.
                         <br/><br/>
-                        Esta edición del concurso "Pro Feedback" nace con la intención de poner como prioridad principal, 
-                        ofrecer al concursante el mejor feedback posible sobre la cerveza que ha presentado a concurso: 
-                        impresión general, puntos que podría mejorar, consejos sobre como conseguirlo...
-                        Haciendo uso para tal fin de medios adicionales que complementen la tradicional hoja de cata BJCP.
                         `}),
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `12 de Noviembre de 2022 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `25 de Noviembre de 2023 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -67,10 +61,6 @@ export class RulesService  implements OnInit{
                         alguna cerveza que pese a no encontrarse dentro del estilo declarado, resalte por
                         sus características de entre las demás.
                     </li>
-                    <li>
-                        De modo excepcional en esta edición la categoría 23G Gose quedará encuadrada dentro de la categoría Historical & Specialty beers,
-                        dada la reciente implantación de la clasificación de las cervezas que hace la guía 2021 y que la anterior guía la consideraba dentro de la categoría 27 historicas. 
-                    </li>
                   </ol>
               </li>
               <br/>
@@ -81,7 +71,7 @@ export class RulesService  implements OnInit{
               <br/>
               <li>
                   Se deberá presentar al concurso, sin marcar, ni etiquetar y sin ninguna marca que pueda revelar
-                  su procedencia, al menos 4 botellas de 33 Cl o de 50 Cl, preferentemente de vidrio o pet marrón.
+                  su procedencia, al menos 3 botellas de 33 Cl o de 50 Cl, preferentemente de vidrio o pet marrón.
                   Se admitirán chapas o tapón cerámico de cualquier color siempre que no tengan ningún marcado. <br/>
       
                   Aquellos participantes que presenten menos botellas del mínimo marcado, de tamaños diferentes a
@@ -118,9 +108,15 @@ export class RulesService  implements OnInit{
                   pero se recomienda que las botellas se empaqueten, correctamente embaladas y separadas entre
                   sí por cartones, en una caja adecuada, con la palabra FRÁGIL escrita en todos sus costados y
                   flechas indicando la posición vertical. <br/>
-      
-                  Las botellas irán identificadas unicamente la etiqueta recibida en su email después de la inscripción, donde constará el numero de entrada asignado y el estilo de la cerveza. <br/>
-      
+              </li>
+              <br/>
+              <li>
+                  Las botellas irán identificadas unicamente con la etiqueta recibida en su email después de la inscripción, donde constará el número de entrada 
+                  asignado y el estilo de la cerveza. La etiqueta debe ir sujeta a la botella mediante una goma elástica u otro método sencillo de quitar, 
+                  NO DEBE IR PEGADA CON PEGAMENTOS NI SUJETA CON CINTAS ADHESIVAS, siendo esto último motivo de exclusión. <br/>
+             </li>
+             <br/>
+             <li>
                   La entrega de las botellas de cerveza deberá hacerse por correo o entrega física a la siguiente dirección:  <br/><br/>
       
                   <ol type="1">
@@ -132,10 +128,12 @@ export class RulesService  implements OnInit{
       
                       Los gastos de envío correrán a cargo del concursante. <br/><br/>
 
-                      Fechas de recepción: -- Pendientes de definir -- <br/><br/>
+                      Fechas de recepción: del 10 al 17 de noviembre  <br/><br/>
                     </li>
                   </ol>
-      
+             </li>
+             <br/>
+             <li>
                   No se dará por inscrito aquel participante que no complete todos los campos del formulario.
                   En el momento en el que se reciba un envío o entrega física, los organizadores y las empresas
                   colaboradoras, comprobarán que dicha entrega cumple con los requisitos exigidos. En caso de
@@ -182,11 +180,11 @@ export class RulesService  implements OnInit{
         // content: `Pendientes de definir`}), 
         content:`<ul>
           <li>
-              Plazo de inscripción del 1 de Agosto al 21 de Octubre.
+              Plazo de inscripción del 1 de Septiembre al 21 de Octubre.
           </li>
           <br/>
           <li>
-              Plazo de envío del 21 de Octubre al 31 de Octubre
+              Plazo de envío del 10 al 17 de Noviembre.
           </li>
         </ul>`
         }),
@@ -210,8 +208,8 @@ export class RulesService  implements OnInit{
         <li>
             Los documentos enlazados explican con claridad el detalle de los protocolos de recepción, gestión y evaluación que rigen en el programa BJCP y que se seguirán en el evento.
             <ol  type="a">
-              <li><a href="http://www.cerveceros-caseros.com/documentos/BJCP_Manual_Competicion.pdf" target="_blank">http://www.cerveceros-caseros.com/documentos/BJCP_Manual_Competicion.pdf</a></li>
-              <li><a href="http://www.cerveceros-caseros.com/documentos/BJCP_Manual_Procedimientos_Jueges.pdf" target="_blank">http://www.cerveceros-caseros.com/documentos/BJCP_Manual_Procedimientos_Jueges.pdf</a></li>
+              <li><a href="https://legacy.bjcp.org/docs/SCPCompHdbk.pdf" target="_blank">https://legacy.bjcp.org/docs/SCPCompHdbk.pdf</a></li>
+              <li><a href="https://dev.bjcp.org/competitions/competition-handbook/competition-planning-overview/" target="_blank">https://dev.bjcp.org/competitions/competition-handbook/competition-planning-overview/</a></li>
             </ol>
         </li>
         <br/>
@@ -246,30 +244,24 @@ export class RulesService  implements OnInit{
         </li>
         <br/>
         <li>
-            El día y hora de la gala de entrega de premios está aún por determinar,
-            se anunciará en nuestro facebook y redes sociales.
+            El primer clasificado de cada categoría recibirá un trofeo. 
         </li>
         <br/>
         <li>
-          En caso de que el premiado no pudiera asistir, el premio será enviado contra reembolso a la dirección que indique el galardonado.
+          El segundo y tercer clasificado de cada categoría recibirán un diploma acreditativo.
         </li>
         <br/>
-        <li> El listado de premios se irá implementando conforme se incorporen 
-            nuevas empresas colaboradoras. Las modificaciones se irán anunciando en nuestra web y facebook.              
+        <li>
+          En caso de disponer de otros premios aportados por patrocinadores para los primeros clasificados, se anunciará en redes.    
         </li>
       </ul>`
       }),
       new Rule({
         icon:"grade",
         title:"Mención especial The Real CordobALE - CerveCataClub",
-        content:` De entre las cervezas que los jueces pasen a la ronda final y de forma independiente a ésta,
-        miembros del The Real CordobALE - CerveCataClub decidirán la cerveza galardonada con
-        la "Mención Especial The Real CordobALE - CerveCataClub".<br/><br/>
-
-        Esta decisión se tomará en una habitación independiente de la que se celebre las mesas de
-        los B.O.S. de cada categoría por parte de los jueces, de forma que las decisiones de una mesa
-        no influyan en la otra. De este modo la cerveza que obtenga esta mención especial podrá
-        encontrarse entre las premiadas en alguna de las categorías o no estar entre ellas.<br/><br/>`
+        content:` En esta edición no se contará con la mención especial The Real CordobALE como se venía realizando en las ediciones pasadas.
+        Esperamos poder recuperarla para la próxima edición.
+        <br/><br/>`
       }),
         // El ganador recibirá un vale de 40€ de La Tienda del Cervecero a cambio de unos litros del
         // lote ganador o el compromiso de repetir un lote de su cerveza y hacer llegar parte de esta
@@ -278,7 +270,7 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"military_tech",
         title:"Rally ACCE",
-        content:` El "VI Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
+        content:` El "VII Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
       }),
       new Rule({
         icon:"toc",
@@ -331,10 +323,10 @@ export class RulesService  implements OnInit{
         <ul>
             <li><b>1. STANDARD AMERICAN BEER </b></li>
             <ul style="list-style-type:none">
-              <li>1A. American Light Lager </li>
-              <li>1B. American Lager </li>
-              <li>1C. Cream Ale </li>
-              <li>1D. American Wheat Beer </li>
+              <li> 1A. American Light Lager </li>
+              <li> 1B. American Lager </li>
+              <li> 1C. Cream Ale </li>
+              <li> 1D. American Wheat Beer </li>
             </ul>
             <br/>
   
@@ -348,7 +340,7 @@ export class RulesService  implements OnInit{
   
             <li><b> 3. CZECH LAGER </b></li>
             <ul style="list-style-type:none">
-              <li>  3A. Czech Pale Lager </li>
+              <li> 3A. Czech Pale Lager </li>
               <li> 3B. Czech Premium Pale Lager </li>
               <li>3C. Czech Amber Lager  </li>
               <li> 3D. Czech Dark Lager </li>
@@ -357,7 +349,7 @@ export class RulesService  implements OnInit{
   
             <li><b> 4. PALE MALTY EUROPEAN LAGER</b></li>
             <ul style="list-style-type:none">
-              <li>  4A. Munich Helles </li>
+              <li> 4A. Munich Helles </li>
               <li> 4B. Festbier </li>
               <li> 4C. Helles Bock </li>
             </ul>
@@ -366,7 +358,7 @@ export class RulesService  implements OnInit{
   
             <li><b>5. PALE BITTER EUROPEAN BEER  </b></li>
             <ul style="list-style-type:none">
-              <li>  5A. German Leichtbier </li>
+              <li> 5A. German Leichtbier </li>
               <li> 5B. Kölsch </li>
               <li> 5C. German Helles Exportbier </li>
               <li> 5D. German Pils </li>
