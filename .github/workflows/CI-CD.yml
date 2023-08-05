@@ -17,10 +17,13 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
+        
       - name: Install Dependencies
-        run: npm install
+        run: npm install --save --legacy-peer-deps
+        
       - name: Build
         run: npm run build -- --configuration production
+        
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
