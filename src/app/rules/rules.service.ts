@@ -14,7 +14,7 @@ export class RulesService  implements OnInit{
               title: "Objeto del concurso", 
               content: `El "<b>VII Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
                         <br/><br/>
-                        Este concurso se enmarca dentro de las actividades para el fomento de la cultura cerveza la asociación <a href="https://www.facebook.com/TheRealCordobALE">
+                        Este concurso se enmarca dentro de las actividades para el fomento de la cultura cerveza que fomenta la asociación <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a>.
                         <br/><br/>
                         `}),
