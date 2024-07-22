@@ -177,10 +177,9 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"hourglass_empty",
         title:"Plazos",
-        // content: `Pendientes de definir`}), 
         content:`<ul>
           <li>
-              Plazo de inscripción del 1 de Septiembre al 9 de Noviembre.
+              Plazo de inscripción del 1 de Septiembre al 21 de Octubre.
           </li>
           <br/>
           <li>

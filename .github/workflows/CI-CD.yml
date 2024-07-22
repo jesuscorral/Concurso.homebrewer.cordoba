@@ -29,6 +29,7 @@ jobs:
         with:
           name: dist
           path: dist
+          
   deploy:
     name: Deploy_to_firebase_hosting
     needs: build
