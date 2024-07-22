@@ -22,13 +22,14 @@ jobs:
         run: npm install --save --legacy-peer-deps
         
       - name: Build
-        run: npm run build -- --configuration production
+        run: npm run build --configuration production
         
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
           name: dist
           path: dist
+          
   deploy:
     name: Deploy_to_firebase_hosting
     needs: build
@@ -36,6 +37,7 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@master
+        
       - name: Download Artifact
         uses: actions/download-artifact@master
         with:
