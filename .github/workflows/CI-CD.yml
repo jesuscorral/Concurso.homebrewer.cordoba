@@ -22,7 +22,7 @@ jobs:
         run: npm install --save --legacy-peer-deps
         
       - name: Build
-        run: npm run build --configuration prod
+        run: npm run build --prod
         
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
