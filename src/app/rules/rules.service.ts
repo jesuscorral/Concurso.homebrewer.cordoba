@@ -179,7 +179,7 @@ export class RulesService  implements OnInit{
         title:"Plazos",
         content:`<ul>
           <li>
-              Plazo de inscripción del 1 de Septiembre al 21 de Octubre.
+              Plazo de inscripción del 1 de Septiembre al 01 de Noviembre.
           </li>
           <br/>
           <li>
