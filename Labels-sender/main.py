@@ -5,7 +5,7 @@ from Utils.functions import generate_qr
 from Utils.functions import create_pdf_with_label
 from Utils.functions import send_email
 
-path = "C:\MyPersonalWS\Concurso.homebrewer.cordoba\Labels-sender\participantes.xlsx"
+path = "C:\MyPersonalWS\Concurso.homebrewer.cordoba\Labels-sender\participantes-ok.xlsx"
 sheet_name="Sheet1"
 
 # Read excel file
@@ -28,8 +28,8 @@ server.login(smtp_user, smtp_password)
 for index, row in participants.iterrows():
     # Get data from Excel file
     code = row['Code']
-    instrucciones_entrada = row['Instrucciones_entrada']
-    otros_ingredientes = row['Otros_ingredientes']
+    instrucciones_entrada = str(row['Instrucciones_entrada']) if(str(row['Instrucciones_entrada']) != 'nan')  else ''
+    otros_ingredientes = str(row['Otros_ingredientes']) if(str(row['Otros_ingredientes']) != 'nan')  else ''
     category = row['Categoria']
     style = row['Estilo']
     email = row['Email']
@@ -40,7 +40,7 @@ for index, row in participants.iterrows():
     
     # Create 3 labels in the same pdf file
     pdf_path = create_pdf_with_label(category, style, code, qr_path_by_particpant)
-    
+    print(f'Sending email to {email}')
     send_email(server, smtp_user, email, name, pdf_path)
     
 # Close SMTP Server connection
