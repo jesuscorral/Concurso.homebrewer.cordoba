@@ -73,7 +73,7 @@ def send_email(server, email_from, to, name, pdf_path):
     msg['Subject'] = 'Etiquetas Concurso Homebrewer Córdoba'
 
     # Contenido del correo
-    body = f"Hola, " +name+ "\n\nMuchas gracias por participar en el VIII Concurso Homebrewer de Córdoba. Para asegurar que todo transcurra de manera organizada, las botellas irán identificadas unicamente con la etiqueta recibida como archivo adjunto en este email. La etiqueta debe ir sujeta a la botella mediante una goma elástica u otro método sencillo de quitar, no deberá ir pegada con pegamentos ni sujeta con cientas adhesivas.\n \n Recuerda, la fecha de entrega será del 10 al 17 de noviembre en la siguiente dirección: \n Hotel Casa de los Azulejos \n C/ Fernando Colón 5, \n 14002 Córdoba \n (Indicar en el paquete: Concurso Homebrewer). \n\n\n Muchas gracias, \n Saludos."
+    body = f"Hola, " +name+ "\n\nMuchas gracias por participar en el VIII Concurso Homebrewer de Córdoba. Para asegurar que todo transcurra de manera organizada, las botellas irán identificadas unicamente con la etiqueta recibida como archivo adjunto en este email. La etiqueta debe ir sujeta a la botella mediante una goma elástica u otro método sencillo de quitar, no deberá ir pegada con pegamentos ni sujeta con cintas adhesivas.\n \n Recuerda, la fecha de entrega será del 10 al 17 de noviembre en la siguiente dirección: \n Hotel Casa de los Azulejos \n C/ Fernando Colón 5, \n 14002 Córdoba \n (Indicar en el paquete: Concurso Homebrewer). \n\n\n Muchas gracias, \n Saludos."
     msg.attach(MIMEText(body, 'plain'))
 
     # Attach labels
