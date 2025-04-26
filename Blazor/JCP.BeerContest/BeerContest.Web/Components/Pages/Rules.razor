@@ -1,0 +1,126 @@
+@page "/rules"
+@using BeerContest.Application.Features.Contests.Queries.GetActiveContests
+@using BeerContest.Domain.Models
+@using MediatR
+@inject IMediator Mediator
+
+<PageTitle>Contest Rules - Beer Contest</PageTitle>
+
+<div class="container">
+    <h1 class="mb-4">Contest Rules</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">General Rules</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Each participant can register up to three (3) beers per contest.</li>
+                <li class="list-group-item">All beers must be brewed by the participant who registers them.</li>
+                <li class="list-group-item">Beers must be delivered in standard 330ml or 500ml bottles.</li>
+                <li class="list-group-item">Each entry requires a minimum of 3 bottles for judging.</li>
+                <li class="list-group-item">All entries must include complete information about ingredients and brewing process.</li>
+                <li class="list-group-item">Registration deadlines are strictly enforced. Late entries will not be accepted.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Judging Process</h2>
+            <p>Beers will be evaluated by a panel of certified judges based on the following criteria:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Appearance (1-5 points)</strong>: Color, clarity, and head retention
+                </li>
+                <li class="list-group-item">
+                    <strong>Aroma (1-5 points)</strong>: Hop aroma, malt aroma, esters, and other aromatics
+                </li>
+                <li class="list-group-item">
+                    <strong>Flavor (1-5 points)</strong>: Hop flavor, malt flavor, fermentation characteristics, balance, and finish/aftertaste
+                </li>
+                <li class="list-group-item">
+                    <strong>Mouthfeel (1-5 points)</strong>: Body, carbonation, warmth, creaminess, and astringency
+                </li>
+                <li class="list-group-item">
+                    <strong>Overall Impression (1-5 points)</strong>: Overall drinking pleasure and adherence to style
+                </li>
+            </ul>
+            <p class="mt-3">The maximum score is 25 points. Judges will provide written feedback for each entry.</p>
+        </div>
+    </div>
+
+    @if (activeContests != null && activeContests.Any())
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">Contest-Specific Rules</h2>
+                <div class="accordion" id="contestRulesAccordion">
+                    @foreach (var contest in activeContests)
+                    {
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-@contest.Id">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@contest.Id" aria-expanded="false" aria-controls="collapse-@contest.Id">
+                                    @contest.Name - @contest.Date.ToString("MMMM d, yyyy")
+                                </button>
+                            </h2>
+                            <div id="collapse-@contest.Id" class="accordion-collapse collapse" aria-labelledby="heading-@contest.Id" data-bs-parent="#contestRulesAccordion">
+                                <div class="accordion-body">
+                                    @if (contest.Rules != null && contest.Rules.Any())
+                                    {
+                                        <ol class="list-group list-group-numbered">
+                                            @foreach (var rule in contest.Rules.OrderBy(r => r.Order))
+                                            {
+                                                <li class="list-group-item">
+                                                    <div class="fw-bold">@rule.Title</div>
+                                                    @rule.Description
+                                                </li>
+                                            }
+                                        </ol>
+                                    }
+                                    else
+                                    {
+                                        <p>No specific rules for this contest. General rules apply.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Awards</h2>
+            <p>Awards will be presented in the following categories:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Best of Show</li>
+                <li class="list-group-item">Gold, Silver, and Bronze medals for each beer category</li>
+                <li class="list-group-item">People's Choice Award</li>
+                <li class="list-group-item">Most Innovative Beer</li>
+            </ul>
+            <p class="mt-3">Winners will be announced at the award ceremony at the end of the contest day.</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">Contact Information</h2>
+            <p>If you have any questions about the rules or the contest, please contact us:</p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Email: contest@beercontest.com</li>
+                <li class="list-group-item">Phone: (123) 456-7890</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<Contest> activeContests;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var query = new GetActiveContestsQuery();
+        activeContests = await Mediator.Send(query);
+    }
+}

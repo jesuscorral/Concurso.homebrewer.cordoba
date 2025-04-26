@@ -1,0 +1,113 @@
+@page "/my-beers"
+@using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
+@using BeerContest.Domain.Models
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using MediatR
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+@attribute [Authorize]
+
+<PageTitle>My Beers - Beer Contest</PageTitle>
+
+<AuthorizeView>
+    <Authorized Context="authContext">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>My Registered Beers</h1>
+                <a href="register-beer" class="btn btn-primary">Register New Beer</a>
+            </div>
+
+            @if (beers == null)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (!beers.Any())
+            {
+                <div class="alert alert-info">
+                    <p>You haven't registered any beers yet.</p>
+                    <a href="register-beer" class="btn btn-primary mt-2">Register Your First Beer</a>
+                </div>
+            }
+            else
+            {
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    @foreach (var beer in beers)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">@beer.Name</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">@beer.Style</h6>
+                                    <p class="card-text">@beer.Description</p>
+                                    <div class="mb-2">
+                                        <small class="text-muted">ABV: @beer.AlcoholByVolume%</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <small class="text-muted">Registered: @beer.RegistrationDate.ToString("MMM d, yyyy")</small>
+                                    </div>
+                                    @if (beer.Ratings != null && beer.Ratings.Any())
+                                    {
+                                        <div class="alert alert-success">
+                                            <h6>Ratings Received: @beer.Ratings.Count</h6>
+                                            <div class="progress mb-2" style="height: 5px;">
+                                                <div class="progress-bar bg-success" role="progressbar" 
+                                                     style="width: @(beer.Ratings.Average(r => r.TotalScore) / 25 * 100)%;" 
+                                                     aria-valuenow="@(beer.Ratings.Average(r => r.TotalScore))" 
+                                                     aria-valuemin="0" aria-valuemax="25"></div>
+                                            </div>
+                                            <small>Average Score: @beer.Ratings.Average(r => r.TotalScore).ToString("F1")/25</small>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="card-footer">
+                                    <a href="@($"beers/{beer.Id}")" class="btn btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private IEnumerable<Beer> beers;
+    private string userId;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var query = new GetParticipantBeersQuery
+                {
+                    ParticipantId = userId
+                };
+                
+                beers = await Mediator.Send(query);
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("Account/Login", forceLoad: true);
+        }
+    }
+}

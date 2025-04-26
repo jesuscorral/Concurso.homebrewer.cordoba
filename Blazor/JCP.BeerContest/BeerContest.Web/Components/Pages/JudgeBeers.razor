@@ -1,0 +1,161 @@
+@page "/judge-beers"
+@using BeerContest.Application.Features.Beers.Queries.GetJudgeAssignedBeers
+@using BeerContest.Domain.Models
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using MediatR
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Judge,Administrator")]
+
+<PageTitle>Judge Beers - Beer Contest</PageTitle>
+
+<AuthorizeView Roles="Judge,Administrator">
+    <Authorized Context="authContext">
+        <div class="container">
+            <h1 class="mb-4">Beers Assigned for Judging</h1>
+
+            @if (beers == null)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (!beers.Any())
+            {
+                <div class="alert alert-info">
+                    <p>You don't have any beers assigned for judging yet.</p>
+                    <p>The contest administrator will assign beers to you when the judging phase begins.</p>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <div class="alert alert-info">
+                            <h5>Judging Guidelines</h5>
+                            <p>Please rate each beer on a scale of 1-5 for each category:</p>
+                            <ul class="mb-0">
+                                <li>Appearance: Color, clarity, and head retention</li>
+                                <li>Aroma: Hop aroma, malt aroma, esters, and other aromatics</li>
+                                <li>Flavor: Hop flavor, malt flavor, fermentation characteristics, balance, and finish/aftertaste</li>
+                                <li>Mouthfeel: Body, carbonation, warmth, creaminess, and astringency</li>
+                                <li>Overall Impression: Overall drinking pleasure and adherence to style</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    @foreach (var beer in beers)
+                    {
+                        <div class="col">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">@beer.Name</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-2 text-muted">@beer.Style</h6>
+                                    <p class="card-text">@beer.Description</p>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Beer Characteristics:</strong>
+                                        <ul class="list-unstyled">
+                                            <li><small>ABV: @beer.AlcoholByVolume%</small></li>
+                                            <li><small>Color: @beer.Color</small></li>
+                                            <li><small>Aroma: @beer.Aroma</small></li>
+                                            <li><small>Flavor: @beer.Flavor</small></li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Ingredients:</strong>
+                                        <ul class="list-unstyled">
+                                            @foreach (var ingredient in beer.Ingredients)
+                                            {
+                                                <li><small>@ingredient</small></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <strong>Brewing Process:</strong>
+                                        <p><small>@beer.BrewingProcess</small></p>
+                                    </div>
+
+                                    @{
+                                        var hasRated = beer.Ratings != null && 
+                                                      beer.Ratings.Any(r => r.JudgeId == userId);
+                                    }
+
+                                    @if (hasRated)
+                                    {
+                                        <div class="alert alert-success">
+                                            <h6>You have rated this beer</h6>
+                                            <a href="@($"rate-beer/{beer.Id}")" class="btn btn-outline-primary btn-sm">Edit Rating</a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="card-footer">
+                                    @if (!hasRated)
+                                    {
+                                        <a href="@($"rate-beer/{beer.Id}")" class="btn btn-primary">Rate This Beer</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@($"beer-details/{beer.Id}")" class="btn btn-outline-secondary">View Details</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="container">
+            <div class="alert alert-danger">
+                <h4>Access Denied</h4>
+                <p>You do not have permission to access this page. Only judges and administrators can access the judging area.</p>
+                <a href="/" class="btn btn-primary">Go to Home</a>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private IEnumerable<Beer> beers;
+    private string userId;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated && (user.IsInRole("Judge") || user.IsInRole("Administrator")))
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var query = new GetJudgeAssignedBeersQuery
+                {
+                    JudgeId = userId
+                };
+                
+                beers = await Mediator.Send(query);
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+    }
+}

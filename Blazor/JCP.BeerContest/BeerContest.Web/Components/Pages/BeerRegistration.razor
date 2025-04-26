@@ -1,0 +1,405 @@
+﻿@page "/register-beer"
+@using System.ComponentModel.DataAnnotations
+@using BeerContest.Application.Features.Beers.Commands.RegisterBeer
+@using System.Linq.Expressions
+@using System.Threading.Tasks
+
+<div class="container mt-4">
+    <h2 class="mb-4">Registro de Cerveza</h2>
+
+    <EditForm Model="@beerRegistration" OnValidSubmit="@(async () => await HandleValidSubmitAsync())">
+        <DataAnnotationsValidator />
+        <ValidationSummary Model="@beerRegistration" />
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Información del Participante</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="memberNumber" class="form-label">Número socio ACCE</label>
+                    <InputText id="memberNumber" @bind-Value="beerRegistration.MemberNumber" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.MemberNumber)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Nombre y apellidos</label>
+                    <InputText id="fullName" @bind-Value="beerRegistration.FullName" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.FullName)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="birthDate" class="form-label">Fecha de nacimiento</label>
+                    <InputDate id="birthDate" @bind-Value="beerRegistration.BirthDate" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.BirthDate)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Teléfono</label>
+                    <InputText id="phone" @bind-Value="beerRegistration.Phone" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.Phone)" />
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Categoría de Cerveza</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="form-check">
+                        <InputRadioGroup @bind-Value="beerRegistration.Category" @bind-Value:after="CategoryChanged" Name="category">
+                            <div class="mb-2">
+                                <InputRadio Value="@(BeerCategory.ClassicStyles)" id="classicStyles" class="form-check-input" />
+                                <label class="form-check-label" for="classicStyles">Estilos clásicos</label>
+                            </div>
+                            <div>
+                                <InputRadio Value="@(BeerCategory.HistoricalAndSpecialtyBeers)" id="historicalStyles" class="form-check-input" />
+                                <label class="form-check-label" for="historicalStyles">Historical & Specialty beers</label>
+                            </div>
+                        </InputRadioGroup>
+                    </div>
+                </div>
+
+                @if (beerRegistration.Category != BeerCategory.None)
+                {
+                    <div class="mb-3">
+                        <label for="beerStyle" class="form-label">Estilo de Cerveza</label>
+                        <InputSelect id="beerStyle" @bind-Value="beerRegistration.BeerStyle" class="form-select">
+                            <option value="">-- Seleccione un estilo --</option>
+                            @foreach (var style in availableStyles)
+                            {
+                                <option value="@style">@style</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => beerRegistration.BeerStyle)" />
+                        
+                        @if (beerRegistration.BeerStyle == "Otro estilo de la guía BJCP2021 (indicar en instrucciones de entrada)")
+                        {
+                            <div class="mt-3">
+                                <label for="otherStyleDetails" class="form-label">Detalles del estilo</label>
+                                <InputTextArea id="otherStyleDetails" @bind-Value="beerRegistration.OtherStyleDetails" class="form-control" rows="3" />
+                                <ValidationMessage For="@(() => beerRegistration.OtherStyleDetails)" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Detalles de la Cerveza</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="alcoholContent" class="form-label">Grado de alcohol (%)</label>
+                    <InputNumber id="alcoholContent" @bind-Value="beerRegistration.AlcoholContent" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.AlcoholContent)" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="elaborationDate" class="form-label">Fecha de elaboración</label>
+                    <InputDate id="elaborationDate" @bind-Value="beerRegistration.ElaborationDate" class="form-control" />  
+                    <ValidationMessage For="@(() => beerRegistration.ElaborationDate)" />
+                </div>
+                <div class="mb-3">
+                    <label for="bottleDate" class="form-label">Fecha de embotellado</label>
+                    <InputDate id="bottleDate" @bind-Value="beerRegistration.BottleDate" class="form-control" />  
+                    <ValidationMessage For="@(() => beerRegistration.BottleDate)" />
+                </div>
+                <div class="mb-3">
+                    <label for="malts" class="form-label">Maltas utilizadas</label>
+                    <InputText id="malts" @bind-Value="beerRegistration.Malts" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.Malts)" />
+                    </div>
+                <div class="mb-3">
+                    <label for="hops" class="form-label">Lúpulos utilizados</label>
+                    <InputText id="hops" @bind-Value="beerRegistration.Hops" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.Hops)" />
+                    </div>
+                <div class="mb-3">
+                    <label for="yeast" class="form-label">Levaduras utilizadas</label>
+                    <InputText id="yeast" @bind-Value="beerRegistration.Yeast" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.Yeast)" />
+                </div>
+                <div class="mb-3">
+                    <label for="additives" class="form-label">Otros ingredientes</label>
+                    <InputText id="additives" @bind-Value="beerRegistration.Additives" class="form-control" />
+                    <ValidationMessage For="@(() => beerRegistration.Additives)" />
+                </div>
+                <div class="mb-3">
+                    <label for="entryInstructions" class="form-label">Instrucciones de entrada</label>
+                    <InputTextArea id="entryInstructions" @bind-Value="beerRegistration.EntryInstructions" class="form-control" rows="3" />
+                    <ValidationMessage For="@(() => beerRegistration.EntryInstructions)" />
+                </div>
+            </div>
+        </div>    
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="submit" class="btn btn-primary">Registrar Cerveza</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    // Enum for beer categories
+    public enum BeerCategory
+    {
+        None,
+        ClassicStyles,
+        HistoricalAndSpecialtyBeers
+    }
+
+    private BeerRegistrationModel beerRegistration = new();
+    private List<string> availableStyles = new();
+    private List<string> classicStyles = new List<string>
+    {
+        "1A. American Light Lager",
+        "1B. American Lager",
+        "1C. Cream Ale",
+        "1D. American Wheat Beer",
+        "2A. International Pale Lager",
+        "2B. International Amber Lager",
+        "2C. International Dark Lager",
+        "3A. Czech Pale Lager",
+        "3B. Czech Premium Pale Lager",
+        "3C. Czech Amber Lager",
+        "3D. Czech Dark Lager",
+        "4A. Munich Helles",
+        "4B. Festbier",
+        "4C. Helles Bock",
+        "5A. German Leichtbier",
+        "5B. Kölsch",
+        "5C. German Helles Exportbier",
+        "5D. German Pils",
+        "6A. Märzen",
+        "6B. Rauchbier",
+        "6C. Dunkles Bock",
+        "7A. Vienna Lager",
+        "7B. Altbier",
+        "8A. Munich Dunkel",
+        "8B. Schwarzbier",
+        "9A. Doppelbock",
+        "9B. Eisbock",
+        "9C. Baltic Porter",
+        "10A. Weissbier",
+        "10B. Dunkles Weissbier",
+        "10C. Weizenbock",
+        "11A. Ordinary Bitter",
+        "11B. Best Bitter",
+        "11C. Strong Bitter",
+        "12A. British Golden Ale",
+        "12B. Australian Sparkling Ale",
+        "12C. English IPA",
+        "13A. Dark Mild",
+        "13B. British Brown Ale",
+        "13C. English Porter",
+        "14A. Scottish Light",
+        "14B. Scottish Heavy",
+        "14C. Scottish Export",
+        "15A. Irish Red Ale",
+        "15B. Irish Stout",
+        "15C. Irish Extra Stout",
+        "16A. Sweet Stout",
+        "16B. Oatmeal Stout",
+        "16C. Tropical Stout",
+        "16D. Foreign Extra Stout",
+        "17A. British Strong Ale (17A Burton Ale)",
+        "17B. Old Ale",
+        "17C. Wee Heavy",
+        "17D. English Barleywine",
+        "18A. Blonde Ale",
+        "18B. American Pale Ale",
+        "19A. American Amber Ale",
+        "19B. California Common",
+        "19C. American Brown Ale",
+        "20A. American Porter",
+        "20B. American Stout",
+        "20C. Imperial Stout",
+        "21A. American IPA",
+        "21B. Specialty IPA",
+        "21B. Specialty IPA: Belgian IPA",
+        "21B.Specialty IPA: Black IPA",
+        "21B. Specialty IPA: Brown IPA",
+        "21B. Specialty IPA: Red IPA",
+        "21B. Specialty IPA: Rye IPA",
+        "21B. Specialty IPA: White IPA",
+        "21B. Specialty IPA: Brut IPA",
+        "21C. Hazy IPA",
+        "22A. Double IPA",
+        "22B. American Strong Ale",
+        "22C. American Barleywine",
+        "22D. Wheatwine",
+        "23A. Berliner Weisse",
+        "23B. Flanders Red",
+        "23C. Oud Bruin",
+        "23D. Lambic",
+        "23E. Gueuze",
+        "23F. Fruit Lambic",
+        "23G. Gose",
+        "24A. Witbier",
+        "24B. Belgian Pale Ale",
+        "24C. Bière de Garde",
+        "25A. Belgian Blond Ale",
+        "25B. Saison",
+        "25C. Belgian Golden Strong Ale",
+        "26A. Trappist Single",
+        "26B. Belgian Dubbel",
+        "26C. Belgian Tripel",
+        "26D. Belgian Dark Strong Ale",
+        "X4. Catharina Sour",
+        "X5. Nueva Zelanda Pilsner",
+        "Otro estilo de la guía BJCP2021 (indicar en instrucciones de entrada)"
+    };
+
+    private List<string> historicalStyles = new List<string>
+    {
+        "27. Historical Beer (Kellerbier)",
+        "27. Historical Beer (Kentucky Common)",
+        "27. Historical Beer (Lichtenhainer)",
+        "27. Historical Beer (London Brown Ale)",
+        "27. Historical Beer (Piwo Grodziskie)",
+        "27. Historical Beer (Pre-Prohibition Lager)",
+        "27. Historical Beer (Pre-Prohibition Porter)",
+        "27. Historical Beer (Roggenbier)",
+        "27. Historical Beer (Sahti)",
+        "28A. Brett Beer",
+        "28B. Mixed-Fermentation Sour Beer",
+        "28C. Wild Specialty Beer",
+        "28D. Straight Sour Beer",
+        "29A. Fruit Beer",
+        "29B. Fruit and Spice Beer",
+        "29C. Specialty Fruit Beer",
+        "29D. Grape Ale",
+        "30A. Spice, Herb, or Vegetable Beer",
+        "30B. Autumn Seasonal Beer",
+        "30C. Winter Seasonal Beer",
+        "30D. Specialty Spice Beer",
+        "31A. Alternative Grain Beer",
+        "31B. Alternative Sugar Beer",
+        "32A. Classic Style Smoked Beer",
+        "32B. Specialty Smoked Beer",
+        "33A. Wood-Aged Beer",
+        "33B. Specialty Wood-Aged Beer",
+        "34A. Commercial Specialty Beer",
+        "34B. Mixed-Style Beer",
+        "34C. Experimental Beer",
+        "Otro estilo de la guía BJCP2021 (indicar en instrucciones de entrada)"
+    };
+
+    protected override void OnInitialized()
+    {
+        // Initialize with empty styles until a category is selected
+        availableStyles = new List<string>();
+    }
+
+    // This method is called after the category value is updated
+    private void CategoryChanged()
+    {
+        // Update available styles based on selected category
+        if (beerRegistration.Category == BeerCategory.ClassicStyles)
+        {
+            availableStyles = classicStyles;
+        }
+        else if (beerRegistration.Category == BeerCategory.HistoricalAndSpecialtyBeers)
+        {
+            availableStyles = historicalStyles;
+        }
+        else
+        {
+            availableStyles = new List<string>();
+        }
+
+        // Reset the selected beer style when category changes
+        beerRegistration.BeerStyle = string.Empty;
+        beerRegistration.OtherStyleDetails = string.Empty;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        // Here you would typically send the data to your backend
+        // For example, using MediatR to send a RegisterBeerCommand
+        
+        // Example (commented out as we don't have the actual implementation):
+        // var command = new RegisterBeerCommand
+        // {
+        //     MemberNumber = beerRegistration.MemberNumber,
+        //     FullName = beerRegistration.FullName,
+        //     BirthDate = beerRegistration.BirthDate,
+        //     Phone = beerRegistration.Phone,
+        //     Category = beerRegistration.Category.ToString(),
+        //     BeerStyle = beerRegistration.BeerStyle,
+        //     OtherStyleDetails = beerRegistration.OtherStyleDetails
+        // };
+        
+        // await mediator.Send(command);
+        
+        // Show success message or navigate to another page
+        Console.WriteLine("Form submitted successfully");
+        
+        // Simulate async operation
+        await Task.CompletedTask;
+    }
+
+    public class BeerRegistrationModel
+    {
+        [Required(ErrorMessage = "El número de socio ACCE es obligatorio")]
+        [Display(Name = "Número socio ACCE")]
+        public string MemberNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "El nombre y apellidos son obligatorios")]
+        [Display(Name = "Nombre y apellidos")]
+        public string FullName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria")]
+        [Display(Name = "Fecha de nacimiento")]
+        public DateTime BirthDate { get; set; } = DateTime.Now.AddYears(-18);
+
+        [Required(ErrorMessage = "El teléfono es obligatorio")]
+        [Phone(ErrorMessage = "El formato del teléfono no es válido")]
+        [Display(Name = "Teléfono")]
+        public string Phone { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La categoría es obligatoria")]
+        [Display(Name = "Categoría")]
+        public BeerCategory Category { get; set; } = BeerCategory.None;
+
+        [Required(ErrorMessage = "El estilo de cerveza es obligatorio")]
+        [Display(Name = "Estilo de cerveza")]
+        public string BeerStyle { get; set; } = string.Empty;
+
+        [Display(Name = "Detalles del estilo")]
+        public string OtherStyleDetails { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Grado de alcohol es obligatoria")]
+        [Display(Name = "Grado de alcohol (%)")]
+        public double AlcoholContent { get; set; } = 0.0;
+
+        [Required(ErrorMessage = "Fecha de elaboración es obligatoria")]
+        [Display(Name = "Fecha de elaboración")]
+        public DateTime ElaborationDate { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "Fecha de embotellado es obligatorio")]
+        [Display(Name = "Fecha de embotellado")]
+        public DateTime BottleDate { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "Maltas utilizadas es obligatorio")]
+        [Display(Name = "Maltas utilizadas")]
+        public string Malts { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Lúpulos utilizados es obligatorio")]
+        [Display(Name = "Lúpulos utilizados")]
+        public string Hops { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Levaduras utilizadas es obligatorio")]
+        [Display(Name = "Levaduras utilizadas")]
+        public string Yeast { get; set; } = string.Empty;
+
+        [Display(Name = "Otros ingredientes")]
+        public string Additives { get; set; } = string.Empty;
+
+        [Display(Name = "Instrucciones de entrada")]
+        public string EntryInstructions { get; set; } = string.Empty;
+    }
+}
