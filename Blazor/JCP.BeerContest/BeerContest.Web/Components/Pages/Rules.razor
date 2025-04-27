@@ -1,5 +1,4 @@
 @page "/rules"
-@using BeerContest.Application.Features.Contests.Queries.GetActiveContests
 @using BeerContest.Domain.Models
 @using MediatR
 @inject IMediator Mediator
@@ -48,47 +47,6 @@
         </div>
     </div>
 
-    @if (activeContests != null && activeContests.Any())
-    {
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title">Contest-Specific Rules</h2>
-                <div class="accordion" id="contestRulesAccordion">
-                    @foreach (var contest in activeContests)
-                    {
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading-@contest.Id">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@contest.Id" aria-expanded="false" aria-controls="collapse-@contest.Id">
-                                    @contest.Name - @contest.Date.ToString("MMMM d, yyyy")
-                                </button>
-                            </h2>
-                            <div id="collapse-@contest.Id" class="accordion-collapse collapse" aria-labelledby="heading-@contest.Id" data-bs-parent="#contestRulesAccordion">
-                                <div class="accordion-body">
-                                    @if (contest.Rules != null && contest.Rules.Any())
-                                    {
-                                        <ol class="list-group list-group-numbered">
-                                            @foreach (var rule in contest.Rules.OrderBy(r => r.Order))
-                                            {
-                                                <li class="list-group-item">
-                                                    <div class="fw-bold">@rule.Title</div>
-                                                    @rule.Description
-                                                </li>
-                                            }
-                                        </ol>
-                                    }
-                                    else
-                                    {
-                                        <p>No specific rules for this contest. General rules apply.</p>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    }
-
     <div class="card mb-4">
         <div class="card-body">
             <h2 class="card-title">Awards</h2>
@@ -116,11 +74,9 @@
 </div>
 
 @code {
-    private IEnumerable<Contest> activeContests;
 
     protected override async Task OnInitializedAsync()
     {
-        var query = new GetActiveContestsQuery();
-        activeContests = await Mediator.Send(query);
+      
     }
 }

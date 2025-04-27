@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using BeerContest.Application.Features.Contests.Queries.GetActiveContests
 @using BeerContest.Domain.Models
 @using MediatR
 @inject IMediator Mediator
@@ -25,47 +24,7 @@
         </div>
     </div>
 
-    @if (activeContests == null)
-    {
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    }
-    else if (!activeContests.Any())
-    {
-        <div class="alert alert-info">
-            There are no active contests at the moment. Please check back later.
-        </div>
-    }
-    else
-    {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var contest in activeContests)
-            {
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">@contest.Name</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">@contest.Date.ToString("MMMM d, yyyy")</h6>
-                            <p class="card-text">@contest.Description</p>
-                            <p class="card-text"><small class="text-muted">Location: @contest.Location</small></p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    Registration: @contest.RegistrationStartDate.ToString("MMM d") - @contest.RegistrationEndDate.ToString("MMM d, yyyy")
-                                </small>
-                            </p>
-                        </div>
-                        <div class="card-footer">
-                            <a href="@($"contests/{contest.Id}")" class="btn btn-primary">View Details</a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    }
-
+   
     <div class="row mt-5">
         <div class="col-md-4 mb-4">
             <div class="card">
@@ -98,11 +57,9 @@
 </div>
 
 @code {
-    private IEnumerable<Contest> activeContests;
 
     protected override async Task OnInitializedAsync()
     {
-        var query = new GetActiveContestsQuery();
-        activeContests = await Mediator.Send(query);
+        
     }
 }

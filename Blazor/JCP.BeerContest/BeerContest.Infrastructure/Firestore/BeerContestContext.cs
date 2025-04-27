@@ -1,8 +1,5 @@
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace BeerContest.Infrastructure.Firestore
 {
