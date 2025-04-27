@@ -16,8 +16,8 @@ namespace BeerContest.Domain.Repositories
         Task AddRuleAsync(string contestId, ContestRule rule);
         Task UpdateRuleAsync(string contestId, ContestRule rule);
         Task DeleteRuleAsync(string contestId, string ruleId);
-        Task AddCategoryAsync(string contestId, BeerCategory category);
-        Task UpdateCategoryAsync(string contestId, BeerCategory category);
+        Task AddCategoryAsync(string contestId, BeerCategory2 category);
+        Task UpdateCategoryAsync(string contestId, BeerCategory2 category);
         Task DeleteCategoryAsync(string contestId, string categoryId);
         Task UpdateStatusAsync(string contestId, ContestStatus status);
     }

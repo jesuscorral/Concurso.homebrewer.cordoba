@@ -12,7 +12,7 @@ namespace BeerContest.Infrastructure
         {
            
             // Register Firestore context
-            services.AddSingleton(new FirestoreContext(configuration));
+            services.AddSingleton(new BeerContestContext(configuration));
 
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();

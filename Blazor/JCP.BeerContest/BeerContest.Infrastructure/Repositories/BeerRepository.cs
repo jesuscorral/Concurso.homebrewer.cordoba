@@ -1,33 +1,36 @@
+using BeerContest.Domain.Models;
+using BeerContest.Domain.Repositories;
+using BeerContest.Infrastructure.Firestore;
+using BeerContest.Infrastructure.Firestore.FirestoreModels;
+using Google.Cloud.Firestore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BeerContest.Domain.Models;
-using BeerContest.Domain.Repositories;
-using BeerContest.Infrastructure.Firestore;
-using Google.Cloud.Firestore;
 
 namespace BeerContest.Infrastructure.Repositories
 {
     public class BeerRepository : IBeerRepository
     {
-        private readonly FirestoreContext _firestoreContext;
+        private readonly BeerContestContext _firestoreContext;
         private const string CollectionName = "beers";
         private const string UserCollectionName = "users";
 
-        public BeerRepository(FirestoreContext firestoreContext)
+        public BeerRepository(BeerContestContext firestoreContext)
         {
             _firestoreContext = firestoreContext;
         }
 
         public async Task<Beer> GetByIdAsync(string id)
         {
-            return await _firestoreContext.GetDocumentAsync<Beer>(CollectionName, id);
+            var firestoreBeer = await _firestoreContext.GetDocumentAsync<FirestoreBeer>(CollectionName, id);
+            return firestoreBeer?.ToBeer();
         }
 
         public async Task<IEnumerable<Beer>> GetAllAsync()
         {
-            return await _firestoreContext.GetCollectionAsync<Beer>(CollectionName);
+            var firestoreBeers = await _firestoreContext.GetCollectionAsync<FirestoreBeer>(CollectionName);
+            return firestoreBeers.Select(fb => fb.ToBeer());
         }
 
         public async Task<IEnumerable<Beer>> GetByContestAsync(string contestId)
@@ -37,7 +40,7 @@ namespace BeerContest.Infrastructure.Repositories
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents
-                .Select(d => d.ConvertTo<Beer>())
+                .Select(d => d.ConvertTo<FirestoreBeer>().ToBeer())
                 .ToList();
         }
 
@@ -48,34 +51,34 @@ namespace BeerContest.Infrastructure.Repositories
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents
-                .Select(d => d.ConvertTo<Beer>())
+                .Select(d => d.ConvertTo<FirestoreBeer>().ToBeer())
                 .ToList();
         }
 
-        public async Task<IEnumerable<Beer>> GetAssignedToJudgeAsync(string judgeId)
-        {
-            // Get the judge user document
-            var judge = await _firestoreContext.GetDocumentAsync<User>(UserCollectionName, judgeId);
+        //public async Task<IEnumerable<Beer>> GetAssignedToJudgeAsync(string judgeId)
+        //{
+        //    // Get the judge user document
+        //    var judge = await _firestoreContext.GetDocumentAsync<User>(UserCollectionName, judgeId);
             
-            if (judge == null || judge.AssignedBeersForJudging == null || !judge.AssignedBeersForJudging.Any())
-            {
-                return new List<Beer>();
-            }
+        //    if (judge == null || judge.AssignedBeersForJudging == null || !judge.AssignedBeersForJudging.Any())
+        //    {
+        //        return new List<Beer>();
+        //    }
 
-            // Get all beers assigned to this judge
-            List<Beer> assignedBeers = new List<Beer>();
-            foreach (var beer in judge.AssignedBeersForJudging)
-            {
-                var beerData = await GetByIdAsync(beer.Id);
-                if (beerData != null)
-                {
-                    // Return only public data for judges
-                    assignedBeers.Add(beerData.GetPublicData());
-                }
-            }
+        //    // Get all beers assigned to this judge
+        //    List<Beer> assignedBeers = new List<Beer>();
+        //    foreach (var beer in judge.AssignedBeersForJudging)
+        //    {
+        //        var beerData = await GetByIdAsync(beer.Id);
+        //        if (beerData != null)
+        //        {
+        //            // Return only public data for judges
+        //            assignedBeers.Add(beerData.GetPublicData());
+        //        }
+        //    }
 
-            return assignedBeers;
-        }
+        //    return assignedBeers;
+        //}
 
         public async Task<int> GetBrewerBeerCountAsync(string brewerId, string contestId)
         {
@@ -89,61 +92,63 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<string> CreateAsync(Beer beer)
         {
-            beer.RegistrationDate = DateTime.UtcNow;
-            return await _firestoreContext.AddDocumentAsync(CollectionName, beer);
+            var firestoreBeer = FirestoreBeer.FromBeer(beer);
+            string id = await _firestoreContext.AddDocumentAsync(CollectionName, firestoreBeer);
+            
+            return id;
         }
 
-        public Task UpdateAsync(Beer beer)
-        {
-            return _firestoreContext.SetDocumentAsync(CollectionName, beer.Id, beer);
-        }
+        //public Task UpdateAsync(Beer beer)
+        //{
+        //    return _firestoreContext.SetDocumentAsync(CollectionName, beer.Id, beer);
+        //}
 
         public Task DeleteAsync(string id)
         {
             return _firestoreContext.DeleteDocumentAsync(CollectionName, id);
         }
 
-        public async Task AddRatingAsync(string beerId, BeerRating rating)
-        {
-            var beer = await GetByIdAsync(beerId);
-            if (beer == null)
-            {
-                throw new ArgumentException($"Beer with ID {beerId} not found");
-            }
+        //public async Task AddRatingAsync(string beerId, BeerRating rating)
+        //{
+        //    var beer = await GetByIdAsync(beerId);
+        //    if (beer == null)
+        //    {
+        //        throw new ArgumentException($"Beer with ID {beerId} not found");
+        //    }
 
-            rating.Id = Guid.NewGuid().ToString();
-            rating.BeerId = beerId;
-            rating.RatedAt = DateTime.UtcNow;
+        //    rating.Id = Guid.NewGuid().ToString();
+        //    rating.BeerId = beerId;
+        //    rating.RatedAt = DateTime.UtcNow;
 
-            if (beer.Ratings == null)
-            {
-                beer.Ratings = new List<BeerRating>();
-            }
+        //    if (beer.Ratings == null)
+        //    {
+        //        beer.Ratings = new List<BeerRating>();
+        //    }
 
-            beer.Ratings.Add(rating);
-            await UpdateAsync(beer);
-        }
+        //    beer.Ratings.Add(rating);
+        //    await UpdateAsync(beer);
+        //}
 
-        public async Task UpdateRatingAsync(BeerRating rating)
-        {
-            var beer = await GetByIdAsync(rating.BeerId);
-            if (beer == null)
-            {
-                throw new ArgumentException($"Beer with ID {rating.BeerId} not found");
-            }
+        //public async Task UpdateRatingAsync(BeerRating rating)
+        //{
+        //    var beer = await GetByIdAsync(rating.BeerId);
+        //    if (beer == null)
+        //    {
+        //        throw new ArgumentException($"Beer with ID {rating.BeerId} not found");
+        //    }
 
-            var existingRating = beer.Ratings?.FirstOrDefault(r => r.Id == rating.Id);
-            if (existingRating == null)
-            {
-                throw new ArgumentException($"Rating with ID {rating.Id} not found");
-            }
+        //    var existingRating = beer.Ratings?.FirstOrDefault(r => r.Id == rating.Id);
+        //    if (existingRating == null)
+        //    {
+        //        throw new ArgumentException($"Rating with ID {rating.Id} not found");
+        //    }
 
-            // Update the rating
-            int index = beer.Ratings.IndexOf(existingRating);
-            beer.Ratings[index] = rating;
+        //    // Update the rating
+        //    int index = beer.Ratings.IndexOf(existingRating);
+        //    beer.Ratings[index] = rating;
 
-            await UpdateAsync(beer);
-        }
+        //    await UpdateAsync(beer);
+        //}
 
         public async Task AssignBeersToJudgeAsync(string judgeId, IEnumerable<string> beerIds)
         {

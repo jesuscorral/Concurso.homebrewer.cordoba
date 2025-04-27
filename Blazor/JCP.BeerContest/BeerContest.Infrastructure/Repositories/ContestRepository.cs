@@ -11,10 +11,10 @@ namespace BeerContest.Infrastructure.Repositories
 {
     public class ContestRepository : IContestRepository
     {
-        private readonly FirestoreContext _firestoreContext;
+        private readonly BeerContestContext _firestoreContext;
         private const string CollectionName = "contests";
 
-        public ContestRepository(FirestoreContext firestoreContext)
+        public ContestRepository(BeerContestContext firestoreContext)
         {
             _firestoreContext = firestoreContext;
         }
@@ -118,7 +118,7 @@ namespace BeerContest.Infrastructure.Repositories
             await UpdateAsync(contest);
         }
 
-        public async Task AddCategoryAsync(string contestId, BeerCategory category)
+        public async Task AddCategoryAsync(string contestId, BeerCategory2 category)
         {
             var contest = await GetByIdAsync(contestId);
             if (contest == null)
@@ -130,14 +130,14 @@ namespace BeerContest.Infrastructure.Repositories
             
             if (contest.Categories == null)
             {
-                contest.Categories = new List<BeerCategory>();
+                contest.Categories = new List<BeerCategory2>();
             }
 
             contest.Categories.Add(category);
             await UpdateAsync(contest);
         }
 
-        public async Task UpdateCategoryAsync(string contestId, BeerCategory category)
+        public async Task UpdateCategoryAsync(string contestId, BeerCategory2 category)
         {
             var contest = await GetByIdAsync(contestId);
             if (contest == null)

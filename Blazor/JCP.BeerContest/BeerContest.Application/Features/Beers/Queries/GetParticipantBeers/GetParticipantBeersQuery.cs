@@ -32,10 +32,10 @@ namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
                 var filteredBeers = new List<Beer>();
                 foreach (var beer in beers)
                 {
-                    if (beer.ContestId == request.ContestId)
-                    {
-                        filteredBeers.Add(beer);
-                    }
+                    //if (beer.ContestId == request.ContestId)
+                    //{
+                    //    filteredBeers.Add(beer);
+                    //}
                 }
                 return filteredBeers;
             }

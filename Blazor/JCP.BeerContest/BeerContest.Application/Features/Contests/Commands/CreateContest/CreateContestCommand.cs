@@ -80,7 +80,7 @@ namespace BeerContest.Application.Features.Contests.Commands.CreateContest
             {
                 foreach (var categoryDto in request.Categories)
                 {
-                    contest.Categories.Add(new BeerCategory
+                    contest.Categories.Add(new BeerCategory2
                     {
                         Id = Guid.NewGuid().ToString(),
                         Name = categoryDto.Name,

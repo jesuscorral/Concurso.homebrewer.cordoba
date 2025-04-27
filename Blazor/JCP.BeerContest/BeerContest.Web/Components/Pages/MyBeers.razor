@@ -10,7 +10,7 @@
 @attribute [Authorize]
 
 <PageTitle>My Beers - Beer Contest</PageTitle>
-
+@* 
 <AuthorizeView>
     <Authorized Context="authContext">
         <div class="container">
@@ -77,7 +77,7 @@
             }
         </div>
     </Authorized>
-</AuthorizeView>
+</AuthorizeView> *@
 
 @code {
     private IEnumerable<Beer> beers;

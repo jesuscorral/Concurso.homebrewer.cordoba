@@ -11,10 +11,10 @@ namespace BeerContest.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly FirestoreContext _firestoreContext;
+        private readonly BeerContestContext _firestoreContext;
         private const string CollectionName = "users";
 
-        public UserRepository(FirestoreContext firestoreContext)
+        public UserRepository(BeerContestContext firestoreContext)
         {
             _firestoreContext = firestoreContext;
         }

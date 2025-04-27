@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Application.Common.Behaviors;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
@@ -11,25 +7,27 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
 {
     public class RegisterBeerCommand : IRequest<string>
     {
-        // Beer information
-        public string Name { get; set; }
-        public string Style { get; set; }
-        public string Description { get; set; }
-        public double AlcoholByVolume { get; set; }
-        public string Color { get; set; }
-        public string Aroma { get; set; }
-        public string Flavor { get; set; }
-        public List<string> Ingredients { get; set; } = new List<string>();
-        public string BrewingProcess { get; set; }
-        
         // Brewer information
-        public string BrewerId { get; set; }
-        public string BrewerName { get; set; }
-        public string BrewerEmail { get; set; }
-        public string BrewerPhone { get; set; }
-        
-        // Contest information
-        public string ContestId { get; set; }
+        public string ACCEMemberNumber { get; set; }
+        public string FullName { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string Phone { get; set; }
+
+
+        // Beer information
+        public BeerCategory Category { get; set; }
+        public string BeerStyle { get; set; }
+        public double AlcoholContent { get; set; }
+        public DateTime ElaborationDate { get; set; }
+        public DateTime BottleDate { get; set; }
+        public string Malts { get; set; }
+        public string Hops { get; set; }
+        public string Yeast { get; set; }
+        public string Additives { get; set; }
+
+        // Entry instructions
+        public string EntryInstructions { get; set; }
+
     }
 
     public class RegisterBeerCommandHandler : IRequestHandler<RegisterBeerCommand, string>
@@ -47,46 +45,40 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
 
         public async Task<string> Handle(RegisterBeerCommand request, CancellationToken cancellationToken)
         {
-            // Check if the contest exists and is open for registration
-            var contest = await _contestRepository.GetByIdAsync(request.ContestId);
-            if (contest == null)
-            {
-                throw new Exception($"Contest with ID {request.ContestId} not found");
-            }
+            // TODO: Check if the contest is open for registration
 
-            if (contest.Status != ContestStatus.RegistrationOpen)
-            {
-                throw new Exception("Contest is not open for registration");
-            }
-
-            // Check if the brewer has already registered the maximum number of beers
-            int beerCount = await _beerRepository.GetBrewerBeerCountAsync(request.BrewerId, request.ContestId);
-            if (beerCount >= contest.MaxBeersPerParticipant)
-            {
-                throw new Exception($"You have already registered the maximum number of beers ({contest.MaxBeersPerParticipant}) for this contest");
-            }
+            //TODO: Check if the brewer has already registered the maximum number of beers
+            //int beerCount = await _beerRepository.GetBrewerBeerCountAsync(request.BrewerId, request.ContestId);
+            //if (beerCount >= contest.MaxBeersPerParticipant)
+            //{
+            //    throw new Exception($"You have already registered the maximum number of beers ({contest.MaxBeersPerParticipant}) for this contest");
+            //}
 
             // Create the beer
             var beer = new Beer
             {
-                Name = request.Name,
-                Style = request.Style,
-                Description = request.Description,
-                AlcoholByVolume = request.AlcoholByVolume,
-                Color = request.Color,
-                Aroma = request.Aroma,
-                Flavor = request.Flavor,
-                Ingredients = request.Ingredients,
-                BrewingProcess = request.BrewingProcess,
-                BrewerId = request.BrewerId,
-                BrewerName = request.BrewerName,
-                BrewerEmail = request.BrewerEmail,
-                BrewerPhone = request.BrewerPhone,
-                ContestId = request.ContestId,
-                RegistrationDate = DateTime.UtcNow
+              Category = request.Category,
+                BeerStyle = request.BeerStyle,
+                AlcoholContent = request.AlcoholContent,
+                ElaborationDate = request.ElaborationDate,
+                BottleDate = request.BottleDate,
+                Malts = request.Malts,
+                Hops = request.Hops,
+                Yeast = request.Yeast,
+                Additives = request.Additives,
             };
 
+            var brewer = new Brewer
+            {
+                ACCEMemberNumber = request.ACCEMemberNumber,
+                FullName = request.FullName,
+                BirthDate = request.BirthDate,
+                Phone = request.Phone,
+            };
+
+            // TODO: Register brewer information
             return await _beerRepository.CreateAsync(beer);
+            // TODO: Register "Registration information" with the relationship beer-brewer-contest
         }
     }
 
@@ -108,63 +100,63 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
             var command = context.Instance;
             var result = new ValidationResult();
 
-            if (string.IsNullOrWhiteSpace(command.Name))
-            {
-                result.Errors.Add(new ValidationFailure("Name", "Beer name is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(command.Name))
+            //{
+            //    result.Errors.Add(new ValidationFailure("Name", "Beer name is required"));
+            //}
 
-            if (string.IsNullOrWhiteSpace(command.Style))
-            {
-                result.Errors.Add(new ValidationFailure("Style", "Beer style is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(command.Style))
+            //{
+            //    result.Errors.Add(new ValidationFailure("Style", "Beer style is required"));
+            //}
 
-            if (command.AlcoholByVolume < 0 || command.AlcoholByVolume > 100)
-            {
-                result.Errors.Add(new ValidationFailure("AlcoholByVolume", "Alcohol by volume must be between 0 and 100"));
-            }
+            //if (command.AlcoholByVolume < 0 || command.AlcoholByVolume > 100)
+            //{
+            //    result.Errors.Add(new ValidationFailure("AlcoholByVolume", "Alcohol by volume must be between 0 and 100"));
+            //}
 
-            if (string.IsNullOrWhiteSpace(command.BrewerId))
-            {
-                result.Errors.Add(new ValidationFailure("BrewerId", "Brewer ID is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(command.BrewerId))
+            //{
+            //    result.Errors.Add(new ValidationFailure("BrewerId", "Brewer ID is required"));
+            //}
 
-            if (string.IsNullOrWhiteSpace(command.BrewerName))
-            {
-                result.Errors.Add(new ValidationFailure("BrewerName", "Brewer name is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(command.BrewerName))
+            //{
+            //    result.Errors.Add(new ValidationFailure("BrewerName", "Brewer name is required"));
+            //}
 
-            if (string.IsNullOrWhiteSpace(command.BrewerEmail))
-            {
-                result.Errors.Add(new ValidationFailure("BrewerEmail", "Brewer email is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(command.BrewerEmail))
+            //{
+            //    result.Errors.Add(new ValidationFailure("BrewerEmail", "Brewer email is required"));
+            //}
 
-            if (string.IsNullOrWhiteSpace(command.ContestId))
-            {
-                result.Errors.Add(new ValidationFailure("ContestId", "Contest ID is required"));
-            }
-            else
-            {
-                // Check if the contest exists and is open for registration
-                var contest = await _contestRepository.GetByIdAsync(command.ContestId);
-                if (contest == null)
-                {
-                    result.Errors.Add(new ValidationFailure("ContestId", $"Contest with ID {command.ContestId} not found"));
-                }
-                else if (contest.Status != ContestStatus.RegistrationOpen)
-                {
-                    result.Errors.Add(new ValidationFailure("ContestId", "Contest is not open for registration"));
-                }
-                else
-                {
-                    // Check if the brewer has already registered the maximum number of beers
-                    int beerCount = await _beerRepository.GetBrewerBeerCountAsync(command.BrewerId, command.ContestId);
-                    if (beerCount >= contest.MaxBeersPerParticipant)
-                    {
-                        result.Errors.Add(new ValidationFailure("BrewerId", 
-                            $"You have already registered the maximum number of beers ({contest.MaxBeersPerParticipant}) for this contest"));
-                    }
-                }
-            }
+            //if (string.IsNullOrWhiteSpace(command.ContestId))
+            //{
+            //    result.Errors.Add(new ValidationFailure("ContestId", "Contest ID is required"));
+            //}
+            //else
+            //{
+            //    // Check if the contest exists and is open for registration
+            //    var contest = await _contestRepository.GetByIdAsync(command.ContestId);
+            //    if (contest == null)
+            //    {
+            //        result.Errors.Add(new ValidationFailure("ContestId", $"Contest with ID {command.ContestId} not found"));
+            //    }
+            //    else if (contest.Status != ContestStatus.RegistrationOpen)
+            //    {
+            //        result.Errors.Add(new ValidationFailure("ContestId", "Contest is not open for registration"));
+            //    }
+            //    else
+            //    {
+            //        // Check if the brewer has already registered the maximum number of beers
+            //        int beerCount = await _beerRepository.GetBrewerBeerCountAsync(command.BrewerId, command.ContestId);
+            //        if (beerCount >= contest.MaxBeersPerParticipant)
+            //        {
+            //            result.Errors.Add(new ValidationFailure("BrewerId", 
+            //                $"You have already registered the maximum number of beers ({contest.MaxBeersPerParticipant}) for this contest"));
+            //        }
+            //    }
+            //}
 
             return result;
         }

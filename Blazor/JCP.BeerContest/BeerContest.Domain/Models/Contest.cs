@@ -14,7 +14,7 @@ namespace BeerContest.Domain.Models
         public DateTime RegistrationStartDate { get; set; }
         public DateTime RegistrationEndDate { get; set; }
         public List<ContestRule> Rules { get; set; } = new List<ContestRule>();
-        public List<BeerCategory> Categories { get; set; } = new List<BeerCategory>();
+        public List<BeerCategory2> Categories { get; set; } = new List<BeerCategory2>();
         public ContestStatus Status { get; set; }
         public int MaxBeersPerParticipant { get; set; } = 3; // Default limit of 3 beers per participant
     }
@@ -27,7 +27,7 @@ namespace BeerContest.Domain.Models
         public int Order { get; set; }
     }
 
-    public class BeerCategory
+    public class BeerCategory2
     {
         public string Id { get; set; }
         public string Name { get; set; }

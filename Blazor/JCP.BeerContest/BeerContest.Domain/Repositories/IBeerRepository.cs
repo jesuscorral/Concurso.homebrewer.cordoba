@@ -11,13 +11,13 @@ namespace BeerContest.Domain.Repositories
         Task<IEnumerable<Beer>> GetAllAsync();
         Task<IEnumerable<Beer>> GetByContestAsync(string contestId);
         Task<IEnumerable<Beer>> GetByBrewerAsync(string brewerId);
-        Task<IEnumerable<Beer>> GetAssignedToJudgeAsync(string judgeId);
+        //Task<IEnumerable<Beer>> GetAssignedToJudgeAsync(string judgeId);
         Task<int> GetBrewerBeerCountAsync(string brewerId, string contestId);
         Task<string> CreateAsync(Beer beer);
-        Task UpdateAsync(Beer beer);
+        //Task UpdateAsync(Beer beer);
         Task DeleteAsync(string id);
-        Task AddRatingAsync(string beerId, BeerRating rating);
-        Task UpdateRatingAsync(BeerRating rating);
+        //Task AddRatingAsync(string beerId, BeerRating rating);
+        //Task UpdateRatingAsync(BeerRating rating);
         Task AssignBeersToJudgeAsync(string judgeId, IEnumerable<string> beerIds);
     }
 }
