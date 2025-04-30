@@ -1,0 +1,76 @@
+@page "/Account/Profile"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>User Profile</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">User Profile</h3>
+                </div>
+                <div class="card-body">
+                    @if (user != null)
+                    {
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-md-end">
+                                <strong>Name:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @user.FindFirst(ClaimTypes.Name)?.Value
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-md-end">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @user.FindFirst(ClaimTypes.Email)?.Value
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-md-end">
+                                <strong>User ID:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-4 text-md-end">
+                                <strong>Role:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                @user.FindFirst(ClaimTypes.Role)?.Value
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            Loading user information...
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <a href="/" class="btn btn-primary">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+    }
+}

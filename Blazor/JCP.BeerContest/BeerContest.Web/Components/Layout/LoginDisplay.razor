@@ -2,13 +2,17 @@
 @inject NavigationManager Navigation  
 
 <AuthorizeView>  
-   <Authorized Context="authContext">  
-       <div class="d-flex align-items-center">  
-           <span class="me-3">Hello, @authContext.User.Identity?.Name!</span>  
-           <a href="Account/Logout" class="btn btn-outline-primary btn-sm">Log out</a>  
-       </div>  
-   </Authorized>  
-   <NotAuthorized>  
-       <a href="Account/Login" class="btn btn-primary btn-sm">Log in</a>  
-   </NotAuthorized>  
+   <Authorized Context="authContext">
+       <div class="d-flex align-items-center">
+           <span class="me-3">Hello, @authContext.User.Identity?.Name!</span>
+           <a href="Account/Profile" class="btn btn-outline-secondary btn-sm me-2">Profile</a>
+           <a href="Account/Logout" class="btn btn-outline-primary btn-sm">Log out</a>
+       </div>
+   </Authorized>
+   <NotAuthorized>
+       <div class="d-flex align-items-center">
+           <a href="Account/Register" class="btn btn-outline-primary btn-sm me-2">Register</a>
+           <a href="Account/Login" class="btn btn-primary btn-sm">Log in</a>
+       </div>
+   </NotAuthorized>
 </AuthorizeView>

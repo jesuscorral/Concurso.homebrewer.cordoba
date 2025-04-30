@@ -57,7 +57,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
             // Create the beer
             var beer = new Beer
             {
-              Category = request.Category,
+                Category = request.Category,
                 BeerStyle = request.BeerStyle,
                 AlcoholContent = request.AlcoholContent,
                 ElaborationDate = request.ElaborationDate,

@@ -1,0 +1,50 @@
+@page "/Account/Register"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Components.Web
+@using System.Web
+@inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
+
+<PageTitle>Register</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Register</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Create a new account to participate in the Beer Contest.</p>
+                    <p class="card-text">Registration is simple - just sign up with your Google account.</p>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="@GoogleRegisterUrl" class="btn btn-lg btn-outline-danger">
+                            <i class="oi oi-google" aria-hidden="true"></i> Register with Google
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <p>Already have an account? <a href="Account/Login">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    private string GoogleRegisterUrl
+    {
+        get
+        {
+            // Ensure we have a valid return URL
+            var returnUrl = string.IsNullOrEmpty(ReturnUrl) ? "/" : ReturnUrl;
+            return $"/api/account/register?returnUrl={HttpUtility.UrlEncode(returnUrl)}";
+        }
+    }
+}
