@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using BeerContest.Infrastructure.Firestore;
+using BeerContest.Infrastructure.Firestore.FirestoreModels;
 using Google.Cloud.Firestore;
 
 namespace BeerContest.Infrastructure.Repositories
@@ -24,20 +21,22 @@ namespace BeerContest.Infrastructure.Repositories
             return await _firestoreContext.GetDocumentAsync<User>(CollectionName, id);
         }
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email)
         {
             Query query = _firestoreContext.CreateQuery(CollectionName)
                 .WhereEqualTo("Email", email);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            return querySnapshot.Documents
-                .Select(d => d.ConvertTo<User>())
+            var firestoreUsers = querySnapshot.Documents
+                .Select(d => d.ConvertTo<FirestoreUser>())
                 .FirstOrDefault();
+            return firestoreUsers?.ToUser();
         }
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _firestoreContext.GetCollectionAsync<User>(CollectionName);
+            var firestoreUsers = await _firestoreContext.GetCollectionAsync<FirestoreUser>(CollectionName);
+            return firestoreUsers.Select(fb => fb.ToUser());
         }
 
         public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role)
@@ -54,12 +53,15 @@ namespace BeerContest.Infrastructure.Repositories
         public async Task<string> CreateAsync(User user)
         {
             user.CreatedAt = DateTime.UtcNow;
-            return await _firestoreContext.AddDocumentAsync(CollectionName, user);
+            var firestoreUser = FirestoreUser.FromUser(user);
+            var id = await _firestoreContext.AddDocumentAsync(CollectionName, firestoreUser);
+            return id;
         }
 
         public Task UpdateAsync(User user)
         {
-            return _firestoreContext.SetDocumentAsync(CollectionName, user.Id, user);
+            var firestoreUser = FirestoreUser.FromUser(user);
+            return _firestoreContext.SetDocumentAsync(CollectionName, user.Id, firestoreUser);
         }
 
         public Task DeleteAsync(string id)

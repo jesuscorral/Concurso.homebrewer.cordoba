@@ -3,10 +3,6 @@ using BeerContest.Domain.Repositories;
 using BeerContest.Infrastructure.Firestore;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
 using Google.Cloud.Firestore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BeerContest.Infrastructure.Repositories
 {

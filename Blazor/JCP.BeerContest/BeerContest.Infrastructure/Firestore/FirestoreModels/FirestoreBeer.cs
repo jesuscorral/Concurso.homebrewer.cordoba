@@ -1,6 +1,5 @@
 using BeerContest.Domain.Models;
 using Google.Cloud.Firestore;
-using Google.Protobuf.WellKnownTypes;
 
 namespace BeerContest.Infrastructure.Firestore.FirestoreModels
 {

@@ -18,13 +18,10 @@
 </div>
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        if (HttpContextAccessor.HttpContext != null)
-        {
-            await HttpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        }
-        
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        // Redirect to the logout endpoint in AccountController
+        // This avoids the "Headers are read-only" error by letting the controller handle the SignOutAsync
+        NavigationManager.NavigateTo("/api/Account/logout", forceLoad: true);
     }
 }
