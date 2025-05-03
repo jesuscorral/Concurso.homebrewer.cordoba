@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Application.Common.Behaviors;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
@@ -37,7 +33,7 @@ namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
                 throw new Exception($"User with ID {request.JudgeId} not found");
             }
 
-            if (user.Role != UserRole.Judge)
+            if (!user.Roles.Contains(UserRole.Judge))
             {
                 throw new Exception($"User with ID {request.JudgeId} is not a judge");
             }
@@ -75,7 +71,7 @@ namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
                 {
                     result.Errors.Add(new ValidationFailure("JudgeId", $"User with ID {command.JudgeId} not found"));
                 }
-                else if (user.Role != UserRole.Judge)
+                else if (!user.Roles.Contains(UserRole.Judge))
                 {
                     result.Errors.Add(new ValidationFailure("JudgeId", $"User with ID {command.JudgeId} is not a judge"));
                 }

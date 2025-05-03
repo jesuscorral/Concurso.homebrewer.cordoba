@@ -16,9 +16,10 @@ namespace BeerContest.Infrastructure.Repositories
             _firestoreContext = firestoreContext;
         }
 
-        public async Task<User> GetByIdAsync(string id)
+        public async Task<User?> GetByIdAsync(string id)
         {
-            return await _firestoreContext.GetDocumentAsync<User>(CollectionName, id);
+            var user = await _firestoreContext.GetDocumentAsync<FirestoreUser>(CollectionName, id);
+            return user?.ToUser();
         }
 
         public async Task<User?> GetByEmailAsync(string email)
@@ -27,6 +28,7 @@ namespace BeerContest.Infrastructure.Repositories
                 .WhereEqualTo("Email", email);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+
             var firestoreUsers = querySnapshot.Documents
                 .Select(d => d.ConvertTo<FirestoreUser>())
                 .FirstOrDefault();

@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using BeerContest.Domain.Models
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -24,11 +25,7 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="register-beer">
-                <span class="oi oi-plus" aria-hidden="true"></span> Register Beer
-            </NavLink>
-        </div>
+      
         
         <AuthorizeView>
             <NotAuthorized>
@@ -48,12 +45,21 @@
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="register-beer">
+                        <span class="oi oi-plus" aria-hidden="true"></span> Register Beer
+                    </NavLink>
+                </div>
+            </Authorized>
+
+            <Authorized>
+                <div class="nav-item px-3">
                     <NavLink class="nav-link" href="my-beers">
                         <span class="oi oi-beaker" aria-hidden="true"></span> My Beers
                     </NavLink>
                 </div>
                 
-                <AuthorizeView Roles="Judge,Administrator">
+                <!-- Using exact enum value names for roles -->
+                <AuthorizeView Roles="@($"{UserRole.Judge},{UserRole.Administrator}")">
                     <Authorized Context="authContext">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="judge-beers">
@@ -63,17 +69,35 @@
                     </Authorized>
                 </AuthorizeView>
                 
-                <AuthorizeView Roles="Administrator">
+                <!-- Using exact enum value names for roles -->
+                <AuthorizeView Roles="@UserRole.Administrator.ToString()">
                     <Authorized Context="authContext">
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="admin">
                                 <span class="oi oi-cog" aria-hidden="true"></span> Administration
                             </NavLink>
                         </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="user-management">
+                                <span class="oi oi-people" aria-hidden="true"></span> User Management
+                            </NavLink>
+                        </div>
                     </Authorized>
                 </AuthorizeView>
             </Authorized>
         </AuthorizeView>
+        
+        <!-- Debug links - remove in production -->
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="debug-auth">
+                <span class="oi oi-bug" aria-hidden="true"></span> Debug Auth
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="auth-help">
+                <span class="oi oi-question-mark" aria-hidden="true"></span> Auth Help
+            </NavLink>
+        </div>
     </nav>
 </div>
 

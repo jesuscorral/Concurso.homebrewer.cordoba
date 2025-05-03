@@ -3,6 +3,7 @@ using BeerContest.Application.Features.Users.Commands.RegisterGoogleUser;
 using BeerContest.Application.Features.Users.Queries.GetUserById;
 using BeerContest.Domain.Models;
 using BeerContest.Infrastructure;
+using BeerContest.Web.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -58,7 +59,7 @@ builder.Services.AddAuthentication(options =>
                 GoogleId = googleId,
                 Email = email,
                 DisplayName = name,
-                Role = UserRole.Participant // Default to Participant
+                Roles = [UserRole.Participant] // Default to Participant
             };
             
             var userId = await mediator.Send(command);
@@ -67,7 +68,26 @@ builder.Services.AddAuthentication(options =>
             var user = await mediator.Send(new GetUserByIdQuery { Id = userId });
             if (user != null)
             {
-                identity.AddClaim(new Claim(ClaimTypes.Role, user.Role.ToString()));
+                // Get the claims service
+                var claimsService = context.HttpContext.RequestServices.GetRequiredService<ClaimsService>();
+                
+                // Clear existing claims
+                var existingClaims = identity.Claims.ToList();
+                foreach (var claim in existingClaims)
+                {
+                    identity.RemoveClaim(claim);
+                }
+                
+                // Add all user claims including roles
+                var claims = claimsService.CreateUserClaims(user);
+                foreach (var claim in claims)
+                {
+                    identity.AddClaim(claim);
+                }
+                
+                // Log the role for debugging
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation($"User authenticated with roles: {string.Join(", ", user.Roles)}");
             }
         }
         catch (Exception ex)
@@ -81,11 +101,12 @@ builder.Services.AddAuthentication(options =>
 // Add authorization
 builder.Services.AddAuthorization(options =>
 {
+    // Make sure policy role names match exactly with the enum value strings
     options.AddPolicy("RequireAdministratorRole", policy =>
-        policy.RequireRole("Administrator"));
+        policy.RequireRole(UserRole.Administrator.ToString()));
     
     options.AddPolicy("RequireJudgeRole", policy =>
-        policy.RequireRole("Judge", "Administrator"));
+        policy.RequireRole(UserRole.Judge.ToString(), UserRole.Administrator.ToString()));
 });
 
 // Add application services
@@ -95,6 +116,12 @@ builder.Services.AddControllers();
 
 // Add HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
+
+// Add ClaimsService
+builder.Services.AddScoped<ClaimsService>();
+
+// Add HttpClient factory
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 

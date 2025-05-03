@@ -13,6 +13,7 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
         public string UserId { get; set; }
         public UserRole NewRole { get; set; }
         public string AdminId { get; set; } // ID of the administrator making the change
+        public bool RefreshClaims { get; set; } = true; // Whether to refresh the user's claims
     }
 
     public class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleCommand, bool>
@@ -33,7 +34,7 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
                 throw new Exception($"Admin user with ID {request.AdminId} not found");
             }
 
-            if (adminUser.Role != UserRole.Administrator)
+            if (!adminUser.Roles.Contains(UserRole.Administrator))
             {
                 throw new Exception($"User with ID {request.AdminId} is not an administrator");
             }
@@ -46,7 +47,7 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
             }
 
             // Update the user's role
-            user.Role = request.NewRole;
+            user.Roles = new List<UserRole> { request.NewRole };
             await _userRepository.UpdateAsync(user);
             
             return true;
@@ -84,7 +85,7 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
                 {
                     result.Errors.Add(new ValidationFailure("AdminId", $"Admin user with ID {command.AdminId} not found"));
                 }
-                else if (adminUser.Role != UserRole.Administrator)
+                else if (!adminUser.Roles.Contains(UserRole.Administrator))
                 {
                     result.Errors.Add(new ValidationFailure("AdminId", $"User with ID {command.AdminId} is not an administrator"));
                 }

@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Application.Common.Behaviors;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
@@ -10,10 +7,11 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
 {
     public class RegisterGoogleUserCommand : IRequest<string>
     {
+        public string Id { get; set; } // This is the unique identifier for the user in your system
         public string GoogleId { get; set; }
         public string Email { get; set; }
         public string DisplayName { get; set; }
-        public UserRole Role { get; set; } = UserRole.Participant; // Default role is Participant
+        public List<UserRole> Roles { get; set; } = new List<UserRole> { UserRole.Participant }; // Default role is Participant
     }
 
     public class RegisterGoogleUserCommandHandler : IRequestHandler<RegisterGoogleUserCommand, string>
@@ -32,26 +30,27 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
             if (existingUser != null)
             {
                 // Update the existing user with Google ID if not already set
-                if (string.IsNullOrEmpty(existingUser.Id))
+                if (string.IsNullOrEmpty(existingUser.GoogleId))
                 {
-                    existingUser.Id = request.GoogleId;
+                    existingUser.GoogleId = request.GoogleId;
                     await _userRepository.UpdateAsync(existingUser);
                 }
-                
+
                 // Update last login time
                 existingUser.LastLoginAt = DateTime.UtcNow;
                 await _userRepository.UpdateAsync(existingUser);
-                
+
+                //return existingUser.GoogleId;
                 return existingUser.Id;
             }
 
             // Create a new user
             var user = new User
             {
-                Id = request.GoogleId,
+                GoogleId = request.GoogleId,
                 Email = request.Email,
                 DisplayName = request.DisplayName,
-                Role = request.Role,
+                Roles = request.Roles, 
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow
             };

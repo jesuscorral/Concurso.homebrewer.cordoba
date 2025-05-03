@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;

@@ -1,0 +1,110 @@
+@page "/auth-help"
+@using BeerContest.Domain.Models
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Authentication Help</PageTitle>
+
+<div class="container">
+    <h2>Authentication and Authorization in Blazor</h2>
+    
+    <div class="alert alert-info">
+        <p>This page explains how authentication and authorization work in this Blazor application.</p>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>How Authentication Works</h3>
+        </div>
+        <div class="card-body">
+            <ol>
+                <li>
+                    <strong>Login Process:</strong>
+                    <p>When a user logs in via Google, the application receives their Google ID, name, and email.</p>
+                </li>
+                <li>
+                    <strong>User Creation/Update:</strong>
+                    <p>The application checks if the user exists in the database. If not, a new user is created with the default role of Participant.</p>
+                </li>
+                <li>
+                    <strong>Claims Creation:</strong>
+                    <p>During authentication, claims are created for the user, including their role. These claims are stored in a cookie.</p>
+                    <pre><code>identity.AddClaim(new Claim(ClaimTypes.Role, user.Role.ToString()));</code></pre>
+                </li>
+                <li>
+                    <strong>Authentication State:</strong>
+                    <p>The AuthenticationStateProvider reads these claims from the cookie and creates an AuthenticationState object.</p>
+                </li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>How Authorization Works</h3>
+        </div>
+        <div class="card-body">
+            <ol>
+                <li>
+                    <strong>Role-Based Authorization:</strong>
+                    <p>The application uses role-based authorization to control access to pages and UI elements.</p>
+                </li>
+                <li>
+                    <strong>AuthorizeView Component:</strong>
+                    <p>The AuthorizeView component checks the user's roles and displays content accordingly:</p>
+                    <pre><code>&lt;AuthorizeView Roles="@UserRole.Administrator.ToString()"&gt;
+    &lt;Authorized&gt;
+        &lt;!-- Content for administrators --&gt;
+    &lt;/Authorized&gt;
+&lt;/AuthorizeView&gt;</code></pre>
+                </li>
+                <li>
+                    <strong>Authorize Attribute:</strong>
+                    <p>Pages can be protected with the Authorize attribute:</p>
+                    @* <pre><code>@attribute [Authorize(Roles = "Administrator")]</code></pre> *@
+                </li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Assigning Roles to Users</h3>
+        </div>
+        <div class="card-body">
+            <ol>
+                <li>
+                    <strong>Administrator Access:</strong>
+                    <p>Only administrators can assign roles to users.</p>
+                </li>
+                <li>
+                    <strong>User Management Page:</strong>
+                    <p>Go to the <a href="user-management">User Management</a> page to assign roles.</p>
+                </li>
+                <li>
+                    <strong>Role Changes:</strong>
+                    <p>When a role is changed, it's updated in the database immediately.</p>
+                </li>
+                <li>
+                    <strong>Effect of Changes:</strong>
+                    <p>Role changes can now take effect immediately using the claims refresh functionality.</p>
+                </li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Debugging Authentication</h3>
+        </div>
+        <div class="card-body">
+            <p>If you're having issues with authentication or authorization:</p>
+            <ol>
+                <li>Visit the <a href="debug-auth">Debug Auth</a> page to see your current authentication state and claims.</li>
+                <li>Check if your role is correctly assigned in the User Management page.</li>
+                <li>Use the "Refresh Claims" button on the Debug Auth page to update your claims without logging out.</li>
+                <li>If refreshing claims doesn't work, try logging out and logging back in.</li>
+            </ol>
+        </div>
+    </div>
+</div>

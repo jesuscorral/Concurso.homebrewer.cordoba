@@ -5,7 +5,10 @@
 @using System.Threading.Tasks
 @using BeerContest.Domain.Models
 @using MediatR
+@using Microsoft.AspNetCore.Authorization
 @inject IMediator Mediator
+
+@attribute [Authorize]
 
 <div class="container mt-4">
     <h2 class="mb-4">Registro de Cerveza</h2>

@@ -2,7 +2,7 @@ namespace BeerContest.Domain.Models
 {
     public class Beer
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public BeerCategory Category { get; set; }
         public string BeerStyle { get; set; }
         public double AlcoholContent { get; set; }

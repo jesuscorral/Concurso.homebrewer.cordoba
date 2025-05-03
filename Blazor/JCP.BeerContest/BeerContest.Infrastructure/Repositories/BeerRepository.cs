@@ -154,7 +154,7 @@ namespace BeerContest.Infrastructure.Repositories
                 throw new ArgumentException($"Judge with ID {judgeId} not found");
             }
 
-            if (judge.Role != UserRole.Judge)
+            if (!judge.Roles.Contains(UserRole.Judge))
             {
                 throw new ArgumentException($"User with ID {judgeId} is not a judge");
             }

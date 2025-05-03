@@ -6,8 +6,11 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     [FirestoreData]
     public class FirestoreUser
     {
-        [FirestoreProperty]
+        [FirestoreDocumentId]
         public string Id { get; set; }
+
+        [FirestoreProperty]
+        public string GoogleId { get; set; }
 
         [FirestoreProperty]
         public string Email { get; set; }
@@ -16,7 +19,7 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         public string DisplayName { get; set; }
 
         [FirestoreProperty]
-        public int RoleId { get; set; }
+        public List<int> RoleIds { get; set; }
 
         [FirestoreProperty]
         public DateTime CreatedAt { get; set; }
@@ -29,10 +32,11 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         {
             return new FirestoreUser
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = user.Id,
+                GoogleId = user.GoogleId,
                 Email = user.Email,
                 DisplayName = user.DisplayName,
-                RoleId = (int)user.Role,
+                RoleIds = user.Roles.Select(role => (int)role).ToList(),
                 CreatedAt = user.CreatedAt.ToUniversalTime(),
                 LastLoginAt = user.LastLoginAt?.ToUniversalTime()
             };
@@ -44,9 +48,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
             return new User
             {
                 Id = Id,
+                GoogleId = GoogleId,
                 Email = Email,
                 DisplayName = DisplayName,
-                Role = (UserRole)RoleId,
+                Roles = RoleIds.Select(roleId => (UserRole)roleId).ToList(), 
                 CreatedAt = CreatedAt.ToLocalTime(),
                 LastLoginAt = LastLoginAt?.ToLocalTime()
             };

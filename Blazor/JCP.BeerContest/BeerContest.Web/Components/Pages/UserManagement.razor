@@ -1,0 +1,158 @@
+@page "/user-management"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using BeerContest.Domain.Models
+@using BeerContest.Application.Features.Users.Commands.UpdateUserRole
+@using BeerContest.Domain.Repositories
+@using BeerContest.Web.Services
+@using MediatR
+@inject IUserRepository UserRepository
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ClaimsService ClaimsService
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>User Management</PageTitle>
+
+<h3>User Management</h3>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="alert alert-info mb-4">
+        <p>Use this page to assign roles to users. Changes will take effect the next time the user logs in.</p>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.DisplayName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Roles</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Participant) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => UpdateUserRole(user.Id, UserRole.Participant)">
+                                    Participant
+                                </button>
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Judge) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => UpdateUserRole(user.Id, UserRole.Judge)">
+                                    Judge
+                                </button>
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Administrator) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => UpdateUserRole(user.Id, UserRole.Administrator)">
+                                    Administrator
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isError ? "alert-danger" : "alert-success")">
+            @message
+        </div>
+    }
+}
+
+@code {
+    private List<User> users;
+    private string currentUserId;
+    private string message;
+    private bool isError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get current user ID
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Get the user ID from claims
+            var emailClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Email);
+            if (emailClaim != null)
+            {
+                var currentUser = await UserRepository.GetByEmailAsync(emailClaim.Value);
+                if (currentUser != null)
+                {
+                    currentUserId = currentUser.Id;
+                }
+            }
+        }
+
+        // Load all users
+        users = (await UserRepository.GetAllAsync()).ToList();
+    }
+
+    private async Task UpdateUserRole(string userId, UserRole newRole)
+    {
+        try
+        {
+            // Create the command
+            var command = new UpdateUserRoleCommand
+            {
+                UserId = userId,
+                NewRole = newRole,
+                AdminId = currentUserId
+            };
+
+            // Send the command
+            var result = await Mediator.Send(command);
+
+            if (result)
+            {
+                // Update the local list
+                var user = users.FirstOrDefault(u => u.Id == userId);
+                if (user != null)
+                {
+                    user.Roles = new List<UserRole> { newRole };
+                }
+
+                // Refresh the user's claims if they're currently logged in
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var currentUserEmail = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+                
+                if (currentUserEmail == user.Email)
+                {
+                    await ClaimsService.RefreshUserClaimsAsync(userId);
+                    message = $"Role updated successfully. The change has been applied immediately.";
+                }
+                else
+                {
+                    message = $"Role updated successfully. The change will take effect the next time the user logs in.";
+                }
+                isError = false;
+            }
+            else
+            {
+                message = "Failed to update role.";
+                isError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+            isError = true;
+        }
+    }
+}

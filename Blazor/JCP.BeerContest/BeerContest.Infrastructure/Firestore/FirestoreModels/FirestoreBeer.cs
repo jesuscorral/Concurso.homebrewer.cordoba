@@ -6,7 +6,7 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     [FirestoreData]
     public class FirestoreBeer
     {
-        [FirestoreProperty]
+        [FirestoreDocumentId]
         public string Id { get; set; }
 
         [FirestoreProperty]
@@ -44,7 +44,7 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         {
             return new FirestoreBeer
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = beer.Id,
                 CategoryId = (int)beer.Category,
                 BeerStyle = beer.BeerStyle,
                 AlcoholContent = beer.AlcoholContent,
@@ -63,7 +63,7 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         {
             return new Beer
             {
-                Id = new Guid(Id),
+                Id = Id,
                 Category = (BeerCategory)CategoryId,
                 BeerStyle = BeerStyle,
                 AlcoholContent = AlcoholContent,

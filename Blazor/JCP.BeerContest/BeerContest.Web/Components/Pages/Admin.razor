@@ -1,0 +1,31 @@
+﻿@page "/admin"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using BeerContest.Domain.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>Admin</PageTitle>
+
+
+<!-- Using exact enum value name for role -->
+<AuthorizeView Roles="@UserRole.Administrator.ToString()">
+     <Authorized Context="authContext">
+        <p>Welcome, Admin!</p>
+        <p>You have access to the admin panel.</p>
+     </Authorized>
+     <NotAuthorized>
+         <div class="container">
+             <div class="alert alert-danger">
+                 <h4>Access Denied</h4>
+                 <p>You do not have permission to access this page. Only judges and administrators can access the judging area.</p>
+                 <a href="/" class="btn btn-primary">Go to Home</a>
+             </div>
+         </div>
+     </NotAuthorized>
+</AuthorizeView>
+@code {
+
+}
