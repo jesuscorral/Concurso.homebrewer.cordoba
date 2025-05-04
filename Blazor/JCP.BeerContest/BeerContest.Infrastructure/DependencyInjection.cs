@@ -17,6 +17,8 @@ namespace BeerContest.Infrastructure
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBeerRepository, BeerRepository>();
+            services.AddScoped<IParticipantRepository, ParticipantRepository>();
+            services.AddScoped<IBeerParticipantRepository, BeerParticipantRepository>();
             services.AddScoped<IContestRepository, ContestRepository>();
             
             return services;

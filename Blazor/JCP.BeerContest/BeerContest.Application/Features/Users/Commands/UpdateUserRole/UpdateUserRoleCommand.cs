@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Application.Common.Behaviors;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
@@ -11,7 +8,8 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
     public class UpdateUserRoleCommand : IRequest<bool>
     {
         public string UserId { get; set; }
-        public UserRole NewRole { get; set; }
+        public UserRole Role { get; set; }
+        public bool IsAdd { get; set; } // True to add the role, false to remove it
         public string AdminId { get; set; } // ID of the administrator making the change
         public bool RefreshClaims { get; set; } = true; // Whether to refresh the user's claims
     }
@@ -46,8 +44,30 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
                 throw new Exception($"User with ID {request.UserId} not found");
             }
 
-            // Update the user's role
-            user.Roles = new List<UserRole> { request.NewRole };
+            // Update the user's roles
+            if (request.IsAdd)
+            {
+                // Add the role if it doesn't already exist
+                if (!user.Roles.Contains(request.Role))
+                {
+                    user.Roles.Add(request.Role);
+                }
+            }
+            else
+            {
+                // Remove the role if it exists
+                if (user.Roles.Contains(request.Role))
+                {
+                    user.Roles.Remove(request.Role);
+                }
+                
+                // Ensure user has at least one role
+                if (user.Roles.Count == 0)
+                {
+                    user.Roles.Add(UserRole.Participant);
+                }
+            }
+            
             await _userRepository.UpdateAsync(user);
             
             return true;

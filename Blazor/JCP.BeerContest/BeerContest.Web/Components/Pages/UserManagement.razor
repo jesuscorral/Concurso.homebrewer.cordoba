@@ -43,19 +43,19 @@ else
                     <tr>
                         <td>@user.DisplayName</td>
                         <td>@user.Email</td>
-                        <td>@user.Roles</td>
+                        <td>@string.Join(", ", user.Roles)</td>
                         <td>
                             <div class="btn-group">
                                 <button class="btn btn-sm @(user.Roles.Contains(UserRole.Participant) ? "btn-primary" : "btn-outline-primary")"
-                                @onclick="() => UpdateUserRole(user.Id, UserRole.Participant)">
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Participant)">
                                     Participant
                                 </button>
                                 <button class="btn btn-sm @(user.Roles.Contains(UserRole.Judge) ? "btn-primary" : "btn-outline-primary")"
-                                @onclick="() => UpdateUserRole(user.Id, UserRole.Judge)">
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Judge)">
                                     Judge
                                 </button>
                                 <button class="btn btn-sm @(user.Roles.Contains(UserRole.Administrator) ? "btn-primary" : "btn-outline-primary")"
-                                @onclick="() => UpdateUserRole(user.Id, UserRole.Administrator)">
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Administrator)">
                                     Administrator
                                 </button>
                             </div>
@@ -104,15 +104,28 @@ else
         users = (await UserRepository.GetAllAsync()).ToList();
     }
 
-    private async Task UpdateUserRole(string userId, UserRole newRole)
+    private async Task ToggleUserRole(string userId, UserRole role)
     {
         try
         {
+            // Get the user
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                message = "User not found.";
+                isError = true;
+                return;
+            }
+
+            // Determine if we're adding or removing the role
+            bool isAdd = !user.Roles.Contains(role);
+
             // Create the command
             var command = new UpdateUserRoleCommand
             {
                 UserId = userId,
-                NewRole = newRole,
+                Role = role,
+                IsAdd = isAdd,
                 AdminId = currentUserId
             };
 
@@ -122,10 +135,25 @@ else
             if (result)
             {
                 // Update the local list
-                var user = users.FirstOrDefault(u => u.Id == userId);
-                if (user != null)
+                if (isAdd)
                 {
-                    user.Roles = new List<UserRole> { newRole };
+                    if (!user.Roles.Contains(role))
+                    {
+                        user.Roles.Add(role);
+                    }
+                }
+                else
+                {
+                    if (user.Roles.Contains(role))
+                    {
+                        user.Roles.Remove(role);
+                    }
+                    
+                    // Ensure user has at least one role
+                    if (user.Roles.Count == 0)
+                    {
+                        user.Roles.Add(UserRole.Participant);
+                    }
                 }
 
                 // Refresh the user's claims if they're currently logged in
@@ -135,17 +163,17 @@ else
                 if (currentUserEmail == user.Email)
                 {
                     await ClaimsService.RefreshUserClaimsAsync(userId);
-                    message = $"Role updated successfully. The change has been applied immediately.";
+                    message = $"Roles updated successfully. The change has been applied immediately.";
                 }
                 else
                 {
-                    message = $"Role updated successfully. The change will take effect the next time the user logs in.";
+                    message = $"Roles updated successfully. The change will take effect the next time the user logs in.";
                 }
                 isError = false;
             }
             else
             {
-                message = "Failed to update role.";
+                message = "Failed to update roles.";
                 isError = true;
             }
         }

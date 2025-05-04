@@ -2,7 +2,6 @@
 {
     public enum BeerCategory
     {
-        None,
         ClassicStyles,
         HistoricalAndSpecialtyBeers
     }

@@ -3,10 +3,15 @@
 @using BeerContest.Application.Features.Beers.Commands.RegisterBeer
 @using System.Linq.Expressions
 @using System.Threading.Tasks
+@using BeerContest.Application.Features.Beers.Commands.RegisterBeerParticipantCommand
 @using BeerContest.Domain.Models
 @using MediatR
 @using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
@@ -68,20 +73,18 @@
                     </div>
                 </div>
 
-                @if (beerRegistration.Category != BeerCategory.None)
-                {
-                    <div class="mb-3">
-                        <label for="beerStyle" class="form-label">Estilo de Cerveza</label>
-                        <InputSelect id="beerStyle" @bind-Value="beerRegistration.BeerStyle" class="form-select">
-                            <option value="">-- Seleccione un estilo --</option>
-                            @foreach (var style in availableStyles)
-                            {
-                                <option value="@style">@style</option>
-                            }
-                        </InputSelect>
-                        <ValidationMessage For="@(() => beerRegistration.BeerStyle)" />
-                    </div>
-                }
+
+                <div class="mb-3">
+                    <label for="beerStyle" class="form-label">Estilo de Cerveza</label>
+                    <InputSelect id="beerStyle" @bind-Value="beerRegistration.BeerStyle" class="form-select">
+                        <option value="">-- Seleccione un estilo --</option>
+                        @foreach (var style in availableStyles)
+                        {
+                            <option value="@style">@style</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => beerRegistration.BeerStyle)" />
+                </div>
             </div>
         </div>
 
@@ -98,24 +101,24 @@
 
                 <div class="mb-3">
                     <label for="elaborationDate" class="form-label">Fecha de elaboración</label>
-                    <InputDate id="elaborationDate" @bind-Value="beerRegistration.ElaborationDate" class="form-control" />  
+                    <InputDate id="elaborationDate" @bind-Value="beerRegistration.ElaborationDate" class="form-control" />
                     <ValidationMessage For="@(() => beerRegistration.ElaborationDate)" />
                 </div>
                 <div class="mb-3">
                     <label for="bottleDate" class="form-label">Fecha de embotellado</label>
-                    <InputDate id="bottleDate" @bind-Value="beerRegistration.BottleDate" class="form-control" />  
+                    <InputDate id="bottleDate" @bind-Value="beerRegistration.BottleDate" class="form-control" />
                     <ValidationMessage For="@(() => beerRegistration.BottleDate)" />
                 </div>
                 <div class="mb-3">
                     <label for="malts" class="form-label">Maltas utilizadas</label>
                     <InputText id="malts" @bind-Value="beerRegistration.Malts" class="form-control" />
                     <ValidationMessage For="@(() => beerRegistration.Malts)" />
-                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="hops" class="form-label">Lúpulos utilizados</label>
                     <InputText id="hops" @bind-Value="beerRegistration.Hops" class="form-control" />
                     <ValidationMessage For="@(() => beerRegistration.Hops)" />
-                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="yeast" class="form-label">Levaduras utilizadas</label>
                     <InputText id="yeast" @bind-Value="beerRegistration.Yeast" class="form-control" />
@@ -132,7 +135,7 @@
                     <ValidationMessage For="@(() => beerRegistration.EntryInstructions)" />
                 </div>
             </div>
-        </div>    
+        </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <button type="submit" class="btn btn-primary">Registrar Cerveza</button>
         </div>
@@ -144,13 +147,13 @@
     private BeerRegistrationModel beerRegistration = new();
     private List<string> availableStyles = new();
     private List<string> classicStyles = BeerStyles.GetClassicStyles();
-
     private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
 
     protected override void OnInitialized()
     {
         // Initialize with empty styles until a category is selected
-        availableStyles = new List<string>();
+        beerRegistration.Category = BeerCategory.ClassicStyles;
+        availableStyles = classicStyles;
     }
 
     // This method is called after the category value is updated
@@ -174,37 +177,91 @@
         beerRegistration.BeerStyle = string.Empty;
     }
 
-    private async Task HandleValidSubmitAsync()
+    private async Task<string> GetUserInfoAsync()
     {
-        // Here you would typically send the data to your backend
-        // For example, using MediatR to send a RegisterBeerCommand
-        
-        // Example (commented out as we don't have the actual implementation):
-        var command = new RegisterBeerCommand
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity != null && user.Identity.IsAuthenticated)
         {
-            ACCEMemberNumber = beerRegistration.ACCEMemberNumber,
-            FullName = beerRegistration.FullName,
-            BirthDate = beerRegistration.BirthDate,
-            Phone = beerRegistration.Phone,
-            Category = beerRegistration.Category,
-            BeerStyle = beerRegistration.BeerStyle,
-            AlcoholContent = beerRegistration.AlcoholContent,
-            ElaborationDate = beerRegistration.ElaborationDate,
-            BottleDate = beerRegistration.BottleDate,
-            Malts = beerRegistration.Malts,
-            Hops = beerRegistration.Hops,
-            Yeast = beerRegistration.Yeast,
-            EntryInstructions = beerRegistration.EntryInstructions
-        };
-        
-        var t = await Mediator.Send(command);
-        
-        // Show success message or navigate to another page
-        Console.WriteLine("Form submitted successfully");
-        
-        // Simulate async operation
-        await Task.CompletedTask;
+            var userEmail = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value; // The user's email
+            return userEmail; 
+        }
+        else
+        {
+            Console.WriteLine("User is not authenticated.");
+            return string.Empty;
+        }
     }
 
-   
+
+    private async Task HandleValidSubmitAsync()
+    {
+        try
+        {
+            var beerCommand = BuildRegisterBeerCommand(beerRegistration);
+            var participantCommand = await BuildRegisterParticipantCommand(beerRegistration);
+
+            var beerId = await Mediator.Send(beerCommand);
+            var participantId = await Mediator.Send(participantCommand);
+
+            var beerParticipantCommand = new RegisterBeerParticipantCommand
+                {
+                    BeerId = beerId,
+                    ParticipantId = participantId,
+                    EntryInstructions = beerRegistration.EntryInstructions
+                };
+            var beerParticipantId = await Mediator.Send(beerParticipantCommand);
+
+            // Clear the form
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error registering beer: {ex.Message}");
+        }
+    }
+
+    private RegisterBeerCommand BuildRegisterBeerCommand(BeerRegistrationModel beerRegistration)
+    {
+        return new RegisterBeerCommand
+            {
+                BeerStyle = beerRegistration.BeerStyle,
+                AlcoholContent = beerRegistration.AlcoholContent,
+                ElaborationDate = beerRegistration.ElaborationDate,
+                BottleDate = beerRegistration.BottleDate,
+                Malts = beerRegistration.Malts,
+                Hops = beerRegistration.Hops,
+                Yeast = beerRegistration.Yeast,
+                Additives = beerRegistration.Additives
+            };
+    }
+
+    private async Task<RegisterParticipantCommand> BuildRegisterParticipantCommand(BeerRegistrationModel beerRegistration)
+    {
+        var emailUser = await GetUserInfoAsync();
+
+        return new RegisterParticipantCommand
+            {
+                ACCEMemberNumber = beerRegistration.ACCEMemberNumber,
+                FullName = beerRegistration.FullName,
+                BirthDate = beerRegistration.BirthDate,
+                Phone = beerRegistration.Phone,
+                EmailUser = emailUser,
+            };
+    }
+
+    private void ResetForm()
+    {
+        // Create a new instance to reset all fields
+        beerRegistration = new BeerRegistrationModel();
+        
+        // Set default category and styles
+        beerRegistration.Category = BeerCategory.ClassicStyles;
+        availableStyles = classicStyles;
+        
+        // Force UI refresh
+        StateHasChanged();
+    }
+
 }

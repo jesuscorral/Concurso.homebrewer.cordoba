@@ -1,15 +1,12 @@
-﻿@page "/admin"
+﻿@page "/generate-labels"
+
+@using BeerContest.Domain.Models
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@using BeerContest.Domain.Models
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 @attribute [Authorize(Roles = "Administrator")]
 
-<PageTitle>Admin</PageTitle>
-
-
-<!-- Using exact enum value name for role -->
+<PageTitle>GenerateLabels</PageTitle>
 <AuthorizeView Roles="@UserRole.Administrator.ToString()">
      <Authorized Context="authContext">
         <p>Welcome, Admin!</p>
@@ -25,6 +22,7 @@
          </div>
      </NotAuthorized>
 </AuthorizeView>
+
 @code {
 
 }

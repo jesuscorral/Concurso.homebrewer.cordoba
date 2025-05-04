@@ -13,8 +13,6 @@ namespace BeerContest.Domain.Models
         public string Yeast { get; set; }
         public string Additives { get; set; }
 
-        // Entry instructions
-        public string EntryInstructions { get; set; }
 
         //TODO: Helper method to get public data only (for judges)
         //public Beer GetPublicData()
@@ -38,19 +36,5 @@ namespace BeerContest.Domain.Models
         //}
     }
 
-    public class BeerRating
-    {
-        public string Id { get; set; }
-        public string BeerId { get; set; }
-        public string JudgeId { get; set; }
-        public int AppearanceScore { get; set; } // 1-5
-        public int AromaScore { get; set; } // 1-5
-        public int FlavorScore { get; set; } // 1-5
-        public int MouthfeelScore { get; set; } // 1-5
-        public int OverallImpressionScore { get; set; } // 1-5
-        public string Comments { get; set; }
-        public DateTime RatedAt { get; set; }
-        
-        public int TotalScore => AppearanceScore + AromaScore + FlavorScore + MouthfeelScore + OverallImpressionScore;
-    }
+ 
 }

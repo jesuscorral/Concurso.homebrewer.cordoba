@@ -7,13 +7,6 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
 {
     public class RegisterBeerCommand : IRequest<string>
     {
-        // Brewer information
-        public string ACCEMemberNumber { get; set; }
-        public string FullName { get; set; }
-        public DateTime BirthDate { get; set; }
-        public string Phone { get; set; }
-
-
         // Beer information
         public BeerCategory Category { get; set; }
         public string BeerStyle { get; set; }
@@ -25,8 +18,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
         public string Yeast { get; set; }
         public string Additives { get; set; }
 
-        // Entry instructions
-        public string EntryInstructions { get; set; }
+
 
     }
 
@@ -46,6 +38,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
         public async Task<string> Handle(RegisterBeerCommand request, CancellationToken cancellationToken)
         {
             // TODO: Check if the contest is open for registration
+            // TODO: Añadir settings del concurso donde definir las fechas y demás requisitos
 
             //TODO: Check if the brewer has already registered the maximum number of beers
             //int beerCount = await _beerRepository.GetBrewerBeerCountAsync(request.BrewerId, request.ContestId);
@@ -68,34 +61,21 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
                 Additives = request.Additives,
             };
 
-            var brewer = new Brewer
-            {
-                ACCEMemberNumber = request.ACCEMemberNumber,
-                FullName = request.FullName,
-                BirthDate = request.BirthDate,
-                Phone = request.Phone,
-            };
+           
+            var beerCreated = await _beerRepository.CreateAsync(beer);
 
-            // TODO: Register brewer information
-            return await _beerRepository.CreateAsync(beer);
-            // TODO: Register "Registration information" with the relationship beer-brewer-contest
+            return beerCreated;
         }
     }
 
-    public class RegisterBeerCommandValidator : IValidator<RegisterBeerCommand>
+    public class RegisterBeerCommandValidator : IValidator<RegisterParticipantCommand>
     {
-        private readonly IBeerRepository _beerRepository;
-        private readonly IContestRepository _contestRepository;
 
-        public RegisterBeerCommandValidator(
-            IBeerRepository beerRepository,
-            IContestRepository contestRepository)
+        public RegisterBeerCommandValidator()
         {
-            _beerRepository = beerRepository;
-            _contestRepository = contestRepository;
         }
 
-        public async Task<ValidationResult> ValidateAsync(ValidationContext<RegisterBeerCommand> context, CancellationToken cancellationToken)
+        public async Task<ValidationResult> ValidateAsync(ValidationContext<RegisterParticipantCommand> context, CancellationToken cancellationToken)
         {
             var command = context.Instance;
             var result = new ValidationResult();

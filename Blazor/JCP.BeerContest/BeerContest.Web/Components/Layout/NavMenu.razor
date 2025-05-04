@@ -18,15 +18,13 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-        
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="rules">
                 <span class="oi oi-book" aria-hidden="true"></span> Contest Rules
             </NavLink>
         </div>
 
-      
-        
         <AuthorizeView>
             <NotAuthorized>
                 <div class="nav-item px-3">
@@ -40,24 +38,22 @@
                     </NavLink>
                 </div>
             </NotAuthorized>
-        </AuthorizeView>
-        
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="register-beer">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Register Beer
-                    </NavLink>
-                </div>
-            </Authorized>
 
             <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="my-beers">
-                        <span class="oi oi-beaker" aria-hidden="true"></span> My Beers
-                    </NavLink>
-                </div>
-                
+                <AuthorizeView Roles="@($"{UserRole.Participant}")">
+                    <Authorized Context="authContext">
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="my-beers">
+                                <span class="oi oi-beaker" aria-hidden="true"></span> My Beers
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="register-beer">
+                                <span class="oi oi-plus" aria-hidden="true"></span> Register Beer
+                            </NavLink>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
                 <!-- Using exact enum value names for roles -->
                 <AuthorizeView Roles="@($"{UserRole.Judge},{UserRole.Administrator}")">
                     <Authorized Context="authContext">
@@ -68,7 +64,7 @@
                         </div>
                     </Authorized>
                 </AuthorizeView>
-                
+
                 <!-- Using exact enum value names for roles -->
                 <AuthorizeView Roles="@UserRole.Administrator.ToString()">
                     <Authorized Context="authContext">
@@ -82,22 +78,16 @@
                                 <span class="oi oi-people" aria-hidden="true"></span> User Management
                             </NavLink>
                         </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="generate-labels">
+                                <span class="oi oi-cog" aria-hidden="true"></span> Beer Labels
+                            </NavLink>
+                        </div>
                     </Authorized>
                 </AuthorizeView>
             </Authorized>
         </AuthorizeView>
-        
-        <!-- Debug links - remove in production -->
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="debug-auth">
-                <span class="oi oi-bug" aria-hidden="true"></span> Debug Auth
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth-help">
-                <span class="oi oi-question-mark" aria-hidden="true"></span> Auth Help
-            </NavLink>
-        </div>
+
     </nav>
 </div>
 
