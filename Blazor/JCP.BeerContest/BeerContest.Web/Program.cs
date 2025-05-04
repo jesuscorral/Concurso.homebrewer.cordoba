@@ -4,6 +4,7 @@ using BeerContest.Application.Features.Users.Queries.GetUserById;
 using BeerContest.Domain.Models;
 using BeerContest.Infrastructure;
 using BeerContest.Web.Services;
+using Blazored.Toast;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -122,6 +123,8 @@ builder.Services.AddScoped<ClaimsService>();
 
 // Add HttpClient factory
 builder.Services.AddHttpClient();
+
+builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 

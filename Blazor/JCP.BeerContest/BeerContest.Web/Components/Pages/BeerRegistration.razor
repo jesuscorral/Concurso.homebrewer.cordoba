@@ -12,6 +12,7 @@
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
+@inject IToastService ToastService
 
 @attribute [Authorize]
 
@@ -212,7 +213,8 @@
                     EntryInstructions = beerRegistration.EntryInstructions
                 };
             var beerParticipantId = await Mediator.Send(beerParticipantCommand);
-
+            
+            ToastService.ShowSuccess("Cerveza registrada correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
             // Clear the form
             ResetForm();
         }
