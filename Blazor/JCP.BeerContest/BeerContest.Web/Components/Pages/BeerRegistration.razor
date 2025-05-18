@@ -3,8 +3,8 @@
 @using BeerContest.Application.Features.Beers.Commands.RegisterBeer
 @using System.Linq.Expressions
 @using System.Threading.Tasks
-@using BeerContest.Application.Features.Beers.Commands.RegisterBeerParticipantCommand
 @using BeerContest.Domain.Models
+@using BeerContest.Web.Helpers
 @using MediatR
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
@@ -178,42 +178,17 @@
         beerRegistration.BeerStyle = string.Empty;
     }
 
-    private async Task<string> GetUserInfoAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity != null && user.Identity.IsAuthenticated)
-        {
-            var userEmail = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value; // The user's email
-            return userEmail; 
-        }
-        else
-        {
-            Console.WriteLine("User is not authenticated.");
-            return string.Empty;
-        }
-    }
-
 
     private async Task HandleValidSubmitAsync()
     {
         try
         {
-            var beerCommand = BuildRegisterBeerCommand(beerRegistration);
             var participantCommand = await BuildRegisterParticipantCommand(beerRegistration);
-
-            var beerId = await Mediator.Send(beerCommand);
             var participantId = await Mediator.Send(participantCommand);
 
-            var beerParticipantCommand = new RegisterBeerParticipantCommand
-                {
-                    BeerId = beerId,
-                    ParticipantId = participantId,
-                    EntryInstructions = beerRegistration.EntryInstructions
-                };
-            var beerParticipantId = await Mediator.Send(beerParticipantCommand);
-            
+            var beerCommand = await BuildRegisterBeerCommand(beerRegistration);
+            var beerId = await Mediator.Send(beerCommand);
+
             ToastService.ShowSuccess("Cerveza registrada correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
             // Clear the form
             ResetForm();
@@ -221,11 +196,14 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error registering beer: {ex.Message}");
+            ToastService.ShowError("Error al registrar la cerveza", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
         }
     }
 
-    private RegisterBeerCommand BuildRegisterBeerCommand(BeerRegistrationModel beerRegistration)
+    private async Task<RegisterBeerCommand> BuildRegisterBeerCommand(BeerRegistrationModel beerRegistration)
     {
+        var emailUser = await UserInfoHelper.GetUserInfoAsync(AuthenticationStateProvider);
+
         return new RegisterBeerCommand
             {
                 BeerStyle = beerRegistration.BeerStyle,
@@ -235,13 +213,16 @@
                 Malts = beerRegistration.Malts,
                 Hops = beerRegistration.Hops,
                 Yeast = beerRegistration.Yeast,
-                Additives = beerRegistration.Additives
+                Additives = beerRegistration.Additives,
+                Category = beerRegistration.Category,
+                ParticipantEmail = emailUser,
+                EntryInstructions = beerRegistration.EntryInstructions
             };
     }
 
     private async Task<RegisterParticipantCommand> BuildRegisterParticipantCommand(BeerRegistrationModel beerRegistration)
     {
-        var emailUser = await GetUserInfoAsync();
+        var emailUser = await UserInfoHelper.GetUserInfoAsync(AuthenticationStateProvider);
 
         return new RegisterParticipantCommand
             {

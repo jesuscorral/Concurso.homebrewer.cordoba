@@ -40,10 +40,10 @@ namespace BeerContest.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<IEnumerable<Beer>> GetByBrewerAsync(string brewerId)
+        public async Task<IEnumerable<Beer>> GetByParticipantAsync(string participantEmail)
         {
             Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("BrewerId", brewerId);
+                .WhereEqualTo("ParticipantEmail", participantEmail);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents

@@ -13,6 +13,10 @@ namespace BeerContest.Domain.Models
         public string Yeast { get; set; }
         public string Additives { get; set; }
 
+        public string ParticipantEmail { get; set; }
+        public string EntryInstructions { get; set; }
+        public DateTime CreatedAt { get; set; }
+
 
         //TODO: Helper method to get public data only (for judges)
         //public Beer GetPublicData()

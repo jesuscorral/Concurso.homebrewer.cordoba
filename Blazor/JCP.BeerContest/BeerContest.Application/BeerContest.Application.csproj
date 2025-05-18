@@ -10,6 +10,10 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Beers\Commands\DeleteBeer\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

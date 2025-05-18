@@ -9,8 +9,7 @@ namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 {
     public class GetParticipantBeersQuery : IRequest<IEnumerable<Beer>>
     {
-        public string ParticipantId { get; set; }
-        public string ContestId { get; set; }
+        public string ParticipantEmail { get; set; }
     }
 
     public class GetParticipantBeersQueryHandler : IRequestHandler<GetParticipantBeersQuery, IEnumerable<Beer>>
@@ -24,21 +23,8 @@ namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 
         public async Task<IEnumerable<Beer>> Handle(GetParticipantBeersQuery request, CancellationToken cancellationToken)
         {
-            var beers = await _beerRepository.GetByBrewerAsync(request.ParticipantId);
-            
-            // If a contest ID is provided, filter by contest
-            if (!string.IsNullOrEmpty(request.ContestId))
-            {
-                var filteredBeers = new List<Beer>();
-                foreach (var beer in beers)
-                {
-                    //if (beer.ContestId == request.ContestId)
-                    //{
-                    //    filteredBeers.Add(beer);
-                    //}
-                }
-                return filteredBeers;
-            }
+            var beers = await _beerRepository.GetByParticipantAsync(request.ParticipantEmail);
+           
             
             return beers;
         }

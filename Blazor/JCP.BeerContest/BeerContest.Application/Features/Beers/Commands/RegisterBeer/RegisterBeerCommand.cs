@@ -18,21 +18,18 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
         public string Yeast { get; set; }
         public string Additives { get; set; }
 
-
-
+        public string ParticipantEmail { get; set; }
+        public string EntryInstructions { get; set; }
     }
 
     public class RegisterBeerCommandHandler : IRequestHandler<RegisterBeerCommand, string>
     {
         private readonly IBeerRepository _beerRepository;
-        private readonly IContestRepository _contestRepository;
 
         public RegisterBeerCommandHandler(
-            IBeerRepository beerRepository,
-            IContestRepository contestRepository)
+            IBeerRepository beerRepository)
         {
             _beerRepository = beerRepository;
-            _contestRepository = contestRepository;
         }
 
         public async Task<string> Handle(RegisterBeerCommand request, CancellationToken cancellationToken)
@@ -59,6 +56,9 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
                 Hops = request.Hops,
                 Yeast = request.Yeast,
                 Additives = request.Additives,
+                ParticipantEmail = request.ParticipantEmail,
+                EntryInstructions = request.EntryInstructions,
+                CreatedAt = DateTime.UtcNow
             };
 
            

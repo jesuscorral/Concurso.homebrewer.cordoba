@@ -5,16 +5,23 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="BeerContest.Web.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="_content/Blazorise.Icons.FluentUI/FluentSystemIcons-Resizable.css?v=1.7.6.0" rel="stylesheet" />
+    <link href="_content/Blazorise.Icons.FontAwesome/v6/css/all.min.css" rel="stylesheet">
+    <link href="_content/Blazorise.Icons.Material/blazorise.icons.material.css" rel="stylesheet" />
+
+
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
     <Routes @rendermode="InteractiveServer" />
-    <script src="bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.web.js"></script>
 </body>
 

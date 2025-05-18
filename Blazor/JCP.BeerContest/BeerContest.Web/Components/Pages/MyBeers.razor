@@ -1,4 +1,6 @@
 @page "/my-beers"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 @using BeerContest.Domain.Models
 @using Microsoft.AspNetCore.Components.Authorization
@@ -6,82 +8,110 @@
 @using System.Security.Claims
 @using MediatR
 @inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
-@attribute [Authorize]
+@inject IToastService ToastService
+
+@attribute [Authorize(Roles = "Participant")]
 
 <PageTitle>My Beers - Beer Contest</PageTitle>
-@* 
-<AuthorizeView>
-    <Authorized Context="authContext">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1>My Registered Beers</h1>
-                <a href="register-beer" class="btn btn-primary">Register New Beer</a>
-            </div>
 
-            @if (beers == null)
-            {
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
+<AuthorizeView Roles="@UserRole.Participant.ToString()">
+    <Authorized Context="authContext">
+        <div class="container mt-4">
+        <h2 class="mb-4">My Registered Beers</h2>
+
+        @if (beers == null)
+        {
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-            }
-            else if (!beers.Any())
-            {
-                <div class="alert alert-info">
-                    <p>You haven't registered any beers yet.</p>
-                    <a href="register-beer" class="btn btn-primary mt-2">Register Your First Beer</a>
-                </div>
-            }
-            else
-            {
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                    @foreach (var beer in beers)
-                    {
-                        <div class="col">
-                            <div class="card h-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">@beer.Name</h5>
-                                </div>
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">@beer.Style</h6>
-                                    <p class="card-text">@beer.Description</p>
-                                    <div class="mb-2">
-                                        <small class="text-muted">ABV: @beer.AlcoholByVolume%</small>
+            </div>
+        }
+        else if (!beers.Any())
+        {
+            <div class="alert alert-info" role="alert">
+                You haven't registered any beers yet.
+            </div>
+            <div class="mt-3">
+                <a href="/register-beer" class="btn btn-primary">Register New Beer</a>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var beer in beers)
+                {
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">@beer.BeerStyle</h5>
+                                <span class="badge bg-primary">@beer.Category</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <strong>Alcohol Content:</strong> @beer.AlcoholContent%
                                     </div>
-                                    <div class="mb-2">
-                                        <small class="text-muted">Registered: @beer.RegistrationDate.ToString("MMM d, yyyy")</small>
+                                    <div class="col-md-6">
+                                        <strong>Elaboration Date:</strong> @beer.ElaborationDate.ToShortDateString()
                                     </div>
-                                    @if (beer.Ratings != null && beer.Ratings.Any())
-                                    {
-                                        <div class="alert alert-success">
-                                            <h6>Ratings Received: @beer.Ratings.Count</h6>
-                                            <div class="progress mb-2" style="height: 5px;">
-                                                <div class="progress-bar bg-success" role="progressbar" 
-                                                     style="width: @(beer.Ratings.Average(r => r.TotalScore) / 25 * 100)%;" 
-                                                     aria-valuenow="@(beer.Ratings.Average(r => r.TotalScore))" 
-                                                     aria-valuemin="0" aria-valuemax="25"></div>
-                                            </div>
-                                            <small>Average Score: @beer.Ratings.Average(r => r.TotalScore).ToString("F1")/25</small>
-                                        </div>
-                                    }
                                 </div>
-                                <div class="card-footer">
-                                    <a href="@($"beers/{beer.Id}")" class="btn btn-outline-primary">View Details</a>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <strong>Bottle Date:</strong> @beer.BottleDate.ToShortDateString()
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Created At:</strong> @beer.CreatedAt.ToShortDateString()
+                                    </div>
                                 </div>
+                                <div class="mb-2">
+                                    <strong>Malts:</strong> @beer.Malts
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Hops:</strong> @beer.Hops
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Yeast:</strong> @beer.Yeast
+                                </div>
+                                @if (!string.IsNullOrEmpty(beer.Additives))
+                                {
+                                    <div class="mb-2">
+                                        <strong>Additives:</strong> @beer.Additives
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(beer.EntryInstructions))
+                                {
+                                    <div class="mb-2">
+                                        <strong>Entry Instructions:</strong> @beer.EntryInstructions
+                                    </div>
+                                }
+                            </div>
+                            <div class="card-footer d-flex justify-content-end">
+                                <button class="btn btn-danger me-2" @onclick="() => DeleteBeer(beer.Id)">Delete</button>
+                                <button class="btn btn-primary" @onclick="() => UpdateBeer(beer.Id)">Update</button>
                             </div>
                         </div>
-                    }
+                    </div>
+                }
+            </div>
+
+            @if (beers.Count() < 3)
+            {
+                <div class="mt-4">
+                    <a href="/register-beer" class="btn btn-success">Register New Beer</a>
                 </div>
             }
-        </div>
+        }
+    </div>
     </Authorized>
-</AuthorizeView> *@
+</AuthorizeView>
 
 @code {
     private IEnumerable<Beer> beers;
-    private string userId;
+    private string email;
+    private bool isLoading = true;
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -93,13 +123,13 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            email = user.FindFirst(ClaimTypes.Email)?.Value;
             
-            if (!string.IsNullOrEmpty(userId))
+            if (!string.IsNullOrEmpty(email))
             {
                 var query = new GetParticipantBeersQuery
                 {
-                    ParticipantId = userId
+                    ParticipantEmail = email
                 };
                 
                 beers = await Mediator.Send(query);
@@ -109,5 +139,40 @@
         {
             Navigation.NavigateTo("Account/Login", forceLoad: true);
         }
+
+        isLoading = false;
+    }
+
+    private async Task DeleteBeer(string beerId)
+    {
+        try
+        {
+            await Mediator.Send(new DeleteBeerCommand { BeerId = beerId });
+            
+            // Refresh the beer list
+            var query = new GetParticipantBeersQuery
+            {
+                ParticipantEmail = email
+            };
+            
+            beers = await Mediator.Send(query);
+            
+            ToastService.ShowSuccess("Beer deleted successfully", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error deleting beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+        }
+    }
+
+    private void UpdateBeer(string beerId)
+    {
+        // Navigate to update page
+        Navigation.NavigateTo($"/update-beer/{beerId}");
+    }
+
+    public class DeleteBeerCommand : IRequest<bool>
+    {
+        public string BeerId { get; set; }
     }
 }

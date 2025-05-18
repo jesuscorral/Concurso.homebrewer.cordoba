@@ -5,11 +5,12 @@ using BeerContest.Domain.Models;
 using BeerContest.Infrastructure;
 using BeerContest.Web.Services;
 using Blazored.Toast;
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -125,6 +126,11 @@ builder.Services.AddScoped<ClaimsService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddBlazoredToast();
+
+builder.Services
+    .AddBlazorise()
+    .AddBootstrapProviders()
+    .AddFontAwesomeIcons();
 
 var app = builder.Build();
 

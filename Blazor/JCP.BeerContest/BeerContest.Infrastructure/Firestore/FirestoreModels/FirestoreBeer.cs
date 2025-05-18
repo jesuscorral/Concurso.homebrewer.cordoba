@@ -35,6 +35,18 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
 
         [FirestoreProperty]
         public string Additives { get; set; }
+        
+        [FirestoreProperty]
+        public string ParticipantId { get; set; }
+
+        [FirestoreProperty]
+        public string ParticipantEmail { get; set; }
+
+        [FirestoreProperty]
+        public string EntryInstructions { get; set; }
+
+        [FirestoreProperty]
+        public DateTime CreatedAt { get; set; }
 
         // Convert from domain model to Firestore model
         public static FirestoreBeer FromBeer(Beer beer)
@@ -50,7 +62,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Malts = beer.Malts,
                 Hops = beer.Hops,
                 Yeast = beer.Yeast,
-                Additives = beer.Additives ?? string.Empty
+                Additives = beer.Additives ?? string.Empty,
+                ParticipantEmail = beer.ParticipantEmail,
+                EntryInstructions = beer.EntryInstructions,
+                CreatedAt = beer.CreatedAt.ToUniversalTime()
             };
         }
 
@@ -68,7 +83,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Malts = Malts,
                 Hops = Hops,
                 Yeast = Yeast,
-                Additives = Additives
+                Additives = Additives,
+                ParticipantEmail = ParticipantEmail,
+                EntryInstructions = EntryInstructions,
+                CreatedAt = CreatedAt.ToLocalTime()
             };
         }
     }
