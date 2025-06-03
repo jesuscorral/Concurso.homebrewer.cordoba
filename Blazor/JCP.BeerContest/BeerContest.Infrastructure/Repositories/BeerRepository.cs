@@ -94,10 +94,11 @@ namespace BeerContest.Infrastructure.Repositories
             return id;
         }
 
-        //public Task UpdateAsync(Beer beer)
-        //{
-        //    return _firestoreContext.SetDocumentAsync(CollectionName, beer.Id, beer);
-        //}
+        public Task UpdateAsync(Beer beer)
+        {
+            var firestoreBeer = FirestoreBeer.FromBeer(beer);
+            return _firestoreContext.SetDocumentAsync(CollectionName, beer.Id, firestoreBeer);
+        }
 
         public Task DeleteAsync(string id)
         {

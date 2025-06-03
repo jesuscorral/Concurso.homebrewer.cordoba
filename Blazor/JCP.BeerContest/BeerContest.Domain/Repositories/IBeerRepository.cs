@@ -18,14 +18,22 @@ namespace BeerContest.Domain.Repositories
         /// <returns></returns>
         Task<IEnumerable<Beer>> GetByParticipantAsync(string email);
 
+        Task UpdateAsync(Beer beer);
+
         Task<Beer> GetByIdAsync(string id);
+
+        /// <summary>
+        /// Get the count of beers registered by a brewer for a specific contest.
+        /// </summary>
+        /// <param name="participantEmail"></param>
+        /// <returns></returns>
+        Task<int> GetBrewerBeerCountAsync(string participantEmail, string contestId);
+
+
+
+
         Task<IEnumerable<Beer>> GetAllAsync();
         Task<IEnumerable<Beer>> GetByContestAsync(string contestId);
-
-        Task<int> GetBrewerBeerCountAsync(string brewerId, string contestId);
-
-
-        //Task UpdateAsync(Beer beer);
         Task DeleteAsync(string id);
         Task AssignBeersToJudgeAsync(string judgeId, IEnumerable<string> beerIds);
     }

@@ -1,0 +1,254 @@
+@page "/update-beer/{BeerId}"
+@using System.ComponentModel.DataAnnotations
+@using BeerContest.Application.Features.Beers.Commands.UpdateBeer
+@using BeerContest.Application.Features.Beers.Queries.GetBeerById
+@using System.Linq.Expressions
+@using System.Threading.Tasks
+@using BeerContest.Domain.Models
+@using BeerContest.Web.Helpers
+@using MediatR
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+@attribute [Authorize(Roles = "Participant")]
+
+<PageTitle>Update Beer - Beer Contest</PageTitle>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Update Beer</h2>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (beer == null)
+    {
+        <div class="alert alert-danger" role="alert">
+            Beer not found or you don't have permission to edit it.
+        </div>
+        <div class="mt-3">
+            <a href="/my-beers" class="btn btn-primary">Back to My Beers</a>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="@beer" OnValidSubmit="@(async () => await HandleValidSubmitAsync())">
+            <DataAnnotationsValidator />
+            <ValidationSummary Model="@beer" />
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Beer Category</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <InputRadioGroup @bind-Value="beer.Category" @bind-Value:after="CategoryChanged" Name="category">
+                                <div class="mb-2">
+                                    <InputRadio Value="@(BeerCategory.ClassicStyles)" id="classicStyles" class="form-check-input" />
+                                    <label class="form-check-label" for="classicStyles">Classic Styles</label>
+                                </div>
+                                <div>
+                                    <InputRadio Value="@(BeerCategory.HistoricalAndSpecialtyBeers)" id="historicalStyles" class="form-check-input" />
+                                    <label class="form-check-label" for="historicalStyles">Historical & Specialty beers</label>
+                                </div>
+                            </InputRadioGroup>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="beerStyle" class="form-label">Beer Style</label>
+                        <InputSelect id="beerStyle" @bind-Value="beer.BeerStyle" class="form-select">
+                            <option value="">-- Select a style --</option>
+                            @foreach (var style in availableStyles)
+                            {
+                                <option value="@style">@style</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => beer.BeerStyle)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Beer Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="alcoholContent" class="form-label">Alcohol Content (%)</label>
+                        <InputNumber id="alcoholContent" @bind-Value="beer.AlcoholContent" class="form-control" />
+                        <ValidationMessage For="@(() => beer.AlcoholContent)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="elaborationDate" class="form-label">Elaboration Date</label>
+                        <InputDate id="elaborationDate" @bind-Value="beer.ElaborationDate" class="form-control" />
+                        <ValidationMessage For="@(() => beer.ElaborationDate)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="bottleDate" class="form-label">Bottle Date</label>
+                        <InputDate id="bottleDate" @bind-Value="beer.BottleDate" class="form-control" />
+                        <ValidationMessage For="@(() => beer.BottleDate)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="malts" class="form-label">Malts Used</label>
+                        <InputText id="malts" @bind-Value="beer.Malts" class="form-control" />
+                        <ValidationMessage For="@(() => beer.Malts)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="hops" class="form-label">Hops Used</label>
+                        <InputText id="hops" @bind-Value="beer.Hops" class="form-control" />
+                        <ValidationMessage For="@(() => beer.Hops)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="yeast" class="form-label">Yeast Used</label>
+                        <InputText id="yeast" @bind-Value="beer.Yeast" class="form-control" />
+                        <ValidationMessage For="@(() => beer.Yeast)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="additives" class="form-label">Other Ingredients</label>
+                        <InputText id="additives" @bind-Value="beer.Additives" class="form-control" />
+                        <ValidationMessage For="@(() => beer.Additives)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="entryInstructions" class="form-label">Entry Instructions</label>
+                        <InputTextArea id="entryInstructions" @bind-Value="beer.EntryInstructions" class="form-control" rows="3" />
+                        <ValidationMessage For="@(() => beer.EntryInstructions)" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/my-beers" class="btn btn-secondary me-2">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string BeerId { get; set; }
+
+    private Beer beer;
+    private List<string> availableStyles = new();
+    private List<string> classicStyles = BeerStyles.GetClassicStyles();
+    private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
+    private bool isLoading = true;
+    private string userEmail;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (!string.IsNullOrEmpty(userEmail) && !string.IsNullOrEmpty(BeerId))
+            {
+                await LoadBeerData();
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("Account/Login", forceLoad: true);
+        }
+
+        isLoading = false;
+    }
+
+    private async Task LoadBeerData()
+    {
+        try
+        {
+            // Get the beer by ID
+            beer = await Mediator.Send(new GetBeerByIdQuery { Id = BeerId });
+
+            // Check if the beer belongs to the current user
+            if (beer == null || beer.ParticipantEmail != userEmail)
+            {
+                beer = null;
+                return;
+            }
+
+            // Set available styles based on the beer's category
+            if (beer.Category == BeerCategory.ClassicStyles)
+            {
+                availableStyles = classicStyles;
+            }
+            else if (beer.Category == BeerCategory.HistoricalAndSpecialtyBeers)
+            {
+                availableStyles = historicalStyles;
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error loading beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            beer = null;
+        }
+    }
+
+    // This method is called after the category value is updated
+    private void CategoryChanged()
+    {
+        // Update available styles based on selected category
+        if (beer.Category == BeerCategory.ClassicStyles)
+        {
+            availableStyles = classicStyles;
+        }
+        else if (beer.Category == BeerCategory.HistoricalAndSpecialtyBeers)
+        {
+            availableStyles = historicalStyles;
+        }
+        else
+        {
+            availableStyles = new List<string>();
+        }
+
+        // Reset the selected beer style when category changes
+        beer.BeerStyle = string.Empty;
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        try
+        {
+            var command = new UpdateBeerCommand
+            {
+                Id = beer.Id,
+                BeerStyle = beer.BeerStyle,
+                AlcoholContent = beer.AlcoholContent,
+                ElaborationDate = beer.ElaborationDate,
+                BottleDate = beer.BottleDate,
+                Malts = beer.Malts,
+                Hops = beer.Hops,
+                Yeast = beer.Yeast,
+                Additives = beer.Additives,
+                Category = beer.Category,
+                ParticipantEmail = beer.ParticipantEmail,
+                EntryInstructions = beer.EntryInstructions
+            };
+
+            await Mediator.Send(command);
+
+            ToastService.ShowSuccess("Beer updated successfully", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            NavigationManager.NavigateTo("/my-beers");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error updating beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+        }
+    }
+
+}

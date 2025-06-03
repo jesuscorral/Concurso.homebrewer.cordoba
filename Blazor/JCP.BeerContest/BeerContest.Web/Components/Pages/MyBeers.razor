@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
+@using BeerContest.Application.Features.Beers.Commands.DeleteBeer
 @using BeerContest.Domain.Models
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Authorization
@@ -171,8 +172,4 @@
         Navigation.NavigateTo($"/update-beer/{beerId}");
     }
 
-    public class DeleteBeerCommand : IRequest<bool>
-    {
-        public string BeerId { get; set; }
-    }
 }
