@@ -8,17 +8,24 @@ namespace BeerContest.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddContests(this IServiceCollection services, IConfiguration configuration)
         {
-           
+
             // Register Firestore context
             services.AddSingleton(new BeerContestContext(configuration));
 
+            return services;
+        }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection services, IConfiguration configuration)
+        {
+           
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBeerRepository, BeerRepository>();
             services.AddScoped<IParticipantRepository, ParticipantRepository>();
-            
+            services.AddScoped<IContestRepository, ContestRepository>();
+
             return services;
         }
     }

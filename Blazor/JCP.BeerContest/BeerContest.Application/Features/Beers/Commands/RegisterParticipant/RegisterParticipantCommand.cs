@@ -3,7 +3,7 @@ using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
 
-namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
+namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
 {
     public class RegisterParticipantCommand : IRequest<string>
     {

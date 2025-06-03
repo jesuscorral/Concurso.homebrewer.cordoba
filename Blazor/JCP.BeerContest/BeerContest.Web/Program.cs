@@ -113,7 +113,8 @@ builder.Services.AddAuthorization(options =>
 
 // Add application services
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddRepositories(builder.Configuration);
+builder.Services.AddContests(builder.Configuration);
 builder.Services.AddControllers();
 
 // Add HttpContextAccessor
