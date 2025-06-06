@@ -101,7 +101,7 @@ namespace BeerContest.Infrastructure.Repositories
                 .Select(d => d.ConvertTo<FirestoreBeer>().ToBeer())
                 .ToList();
 
-            var contestDoc = await _firestoreContext.GetDocumentAsync<dynamic>("contests", contestId);
+            var constest = await _contestRepository.GetByIdAsync(contestId);
 
             // Enrich Beer objects with contest status
             var beersWithStatus = beers.Select(b => new BeerWithContestStatus
@@ -121,7 +121,7 @@ namespace BeerContest.Infrastructure.Repositories
                 EntryInstructions = b.EntryInstructions,
                 ContestId = b.ContestId,
                 CreatedAt = b.CreatedAt,
-                ContestStatus = contestDoc.Status
+                ContestStatus = constest.Status
             }).ToList();
 
             return beersWithStatus;

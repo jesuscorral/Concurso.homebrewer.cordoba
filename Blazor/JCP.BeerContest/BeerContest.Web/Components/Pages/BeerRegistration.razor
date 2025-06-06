@@ -192,8 +192,13 @@
         beerRegistration.Category = BeerCategory.ClassicStyles;
         availableStyles = classicStyles;
         await LoadContests();
+        await CheckMaxBeerReached();
+    }
+
+    private async Task CheckMaxBeerReached()
+    {
         var beers = await GetBeers();
-        maxBeerRached = beers.Count() >= 3;
+        maxBeerRached = beers.Count() >= 3; // TODO: Remove harcoded value and get this value from Contest
     }
 
     // This method is called after the category value is updated
@@ -217,13 +222,13 @@
         beerRegistration.BeerStyle = string.Empty;
     }
 
-     private async Task<IEnumerable<Beer>> GetBeers()
+    private async Task<IEnumerable<Beer>> GetBeers()
     {
-         var authState = await authenticationStateTask;
+        var authState = await authenticationStateTask;
         var user = authState.User;
 
         IEnumerable<BeerWithContestStatus> beersWithContestStatus; 
-        
+
         var email = user.FindFirst(ClaimTypes.Email)?.Value;
 
         if (!string.IsNullOrEmpty(email) && contests?.Any(x => x.Status == ContestStatus.RegistrationOpen) == true)
@@ -274,7 +279,10 @@
             var beerCommand = await BuildRegisterBeerCommand(beerRegistration, participantId);
             var beerId = await Mediator.Send(beerCommand);
 
+            // TODO - Fix it
             ToastService.ShowSuccess("Cerveza registrada correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+
+            await CheckMaxBeerReached();
             // Clear the form
             ResetForm();
         }

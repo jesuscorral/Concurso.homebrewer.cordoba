@@ -91,13 +91,13 @@
                                         </div>
                                     }
                                 </div>
-                            @if (beer.ContestStatus.Equals(ContestStatus.RegistrationOpen))
-                            {
-                                <div class="card-footer d-flex justify-content-end">
-                                    <button class="btn btn-danger me-2" @onclick="() => DeleteBeer(beer.Id)">Delete</button>
-                                    <button class="btn btn-primary" @onclick="() => UpdateBeer(beer.Id)">Update</button>
-                                </div>
-                            }
+                                @if (beer.ContestStatus.Equals(ContestStatus.RegistrationOpen))
+                                {
+                                    <div class="card-footer d-flex justify-content-end">
+                                        <button class="btn btn-danger me-2" @onclick="() => DeleteBeer(beer.Id)">Delete</button>
+                                        <button class="btn btn-primary" @onclick="() => UpdateBeer(beer.Id)">Update</button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
@@ -128,14 +128,14 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadContests();
-        
-        var authState = await authenticationStateTask;
-        var user = authState.User;
+
+        var user = await GetUser();
+
 
         if (user.Identity.IsAuthenticated)
         {
             beers = await GetBeers(user);
-           
+
         }
         else
         {
@@ -143,6 +143,12 @@
         }
 
         isLoading = false;
+    }
+    private async Task<ClaimsPrincipal> GetUser()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        return user;
     }
 
     private async Task<IEnumerable<BeerWithContestStatus>> GetBeers(ClaimsPrincipal user)
@@ -195,13 +201,8 @@
         {
             await Mediator.Send(new DeleteBeerCommand { BeerId = beerId });
 
-            // Refresh the beer list
-            var query = new GetParticipantBeersByContestIdQuery
-                {
-                    ParticipantEmail = email
-                };
-
-            beers = await Mediator.Send(query);
+            var user = await GetUser();
+            beers = await GetBeers(user);
 
             ToastService.ShowSuccess("Beer deleted successfully", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
         }
