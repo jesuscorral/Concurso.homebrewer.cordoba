@@ -12,9 +12,10 @@ namespace BeerContest.Domain.Models
         public string Hops { get; set; }
         public string Yeast { get; set; }
         public string Additives { get; set; }
-
+        public string ParticpantId { get; set; }
         public string ParticipantEmail { get; set; }
         public string EntryInstructions { get; set; }
+        public string ContestId { get; set; }
         public DateTime CreatedAt { get; set; }
 
 

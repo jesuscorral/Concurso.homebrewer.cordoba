@@ -35,9 +35,17 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
                 EmailUser = request.EmailUser,
             };
 
-            var participantCreated = await _participantRepository.CreateAsync(participant);
+            var existsParticipant = await _participantRepository.GetByEmailUserAsync(participant.EmailUser);
+            if (existsParticipant == null)
+            {
+                var participantCreated = await _participantRepository.CreateAsync(participant);
+                return participantCreated;
+            }
+            else
+            {
+                return existsParticipant.Id;
+            }
 
-            return participantCreated;
         }
     }
 

@@ -17,9 +17,10 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
         public string Hops { get; set; }
         public string Yeast { get; set; }
         public string Additives { get; set; }
-
+        public string ParticipantId { get; set; }
         public string ParticipantEmail { get; set; }
         public string EntryInstructions { get; set; }
+        public string ContestId { get; set; }
     }
 
     public class RegisterBeerCommandHandler : IRequestHandler<RegisterBeerCommand, string>
@@ -56,8 +57,10 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
                 Hops = request.Hops,
                 Yeast = request.Yeast,
                 Additives = request.Additives,
+                ParticpantId = request.ParticipantId,
                 ParticipantEmail = request.ParticipantEmail,
                 EntryInstructions = request.EntryInstructions,
+                ContestId = request.ContestId,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -70,7 +73,6 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
 
     public class RegisterBeerCommandValidator : IValidator<RegisterBeerCommand>
     {
-
         public RegisterBeerCommandValidator()
         {
         }

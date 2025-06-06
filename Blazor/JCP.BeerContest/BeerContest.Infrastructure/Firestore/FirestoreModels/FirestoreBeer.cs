@@ -42,6 +42,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         [FirestoreProperty]
         public string ParticipantEmail { get; set; }
 
+
+        [FirestoreProperty]
+        public string ContestId { get; set; }
+
         [FirestoreProperty]
         public string EntryInstructions { get; set; }
 
@@ -63,8 +67,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Hops = beer.Hops,
                 Yeast = beer.Yeast,
                 Additives = beer.Additives ?? string.Empty,
+                ParticipantId = beer.ParticpantId,
                 ParticipantEmail = beer.ParticipantEmail,
                 EntryInstructions = beer.EntryInstructions,
+                ContestId = beer.ContestId,
                 CreatedAt = beer.CreatedAt.ToUniversalTime()
             };
         }
@@ -84,8 +90,10 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Hops = Hops,
                 Yeast = Yeast,
                 Additives = Additives,
+                ParticpantId = ParticipantId,
                 ParticipantEmail = ParticipantEmail,
                 EntryInstructions = EntryInstructions,
+                ContestId = ContestId,
                 CreatedAt = CreatedAt.ToLocalTime()
             };
         }

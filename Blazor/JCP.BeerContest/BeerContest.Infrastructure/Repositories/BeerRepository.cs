@@ -11,10 +11,12 @@ namespace BeerContest.Infrastructure.Repositories
         private readonly BeerContestContext _firestoreContext;
         private const string CollectionName = "beers";
         private const string UserCollectionName = "users";
+        private readonly IContestRepository _contestRepository;
 
-        public BeerRepository(BeerContestContext firestoreContext)
+        public BeerRepository(BeerContestContext firestoreContext, IContestRepository contestRepository)
         {
             _firestoreContext = firestoreContext;
+            _contestRepository = contestRepository;
         }
 
         public async Task<Beer> GetByIdAsync(string id)
@@ -40,22 +42,98 @@ namespace BeerContest.Infrastructure.Repositories
                 .ToList();
         }
 
-        public async Task<IEnumerable<Beer>> GetByParticipantAsync(string participantEmail)
+        public async Task<IEnumerable<BeerWithContestStatus>> GetByParticipantAsync(string participantEmail)
         {
+            // Get beers by participant email
             Query query = _firestoreContext.CreateQuery(CollectionName)
                 .WhereEqualTo("ParticipantEmail", participantEmail);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            return querySnapshot.Documents
+            var beers = querySnapshot.Documents
                 .Select(d => d.ConvertTo<FirestoreBeer>().ToBeer())
                 .ToList();
+
+            // Get unique contestIds from beers
+            var contestIds = beers.Select(b => b.ContestId).Distinct().ToList();
+
+            // Prepare a dictionary to hold contestId -> status
+            var contestStatuses = new Dictionary<string, ContestStatus>();
+
+            var contests = await _contestRepository.GetAllAsync();
+
+            // Enrich Beer objects with contest status
+            var beersWithStatus = beers.Select(b =>
+            {
+                var contest = contests.FirstOrDefault(x => x.Id.Equals(b.ContestId, StringComparison.Ordinal));
+                return new BeerWithContestStatus
+                {
+                    Id = b.Id,
+                    Category = b.Category,
+                    BeerStyle = b.BeerStyle,
+                    AlcoholContent = b.AlcoholContent,
+                    ElaborationDate = b.ElaborationDate,
+                    BottleDate = b.BottleDate,
+                    Malts = b.Malts,
+                    Hops = b.Hops,
+                    Yeast = b.Yeast,
+                    Additives = b.Additives,
+                    ParticpantId = b.ParticpantId,
+                    ParticipantEmail = b.ParticipantEmail,
+                    EntryInstructions = b.EntryInstructions,
+                    ContestId = b.ContestId,
+                    CreatedAt = b.CreatedAt,
+                    ContestStatus = contest?.Status ?? ContestStatus.Draft // Handle null contest gracefully
+                };
+            }).ToList();
+
+            return beersWithStatus;
         }
+
+        public async Task<IEnumerable<BeerWithContestStatus>> GetByParticipantAndContestIdAsync(string participantEmail, string contestId)
+        {
+            // Get beers by participant email
+            Query query = _firestoreContext.CreateQuery(CollectionName)
+                .WhereEqualTo("ParticipantEmail", participantEmail)
+                .WhereEqualTo("ContestId", contestId);
+
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+            var beers =  querySnapshot.Documents
+                .Select(d => d.ConvertTo<FirestoreBeer>().ToBeer())
+                .ToList();
+
+            var contestDoc = await _firestoreContext.GetDocumentAsync<dynamic>("contests", contestId);
+
+            // Enrich Beer objects with contest status
+            var beersWithStatus = beers.Select(b => new BeerWithContestStatus
+            {
+                Id = b.Id,
+                Category = b.Category,
+                BeerStyle = b.BeerStyle,
+                AlcoholContent = b.AlcoholContent,
+                ElaborationDate = b.ElaborationDate,
+                BottleDate = b.BottleDate,
+                Malts = b.Malts,
+                Hops = b.Hops,
+                Yeast = b.Yeast,
+                Additives = b.Additives,
+                ParticpantId = b.ParticpantId,
+                ParticipantEmail = b.ParticipantEmail,
+                EntryInstructions = b.EntryInstructions,
+                ContestId = b.ContestId,
+                CreatedAt = b.CreatedAt,
+                ContestStatus = contestDoc.Status
+            }).ToList();
+
+            return beersWithStatus;
+
+        }
+
 
         //public async Task<IEnumerable<Beer>> GetAssignedToJudgeAsync(string judgeId)
         //{
         //    // Get the judge user document
         //    var judge = await _firestoreContext.GetDocumentAsync<User>(UserCollectionName, judgeId);
-            
+
         //    if (judge == null || judge.AssignedBeersForJudging == null || !judge.AssignedBeersForJudging.Any())
         //    {
         //        return new List<Beer>();

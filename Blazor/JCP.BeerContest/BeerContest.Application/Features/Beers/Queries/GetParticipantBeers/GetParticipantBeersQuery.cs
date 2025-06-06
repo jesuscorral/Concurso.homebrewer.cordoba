@@ -1,18 +1,15 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
 
 namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 {
-    public class GetParticipantBeersQuery : IRequest<IEnumerable<Beer>>
+    public class GetParticipantBeersQuery : IRequest<IEnumerable<BeerWithContestStatus>>
     {
         public string ParticipantEmail { get; set; }
     }
 
-    public class GetParticipantBeersQueryHandler : IRequestHandler<GetParticipantBeersQuery, IEnumerable<Beer>>
+    public class GetParticipantBeersQueryHandler : IRequestHandler<GetParticipantBeersQuery, IEnumerable<BeerWithContestStatus>>
     {
         private readonly IBeerRepository _beerRepository;
 
@@ -21,12 +18,11 @@ namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
             _beerRepository = beerRepository;
         }
 
-        public async Task<IEnumerable<Beer>> Handle(GetParticipantBeersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BeerWithContestStatus>> Handle(GetParticipantBeersQuery request, CancellationToken cancellationToken)
         {
-            var beers = await _beerRepository.GetByParticipantAsync(request.ParticipantEmail);
+            var beersWithContestStatus = await _beerRepository.GetByParticipantAsync(request.ParticipantEmail);
            
-            
-            return beers;
+            return beersWithContestStatus;
         }
     }
 }
