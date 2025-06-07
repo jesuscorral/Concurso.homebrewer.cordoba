@@ -4,7 +4,7 @@ namespace BeerContest.Web.Helpers
 {
     public static class UserInfoHelper
     {
-        public static async Task<string> GetUserInfoAsync(AuthenticationStateProvider authenticationStateProvider)
+        public static async Task<string> GetEmailLoggedUserAsync(AuthenticationStateProvider authenticationStateProvider)
         {
             var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;

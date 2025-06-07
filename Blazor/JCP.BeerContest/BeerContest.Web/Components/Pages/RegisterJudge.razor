@@ -1,0 +1,126 @@
+@page "/register-judge"
+@using BeerContest.Application.Features.Judges.Commands.RegisterJudge
+@using BeerContest.Application.Features.Contests.Queries.GetAllContests
+@using BeerContest.Domain.Models
+@using System.Linq
+@using BeerContest.Web.Helpers
+@using MediatR
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IToastService ToastService
+
+@attribute [Authorize(Roles = "Participant, Judge")]
+
+<div class="container mt-4">
+    <h2 class="mb-4">Registro de Jueces</h2>
+    <EditForm Model="@judge" OnValidSubmit="@HandleRegistrationAsync">
+        <DataAnnotationsValidator />
+        <ValidationSummary Model="@judge" />
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Informaci�n Juez</h4>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <InputText id="name" class="form-control" @bind-Value="judge.Name" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="surname" class="form-label">Surname:</label>
+                    <InputText id="surname" class="form-control" @bind-Value="judge.Surname" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone:</label>
+                    <InputText id="phone" class="form-control" @bind-Value="judge.Phone" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="preferences" class="form-label">Preferences:</label>
+                    <InputTextArea id="preferences" class="form-control" @bind-Value="judge.Preferences" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="contest" class="form-label">Contest:</label>
+                    <InputSelect id="contest" class="form-control" @bind-Value="judge.ContestId">
+                        <option value="">-- Select Contest --</option>
+                        @if (availableContests != null)
+                        {
+                            @foreach (var contest in availableContests)
+                            {
+                                <option value="@contest.Id">@contest.Edition</option>
+                            }
+                        }
+                    </InputSelect>
+                </div>
+
+                <div class="mb-3">
+                    <label for="bcjpid" class="form-label">BCJP Id:</label>
+                    <InputText id="bcjpid" class="form-control" @bind-Value="judge.BcjpId" />
+                </div>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    private JudgeModel judge = new JudgeModel();
+    private IEnumerable<Contest> availableContests;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var contests = await Mediator.Send(new GetAllContestsQuery());
+        availableContests = contests.Where(c => c.Status != ContestStatus.Judging && c.Status != ContestStatus.Completed);
+    }
+
+    private async Task HandleRegistrationAsync()
+    {
+        var selectedContest = availableContests.FirstOrDefault(c => c.Id == judge.ContestId);
+        if (selectedContest != null)
+        {
+            judge.ContestName = selectedContest.Edition;
+        }
+
+        var emailUser = await UserInfoHelper.GetEmailLoggedUserAsync(AuthenticationStateProvider);
+
+        var command = new RegisterJudgeCommand
+        {
+            Name = judge.Name,
+            Surname = judge.Surname,
+            Phone = judge.Phone,
+            Email = emailUser,
+            Preferences = judge.Preferences,
+            BcjpId = judge.BcjpId,
+            ContestId = judge.ContestId,
+            ContestName = judge.ContestName
+        };
+
+        await Mediator.Send(command);
+
+        ToastService.ShowSuccess("Registrado correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+
+        // Reset all fields after successful registration
+        judge = new JudgeModel();
+        StateHasChanged();
+    }
+
+    public class JudgeModel
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Preferences { get; set; }
+        public string BcjpId { get; set; }
+        public string ContestId { get; set; }
+        public string ContestName { get; set; }
+    }
+}

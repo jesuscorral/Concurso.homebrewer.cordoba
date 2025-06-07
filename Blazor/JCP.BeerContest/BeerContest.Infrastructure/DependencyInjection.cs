@@ -25,6 +25,7 @@ namespace BeerContest.Infrastructure
             services.AddScoped<IBeerRepository, BeerRepository>();
             services.AddScoped<IParticipantRepository, ParticipantRepository>();
             services.AddScoped<IContestRepository, ContestRepository>();
+            services.AddScoped<IJudgeRepository, JudgeRepository>();
 
             return services;
         }

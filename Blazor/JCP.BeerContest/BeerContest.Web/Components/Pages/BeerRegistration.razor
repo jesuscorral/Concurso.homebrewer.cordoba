@@ -295,7 +295,7 @@
 
     private async Task<RegisterBeerCommand> BuildRegisterBeerCommand(BeerRegistrationModel beerRegistration, string participantId)
     {
-        var emailUser = await UserInfoHelper.GetUserInfoAsync(AuthenticationStateProvider);
+        var emailUser = await UserInfoHelper.GetEmailLoggedUserAsync(AuthenticationStateProvider);
 
         return new RegisterBeerCommand
             {
@@ -317,7 +317,7 @@
 
     private async Task<RegisterParticipantCommand> BuildRegisterParticipantCommand(BeerRegistrationModel beerRegistration)
     {
-        var emailUser = await UserInfoHelper.GetUserInfoAsync(AuthenticationStateProvider);
+        var emailUser = await UserInfoHelper.GetEmailLoggedUserAsync(AuthenticationStateProvider);
 
         return new RegisterParticipantCommand
             {

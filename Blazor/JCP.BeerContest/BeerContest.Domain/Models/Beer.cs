@@ -17,29 +17,5 @@ namespace BeerContest.Domain.Models
         public string EntryInstructions { get; set; }
         public string ContestId { get; set; }
         public DateTime CreatedAt { get; set; }
-
-
-        //TODO: Helper method to get public data only (for judges)
-        //public Beer GetPublicData()
-        //{
-        //    return new Beer
-        //    {
-        //        Id = this.Id,
-        //        Name = this.Name,
-        //        Style = this.Style,
-        //        Description = this.Description,
-        //        AlcoholByVolume = this.AlcoholByVolume,
-        //        Color = this.Color,
-        //        Aroma = this.Aroma,
-        //        Flavor = this.Flavor,
-        //        Ingredients = this.Ingredients,
-        //        BrewingProcess = this.BrewingProcess,
-        //        ContestId = this.ContestId,
-        //        RegistrationDate = this.RegistrationDate
-        //        // Note: Brewer personal information is excluded
-        //    };
-        //}
     }
-
- 
 }
