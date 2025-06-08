@@ -18,20 +18,56 @@
     </CloseButtonContent>
 </BlazoredToasts>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="beer-contest-layout">
+    <!-- Header with logo and login -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <a href="/" class="logo">
+                        <i class="fa fa-beer me-2"></i>
+                        <span>Beer Contest</span>
+                    </a>
+                </div>
+                <div class="login-container">
+                    <LoginDisplay />
+                </div>
+            </div>
+        </div>
+    </header>
 
-    <main>
-        <div class="top-row px-4">
-            <LoginDisplay />
+    <!-- Main content area with sidebar and content -->
+    <div class="main-content">
+        <div class="sidebar">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <main class="content-area">
+            <div class="container">
+                @Body
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fa fa-beer me-2"></i>
+                    <span>Beer Contest</span>
+                </div>
+                <div class="footer-links">
+                    <a href="/">Home</a>
+                    <a href="/rules">Rules</a>
+                    <a href="/register-judge">Become a Judge</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; @DateTime.Now.Year Beer Contest. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <div id="blazor-error-ui">

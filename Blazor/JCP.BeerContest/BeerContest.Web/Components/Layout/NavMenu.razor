@@ -2,45 +2,49 @@
 @using BeerContest.Domain.Models
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Beer Contest</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
+<div class="nav-header">
+    <button title="Navigation menu" class="nav-toggler" @onclick="ToggleNavMenu">
+        <i class="fa fa-bars"></i>
+    </button>
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
+    <nav class="flex-column p-3">
+        <div class="nav-brand mb-4 text-center">
+            <i class="fa fa-beer fa-2x text-amber"></i>
+            <div class="mt-2 fw-bold">Beer Contest</div>
+        </div>
+        <div class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <i class="fa fa-home" aria-hidden="true"></i> Home
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
+        <div class="nav-item">
             <NavLink class="nav-link" href="rules">
-                <span class="oi oi-book" aria-hidden="true"></span> Contest Rules
+                <i class="fa fa-book" aria-hidden="true"></i> Contest Rules
             </NavLink>
         </div>
-
+        
         <AuthorizeView>
             <NotAuthorized>
-                <div class="nav-item px-3">
+                <div class="nav-section-header mt-3 mb-2 text-amber">
+                    <i class="fa fa-user me-2"></i> Account
+                </div>
+                <div class="nav-item">
                     <NavLink class="nav-link" href="Account/Register">
-                        <span class="oi oi-person" aria-hidden="true"></span> Register
+                        <i class="fa fa-user-plus" aria-hidden="true"></i> Register
                     </NavLink>
                 </div>
-                <div class="nav-item px-3">
+                <div class="nav-item">
                     <NavLink class="nav-link" href="Account/Login">
-                        <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                        <i class="fa fa-sign-in-alt" aria-hidden="true"></i> Login
                     </NavLink>
                 </div>
 
-                <div class="nav-item px-3">
+                <div class="nav-item">
                     <NavLink class="nav-link" href="register-judge">
-                        <span class="oi oi-beaker" aria-hidden="true"></span> Register as jugde
+                        <i class="fa fa-award" aria-hidden="true"></i> Register as Judge
                     </NavLink>
                 </div>
             </NotAuthorized>
@@ -48,19 +52,22 @@
             <Authorized>
                 <AuthorizeView Roles="@($"{UserRole.Participant}")">
                     <Authorized Context="authContext">
-                         <div class="nav-item px-3">
+                        <div class="nav-section-header mt-3 mb-2 text-amber">
+                            <i class="fa fa-flask me-2"></i> Participant
+                        </div>
+                         <div class="nav-item">
                             <NavLink class="nav-link" href="register-beer">
-                                <span class="oi oi-plus" aria-hidden="true"></span> Register Beer
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i> Register Beer
                             </NavLink>
                         </div>
-                        <div class="nav-item px-3">
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="register-judge">
-                                <span class="oi oi-beaker" aria-hidden="true"></span> Register as jugde
+                                <i class="fa fa-award" aria-hidden="true"></i> Register as Judge
                             </NavLink>
                         </div>
-                        <div class="nav-item px-3">
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="my-beers">
-                                <span class="oi oi-beaker" aria-hidden="true"></span> My Beers
+                                <i class="fa fa-beer" aria-hidden="true"></i> My Beers
                             </NavLink>
                         </div>
                     </Authorized>
@@ -68,9 +75,12 @@
                
                 <AuthorizeView Roles="@($"{UserRole.Judge},{UserRole.Administrator}")">
                     <Authorized Context="authContext">
-                        <div class="nav-item px-3">
+                        <div class="nav-section-header mt-3 mb-2 text-amber">
+                            <i class="fa fa-gavel me-2"></i> Judge
+                        </div>
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="judge-beers">
-                                <span class="oi oi-star" aria-hidden="true"></span> Judge Beers
+                                <i class="fa fa-star" aria-hidden="true"></i> Judge Beers
                             </NavLink>
                         </div>
                     </Authorized>
@@ -80,19 +90,23 @@
                 <AuthorizeView Roles="@UserRole.Administrator.ToString()">
                     <Authorized Context="authContext">
 
-                        <div class="nav-item px-3">
+                        <div class="nav-section-header mt-3 mb-2 text-amber">
+                            <i class="fa fa-cog me-2"></i> Administration
+                        </div>
+                        
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="user-management">
-                                <span class="oi oi-people" aria-hidden="true"></span> User Management
+                                <i class="fa fa-users" aria-hidden="true"></i> User Management
                             </NavLink>
                         </div>
-                        <div class="nav-item px-3">
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="generate-labels">
-                                <span class="oi oi-cog" aria-hidden="true"></span> Beer Labels
+                                <i class="fa fa-tags" aria-hidden="true"></i> Beer Labels
                             </NavLink>
                         </div>
-                        <div class="nav-item px-3">
+                        <div class="nav-item">
                             <NavLink class="nav-link" href="contest-management">
-                                <span class="oi oi-list" aria-hidden="true"></span> Contest Management
+                                <i class="fa fa-trophy" aria-hidden="true"></i> Contest Management
                             </NavLink>
                         </div>
                     </Authorized>

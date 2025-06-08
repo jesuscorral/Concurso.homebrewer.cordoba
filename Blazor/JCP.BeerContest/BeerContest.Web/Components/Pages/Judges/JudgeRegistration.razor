@@ -13,62 +13,97 @@
 
 @attribute [Authorize(Roles = "Participant, Judge")]
 
-<div class="container mt-4">
-    <h2 class="mb-4">Registro de Jueces</h2>
-    <EditForm Model="@judge" OnValidSubmit="@HandleRegistrationAsync">
-        <DataAnnotationsValidator />
-        <ValidationSummary Model="@judge" />
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>Informaci�n Juez</h4>
-            </div>
-
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name:</label>
-                    <InputText id="name" class="form-control" @bind-Value="judge.Name" />
+<div class="container mt-5">
+    <h2 class="section-header mb-4">Become a Judge</h2>
+    
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="beer-card card mb-4">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-gavel fa-2x me-3 text-amber"></i>
+                        <h4 class="mb-0">Judge Registration</h4>
+                    </div>
                 </div>
+                
+                <div class="card-body">
+                    <p class="lead mb-4">Join our panel of judges and help evaluate the best homebrewed beers in the contest.</p>
+                    
+                    <EditForm Model="@judge" OnValidSubmit="@HandleRegistrationAsync">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary Model="@judge" />
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Name:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <InputText id="name" class="form-control" @bind-Value="judge.Name" placeholder="Your first name" />
+                                </div>
+                            </div>
 
-                <div class="mb-3">
-                    <label for="surname" class="form-label">Surname:</label>
-                    <InputText id="surname" class="form-control" @bind-Value="judge.Surname" />
-                </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="surname" class="form-label">Surname:</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <InputText id="surname" class="form-control" @bind-Value="judge.Surname" placeholder="Your last name" />
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Phone:</label>
-                    <InputText id="phone" class="form-control" @bind-Value="judge.Phone" />
-                </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                <InputText id="phone" class="form-control" @bind-Value="judge.Phone" placeholder="Your contact number" />
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="preferences" class="form-label">Preferences:</label>
-                    <InputTextArea id="preferences" class="form-control" @bind-Value="judge.Preferences" />
-                </div>
+                        <div class="mb-3">
+                            <label for="contest" class="form-label">Contest:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-trophy"></i></span>
+                                <InputSelect id="contest" class="form-control" @bind-Value="judge.ContestId">
+                                    <option value="">-- Select Contest --</option>
+                                    @if (availableContests != null)
+                                    {
+                                        @foreach (var contest in availableContests)
+                                        {
+                                            <option value="@contest.Id">@contest.Edition</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="contest" class="form-label">Contest:</label>
-                    <InputSelect id="contest" class="form-control" @bind-Value="judge.ContestId">
-                        <option value="">-- Select Contest --</option>
-                        @if (availableContests != null)
-                        {
-                            @foreach (var contest in availableContests)
-                            {
-                                <option value="@contest.Id">@contest.Edition</option>
-                            }
-                        }
-                    </InputSelect>
-                </div>
+                        <div class="mb-3">
+                            <label for="bcjpid" class="form-label">BCJP Id:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                                <InputText id="bcjpid" class="form-control" @bind-Value="judge.BcjpId" placeholder="Your BCJP identification" />
+                            </div>
+                            <small class="text-muted">Enter your Beer Judge Certification Program ID if you have one.</small>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="bcjpid" class="form-label">BCJP Id:</label>
-                    <InputText id="bcjpid" class="form-control" @bind-Value="judge.BcjpId" />
+                        <div class="mb-3">
+                            <label for="preferences" class="form-label">Preferences:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-list"></i></span>
+                                <InputTextArea id="preferences" class="form-control" @bind-Value="judge.Preferences" rows="4" placeholder="Your beer style preferences or expertise" />
+                            </div>
+                            <small class="text-muted">Let us know which beer styles you prefer to judge or have expertise in.</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-beer-primary">
+                                <i class="fa fa-check-circle me-2"></i> Register as Judge
+                            </button>
+                        </div>
+                    </EditForm>
                 </div>
             </div>
         </div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button type="submit" class="btn btn-primary">Register</button>
-        </div>
-    </EditForm>
+    </div>
 </div>
 
 @code {
