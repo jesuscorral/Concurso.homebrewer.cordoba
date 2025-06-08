@@ -2,6 +2,7 @@ using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using BeerContest.Infrastructure.Firestore;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
+using Google.Cloud.Firestore;
 
 namespace BeerContest.Infrastructure.Repositories
 {
@@ -24,5 +25,15 @@ namespace BeerContest.Infrastructure.Repositories
             return id;  
         }
 
+        public async Task<IEnumerable<Judge>> GetAllByContestAsync(string contestId)
+        {
+            Query query = _context.CreateQuery(JudgesCollectionName)
+                .WhereEqualTo("ContestId", contestId);
+
+            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+            return querySnapshot.Documents
+                .Select(d => d.ConvertTo<FirestoreJudge>().ToJudge())
+                .ToList();
+        }
     }
 }
