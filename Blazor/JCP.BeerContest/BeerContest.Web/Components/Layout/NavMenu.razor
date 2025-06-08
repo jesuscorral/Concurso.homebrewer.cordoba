@@ -79,11 +79,7 @@
                 <!-- Using exact enum value names for roles -->
                 <AuthorizeView Roles="@UserRole.Administrator.ToString()">
                     <Authorized Context="authContext">
-                        <div class="nav-item px-3">
-                            <NavLink class="nav-link" href="admin">
-                                <span class="oi oi-cog" aria-hidden="true"></span> Administration
-                            </NavLink>
-                        </div>
+
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="user-management">
                                 <span class="oi oi-people" aria-hidden="true"></span> User Management
