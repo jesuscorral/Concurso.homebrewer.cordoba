@@ -1,0 +1,343 @@
+﻿@page "/register-beer"
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions
+@using System.Security.Claims
+@using System.Threading.Tasks
+@using BeerContest.Application.Features.Beers.Commands.RegisterBeer
+@using BeerContest.Application.Features.Beers.Commands.RegisterParticipant
+@using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
+@using BeerContest.Application.Features.Beers.Queries.GetParticipantBeersByContestId
+@using BeerContest.Application.Features.Contests.Queries.GetAllContests
+@using BeerContest.Domain.Models
+@using BeerContest.Web.Helpers
+@using MediatR
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+
+@attribute [Authorize(Roles = "Participant, Judge")]
+
+<div class="container mt-4">
+    <h2 class="mb-4">Registro de Cerveza</h2>
+
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+    else if (maxBeerRached)
+    {
+        <div class="alert alert-warning" role="alert">
+            Has alcanzado el límite máximo de 3 cervezas registradas. Por favor, elimina una cerveza antes de registrar una nueva.
+        </div>
+    }
+    else if (contests.Any(x => x.Status == ContestStatus.RegistrationOpen))
+    {
+        <EditForm Model="@beerRegistration" OnValidSubmit="@(async () => await HandleValidSubmitAsync())">
+            <DataAnnotationsValidator />
+            <ValidationSummary Model="@beerRegistration" />
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Información del Participante</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="memberNumber" class="form-label">Número socio ACCE</label>
+                        <InputText id="memberNumber" @bind-Value="beerRegistration.ACCEMemberNumber" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.ACCEMemberNumber)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Nombre y apellidos</label>
+                        <InputText id="fullName" @bind-Value="beerRegistration.FullName" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.FullName)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="birthDate" class="form-label">Fecha de nacimiento</label>
+                        <InputDate id="birthDate" @bind-Value="beerRegistration.BirthDate" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.BirthDate)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Teléfono</label>
+                        <InputText id="phone" @bind-Value="beerRegistration.Phone" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.Phone)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Categoría de Cerveza</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <InputRadioGroup @bind-Value="beerRegistration.Category" @bind-Value:after="CategoryChanged" Name="category">
+                                <div class="mb-2">
+                                    <InputRadio Value="@(BeerCategory.ClassicStyles)" id="classicStyles" class="form-check-input" />
+                                    <label class="form-check-label" for="classicStyles">Estilos clásicos</label>
+                                </div>
+                                <div>
+                                    <InputRadio Value="@(BeerCategory.HistoricalAndSpecialtyBeers)" id="historicalStyles" class="form-check-input" />
+                                    <label class="form-check-label" for="historicalStyles">Historical & Specialty beers</label>
+                                </div>
+                            </InputRadioGroup>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="beerStyle" class="form-label">Estilo de Cerveza</label>
+                        <InputSelect id="beerStyle" @bind-Value="beerRegistration.BeerStyle" class="form-select">
+                            <option value="">-- Seleccione un estilo --</option>
+                            @foreach (var style in availableStyles)
+                            {
+                                <option value="@style">@style</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => beerRegistration.BeerStyle)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Detalles de la Cerveza</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="alcoholContent" class="form-label">Grado de alcohol (%)</label>
+                        <InputNumber id="alcoholContent" @bind-Value="beerRegistration.AlcoholContent" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.AlcoholContent)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="elaborationDate" class="form-label">Fecha de elaboración</label>
+                        <InputDate id="elaborationDate" @bind-Value="beerRegistration.ElaborationDate" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.ElaborationDate)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="bottleDate" class="form-label">Fecha de embotellado</label>
+                        <InputDate id="bottleDate" @bind-Value="beerRegistration.BottleDate" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.BottleDate)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="malts" class="form-label">Maltas utilizadas</label>
+                        <InputText id="malts" @bind-Value="beerRegistration.Malts" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.Malts)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="hops" class="form-label">Lúpulos utilizados</label>
+                        <InputText id="hops" @bind-Value="beerRegistration.Hops" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.Hops)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="yeast" class="form-label">Levaduras utilizadas</label>
+                        <InputText id="yeast" @bind-Value="beerRegistration.Yeast" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.Yeast)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="additives" class="form-label">Otros ingredientes</label>
+                        <InputText id="additives" @bind-Value="beerRegistration.Additives" class="form-control" />
+                        <ValidationMessage For="@(() => beerRegistration.Additives)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="entryInstructions" class="form-label">Instrucciones de entrada</label>
+                        <InputTextArea id="entryInstructions" @bind-Value="beerRegistration.EntryInstructions" class="form-control" rows="3" />
+                        <ValidationMessage For="@(() => beerRegistration.EntryInstructions)" />
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">Registrar Cerveza</button>
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            Actualmente no hay concursos abiertos para el registro de cervezas.
+        </div>
+    }
+
+
+</div>
+
+@code {
+
+    private BeerRegistrationModel beerRegistration = new();
+    private List<string> availableStyles = new();
+    private List<string> classicStyles = BeerStyles.GetClassicStyles();
+    private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
+    private List<Contest> contests = new();
+    private string message;
+    private bool isError;
+    private bool isLoading = true;
+    private bool maxBeerRached = false;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Initialize with empty styles until a category is selected
+        beerRegistration.Category = BeerCategory.ClassicStyles;
+        availableStyles = classicStyles;
+        await LoadContests();
+        await CheckMaxBeerReached();
+    }
+
+    private async Task CheckMaxBeerReached()
+    {
+        var beers = await GetBeers();
+        maxBeerRached = beers.Count() >= 3; // TODO: Remove harcoded value and get this value from Contest
+    }
+
+    // This method is called after the category value is updated
+    private void CategoryChanged()
+    {
+        // Update available styles based on selected category
+        if (beerRegistration.Category == BeerCategory.ClassicStyles)
+        {
+            availableStyles = classicStyles;
+        }
+        else if (beerRegistration.Category == BeerCategory.HistoricalAndSpecialtyBeers)
+        {
+            availableStyles = historicalStyles;
+        }
+        else
+        {
+            availableStyles = new List<string>();
+        }
+
+        // Reset the selected beer style when category changes
+        beerRegistration.BeerStyle = string.Empty;
+    }
+
+    private async Task<IEnumerable<Beer>> GetBeers()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        IEnumerable<BeerWithContestStatus> beersWithContestStatus; 
+
+        var email = user.FindFirst(ClaimTypes.Email)?.Value;
+
+        if (!string.IsNullOrEmpty(email) && contests?.Any(x => x.Status == ContestStatus.RegistrationOpen) == true)
+        {
+            var query = new GetParticipantBeersByContestIdQuery
+                {
+                    ParticipantEmail = email,
+                    ContestId = contests.FirstOrDefault(x => x.Status == ContestStatus.RegistrationOpen)?.Id
+                };
+
+            beersWithContestStatus = await Mediator.Send(query);
+        }
+        else
+        {
+            beersWithContestStatus = new List<BeerWithContestStatus>();
+        }
+
+        return beersWithContestStatus;
+
+    }
+
+    private async Task LoadContests()
+    {
+        try
+        {
+            var result = await Mediator.Send(new GetAllContestsQuery());
+            contests = result.ToList();
+        }
+        catch (Exception ex)
+        {
+            message = $"Error loading contests: {ex.Message}";
+            isError = true;
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleValidSubmitAsync()
+    {
+        try
+        {
+            var participantCommand = await BuildRegisterParticipantCommand(beerRegistration);
+            var participantId = await Mediator.Send(participantCommand);
+
+            var beerCommand = await BuildRegisterBeerCommand(beerRegistration, participantId);
+            var beerId = await Mediator.Send(beerCommand);
+
+            // TODO - Fix it
+            ToastService.ShowSuccess("Cerveza registrada correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+
+            await CheckMaxBeerReached();
+            // Clear the form
+            ResetForm();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error registering beer: {ex.Message}");
+            ToastService.ShowError("Error al registrar la cerveza", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+        }
+    }
+
+    private async Task<RegisterBeerCommand> BuildRegisterBeerCommand(BeerRegistrationModel beerRegistration, string participantId)
+    {
+        var emailUser = await UserInfoHelper.GetEmailLoggedUserAsync(AuthenticationStateProvider);
+
+        return new RegisterBeerCommand
+            {
+                BeerStyle = beerRegistration.BeerStyle,
+                AlcoholContent = beerRegistration.AlcoholContent,
+                ElaborationDate = beerRegistration.ElaborationDate,
+                BottleDate = beerRegistration.BottleDate,
+                Malts = beerRegistration.Malts,
+                Hops = beerRegistration.Hops,
+                Yeast = beerRegistration.Yeast,
+                Additives = beerRegistration.Additives,
+                Category = beerRegistration.Category,
+                ParticipantEmail = emailUser,
+                EntryInstructions = beerRegistration.EntryInstructions,
+                ParticipantId = participantId,
+                ContestId = contests.FirstOrDefault(x => x.Status == ContestStatus.RegistrationOpen)?.Id // By default only will be open one Contest to register
+            };
+    }
+
+    private async Task<RegisterParticipantCommand> BuildRegisterParticipantCommand(BeerRegistrationModel beerRegistration)
+    {
+        var emailUser = await UserInfoHelper.GetEmailLoggedUserAsync(AuthenticationStateProvider);
+
+        return new RegisterParticipantCommand
+            {
+                ACCEMemberNumber = beerRegistration.ACCEMemberNumber,
+                FullName = beerRegistration.FullName,
+                BirthDate = beerRegistration.BirthDate,
+                Phone = beerRegistration.Phone,
+                EmailUser = emailUser,
+            };
+    }
+
+    private void ResetForm()
+    {
+        // Create a new instance to reset all fields
+        beerRegistration = new BeerRegistrationModel();
+
+        // Set default category and styles
+        beerRegistration.Category = BeerCategory.ClassicStyles;
+        availableStyles = classicStyles;
+        // Force UI refresh
+        StateHasChanged();
+    }
+}

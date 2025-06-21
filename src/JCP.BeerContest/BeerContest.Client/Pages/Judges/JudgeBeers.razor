@@ -1,0 +1,586 @@
+@page "/judge-beers"
+@using BeerContest.Application.Features.Beers.Queries.GetJudgeAssignedBeers
+@using BeerContest.Application.Features.Beers.Queries.GetallBeeryByContest
+@using BeerContest.Application.Features.Judges.Queries
+@using BeerContest.Application.Features.Judges.Queries.GetAllJudgesByContest
+@using BeerContest.Application.Features.JudgingTables.Commands.CreateJudgingTable
+@using BeerContest.Application.Features.JudgingTables.Commands.UpdateJudgingTable
+@using BeerContest.Application.Features.JudgingTables.Commands.DeleteJudgingTable
+@using BeerContest.Application.Features.JudgingTables.Queries.GetAllJudgingTables
+@using BeerContest.Application.Features.JudgingTables.Queries.GetJudgingTableById
+@using BeerContest.Application.Features.JudgingTables.Queries.GetUnassignedBeers
+@using BeerContest.Application.Features.JudgingTables.Queries.GetUnassignedJudges
+@using BeerContest.Application.Features.JudgingTables.Queries.AreAllBeersAssigned
+@using BeerContest.Application.Features.Contests.Queries.GetAllContests
+@using BeerContest.Domain.Models
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+@using MediatR
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+@inject IToastService ToastService
+@attribute [Authorize(Roles = "Judge,Administrator")]
+
+<PageTitle>Judge Beers</PageTitle>
+
+<AuthorizeView Roles="Judge,Administrator">
+    <Authorized Context="authContext">
+        <div class="container mt-4">
+            <h2 class="mb-4">Judging Tables</h2>
+            
+            <div class="mb-4">
+                <button class="btn btn-primary" @onclick="() => OpenTableForm()" disabled="@areAllBeersAssigned">
+                    <i class="fa fa-plus"></i> Create New Table
+                </button>
+            </div>
+
+            @if (showTableForm)
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>@(isEditing ? "Edit" : "Create") Judging Table</h4>
+                    </div>
+                    <div class="card-body">
+                        <EditForm Model="@currentTable" OnValidSubmit="@(async () => await HandleTableSubmit())">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="mb-3">
+                                <label for="tableName" class="form-label">Table Name:</label>
+                                <InputText id="tableName" class="form-control" @bind-Value="currentTable.Name" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contestId" class="form-label">Contest:</label>
+                                <InputSelect id="contestId" class="form-control" @bind-Value="currentTable.ContestId" @onchange="ContestChanged">
+                                    <option value="">-- Select Contest --</option>
+                                    @if (availableContests != null)
+                                    {
+                                        @foreach (var contest in availableContests)
+                                        {
+                                            <option value="@contest.Id">@contest.Edition</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(currentTable.ContestId))
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label">Judges (max 3):</label>
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        @foreach (var judgeId in currentTable.JudgeIds)
+                                        {
+                                            var judge = allJudges.FirstOrDefault(j => j.Id == judgeId);
+                                            if (judge != null)
+                                            {
+                                                <div class="badge bg-primary p-2">
+                                                    @($"{judge.Name} {judge.Surname}")
+                                                    <button type="button" class="btn-close btn-close-white ms-2"
+                                                            @onclick="() => RemoveJudge(judgeId)" aria-label="Remove"></button>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    
+                                    @if (currentTable.JudgeIds.Count < 3 && unassignedJudges.Any())
+                                    {
+                                        <div class="input-group">
+                                            <select class="form-select" @bind="selectedJudgeId">
+                                                <option value="">-- Select Judge --</option>
+                                                @foreach (var judge in unassignedJudges)
+                                                {
+                                                    <option value="@judge.Id">@($"{judge.Name} {judge.Surname}")</option>
+                                                }
+                                            </select>
+                                            <button class="btn btn-primary" type="button" @onclick="AddJudge">
+                                                Add Judge
+                                            </button>
+                                        </div>
+                                    }
+                                    else if (!unassignedJudges.Any() && currentTable.JudgeIds.Count < 3)
+                                    {
+                                        <div class="alert alert-info">No more judges available for this contest.</div>
+                                    }
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Beers (max 15):</label>
+                                    <div class="mb-2">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn @(beerSortBy == "Name" ? "btn-primary" : "btn-outline-primary")"
+                                                    @onclick="@(() => SortBeersBy("Name"))">
+                                                Sort by Name
+                                            </button>
+                                            <button type="button" class="btn @(beerSortBy == "AlcoholContent" ? "btn-primary" : "btn-outline-primary")"
+                                                    @onclick="@(() => SortBeersBy("AlcoholContent"))">
+                                                Sort by Alcohol Content
+                                            </button>
+                                            <button type="button" class="btn @(beerSortBy == "Style" ? "btn-primary" : "btn-outline-primary")"
+                                                    @onclick="@(() => SortBeersBy("Style"))">
+                                                Sort by Style
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        @foreach (var beerId in currentTable.BeerIds)
+                                        {
+                                            var beer = allBeers.FirstOrDefault(b => b.Id == beerId);
+                                            if (beer != null)
+                                            {
+                                                <div class="badge bg-secondary p-2">
+                                                    @beer.BeerStyle (@beer.AlcoholContent%)
+                                                    <button type="button" class="btn-close btn-close-white ms-2"
+                                                            @onclick="() => RemoveBeer(beerId)" aria-label="Remove"></button>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                    
+                                    @if (currentTable.BeerIds.Count < 15 && sortedUnassignedBeers.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Style</th>
+                                                        <th>Alcohol Content</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var beer in sortedUnassignedBeers)
+                                                    {
+                                                        <tr>
+                                                            <td>@beer.BeerStyle</td>
+                                                            <td>@beer.AlcoholContent%</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-primary" @onclick="() => AddBeer(beer.Id)">
+                                                                    Add
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else if (!sortedUnassignedBeers.Any() && currentTable.BeerIds.Count < 15)
+                                    {
+                                        <div class="alert alert-info">No more beers available for this contest.</div>
+                                    }
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" @onclick="CloseTableForm">Cancel</button>
+                                <button type="submit" class="btn btn-primary">@(isEditing ? "Update" : "Create")</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+
+            @if (judgingTables == null)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (!judgingTables.Any())
+            {
+                <div class="alert alert-info">
+                    No judging tables have been created yet.
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var table in judgingTables)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5 class="mb-0">@table.Name</h5>
+                                </div>
+                                <div class="card-body">
+                                    <h6>Judges:</h6>
+                                    <ul class="list-group mb-3">
+                                        @foreach (var judgeId in table.JudgeIds)
+                                        {
+                                            var judge = allJudges.FirstOrDefault(j => j.Id == judgeId);
+                                            if (judge != null)
+                                            {
+                                                <li class="list-group-item">@($"{judge.Name} {judge.Surname}")</li>
+                                            }
+                                        }
+                                        @if (!table.JudgeIds.Any())
+                                        {
+                                            <li class="list-group-item text-muted">No judges assigned</li>
+                                        }
+                                    </ul>
+
+                                    <h6>Beers: @table.BeerIds.Count</h6>
+                                    <ul class="list-group mb-3">
+                                        @foreach (var beerId in table.BeerIds)
+                                        {
+                                            var beer = allBeers.FirstOrDefault(j => j.Id == beerId);
+                                            if (beer != null)
+                                            {
+                                                <li class="list-group-item">@($"{beer.BeerStyle}")</li>
+                                            }
+                                        }
+                                        @if (!table.BeerIds.Any())
+                                        {
+                                            <li class="list-group-item text-muted">No beers assigned</li>
+                                        }
+                                    </ul>
+
+
+                                    <p class="card-text">
+                                        <small class="text-muted">Created: @table.CreatedAt.ToLocalTime().ToString("g")</small>
+                                    </p>
+                                </div>
+                                <div class="card-footer d-flex justify-content-end gap-2">
+                                    <button class="btn btn-sm btn-primary" @onclick="() => EditTable(table.Id)">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteTable(table.Id)">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="container">
+            <div class="alert alert-danger">
+                <h4>Access Denied</h4>
+                <p>You do not have permission to access this page. Only judges and administrators can access the judging area.</p>
+                <a href="/" class="btn btn-primary">Go to Home</a>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private List<JudgingTable> judgingTables;
+    private List<Contest> availableContests;
+    private List<Judge> allJudges = new List<Judge>();
+    private List<Judge> unassignedJudges = new List<Judge>();
+    private List<Beer> allBeers = new List<Beer>();
+    private List<Beer> unassignedBeers = new List<Beer>();
+    private List<Beer> sortedUnassignedBeers = new List<Beer>();
+    private bool areAllBeersAssigned = false;
+    private bool showTableForm = false;
+    private bool isEditing = false;
+    private string selectedJudgeId;
+    private string beerSortBy = "Name";
+
+    private class JudgingTableModel
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string ContestId { get; set; }
+        public List<string> JudgeIds { get; set; } = new List<string>();
+        public List<string> BeerIds { get; set; } = new List<string>();
+    }
+
+    private JudgingTableModel currentTable = new JudgingTableModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadContests();
+        await LoadJudgingTables();
+    }
+
+    private async Task LoadContests()
+    {
+        var contests = await Mediator.Send(new GetAllContestsQuery());
+        availableContests = contests.Where(c => c.Status != ContestStatus.Completed).ToList();
+    }
+
+    private async Task LoadJudgingTables()
+    {
+        if (availableContests != null && availableContests.Any())
+        {
+            var contestId = availableContests.First().Id;
+            judgingTables = (await Mediator.Send(new GetAllJudgingTablesQuery { ContestId = contestId })).ToList();
+
+            await LoadJudgesAndBeers(contestId);
+        }
+        else
+        {
+            judgingTables = new List<JudgingTable>();
+        }
+    }
+
+    private async Task LoadJudgesAndBeers(string contestId)
+    {
+        if (string.IsNullOrEmpty(contestId))
+            return;
+
+        var judgesQuery = new GetUnassignedJudgesQuery { ContestId = contestId };
+        unassignedJudges = (await Mediator.Send(judgesQuery)).ToList();
+
+
+        // Load all judges for the contest
+        var allJudgesQuery = new GetAllJudgesByContestCommand { ContestId = contestId};
+        allJudges = (await Mediator.Send(allJudgesQuery)).ToList();
+
+        // Add judges that are already assigned to tables
+        foreach (var table in judgingTables)
+        {
+            foreach (var judgeId in table.JudgeIds)
+            {
+                var judge = allJudges.FirstOrDefault(j => j.Id == judgeId);
+                if (judge == null)
+                {
+                    // TODO: Load judge details
+                }
+            }
+        }
+
+        // Load all beers for the contest
+        var beersQuery = new GetUnassignedBeersQuery { ContestId = contestId };
+        unassignedBeers = (await Mediator.Send(beersQuery)).ToList();
+        
+        var allBeersQuery = new GetallBeeryByContestCommand { ContestId = contestId };
+        allBeers =  (await Mediator.Send(allBeersQuery)).ToList();
+
+        // Add beers that are already assigned to tables
+        foreach (var table in judgingTables)
+        {
+            foreach (var beerId in table.BeerIds)
+            {
+                var beer = allBeers.FirstOrDefault(b => b.Id == beerId);
+                if (beer == null)
+                {
+                    // TODO: Load beer details
+                }
+            }
+        }
+
+        // Sort unassigned beers
+        SortBeersBy(beerSortBy);
+
+        // Check if all beers are assigned
+        areAllBeersAssigned = await Mediator.Send(new AreAllBeersAssignedQuery { ContestId = contestId });
+    }
+
+    private void SortBeersBy(string sortBy)
+    {
+        beerSortBy = sortBy;
+        
+        switch (sortBy)
+        {
+            case "Name":
+                sortedUnassignedBeers = unassignedBeers.OrderBy(b => b.BeerStyle).ToList();
+                break;
+            case "AlcoholContent":
+                sortedUnassignedBeers = unassignedBeers.OrderBy(b => b.AlcoholContent).ToList();
+                break;
+            case "Style":
+                sortedUnassignedBeers = unassignedBeers.OrderBy(b => b.BeerStyle).ToList();
+                break;
+            default:
+                sortedUnassignedBeers = unassignedBeers.ToList();
+                break;
+        }
+    }
+
+    private void OpenTableForm()
+    {
+        currentTable = new JudgingTableModel
+        {
+            ContestId = availableContests?.FirstOrDefault()?.Id ?? string.Empty
+        };
+        isEditing = false;
+        showTableForm = true;
+    }
+
+    private void CloseTableForm()
+    {
+        showTableForm = false;
+    }
+
+    private async Task ContestChanged()
+    {
+        if (!string.IsNullOrEmpty(currentTable.ContestId))
+        {
+            await LoadJudgesAndBeers(currentTable.ContestId);
+            
+            // Reset selected judges and beers
+            currentTable.JudgeIds.Clear();
+            currentTable.BeerIds.Clear();
+        }
+    }
+
+    private void AddJudge()
+    {
+        if (string.IsNullOrEmpty(selectedJudgeId) || currentTable.JudgeIds.Contains(selectedJudgeId) || currentTable.JudgeIds.Count >= 3)
+            return;
+
+        currentTable.JudgeIds.Add(selectedJudgeId);
+        var judge = unassignedJudges.FirstOrDefault(j => j.Id == selectedJudgeId);
+        if (judge != null)
+        {
+            unassignedJudges.Remove(judge);
+        }
+        selectedJudgeId = string.Empty;
+    }
+
+    private void RemoveJudge(string judgeId)
+    {
+        if (currentTable.JudgeIds.Contains(judgeId))
+        {
+            currentTable.JudgeIds.Remove(judgeId);
+            var judge = allJudges.FirstOrDefault(j => j.Id == judgeId);
+            if (judge != null && !unassignedJudges.Contains(judge))
+            {
+                unassignedJudges.Add(judge);
+            }
+        }
+    }
+
+    private void AddBeer(string beerId)
+    {
+        if (string.IsNullOrEmpty(beerId) || currentTable.BeerIds.Contains(beerId) || currentTable.BeerIds.Count >= 15)
+            return;
+
+        currentTable.BeerIds.Add(beerId);
+        var beer = unassignedBeers.FirstOrDefault(b => b.Id == beerId);
+        if (beer != null)
+        {
+            unassignedBeers.Remove(beer);
+            sortedUnassignedBeers.Remove(beer);
+        }
+    }
+
+    private void RemoveBeer(string beerId)
+    {
+        if (currentTable.BeerIds.Contains(beerId))
+        {
+            currentTable.BeerIds.Remove(beerId);
+            var beer = allBeers.FirstOrDefault(b => b.Id == beerId);
+            if (beer != null && !unassignedBeers.Contains(beer))
+            {
+                unassignedBeers.Add(beer);
+                SortBeersBy(beerSortBy); // Re-sort the list
+            }
+        }
+    }
+
+    private async Task HandleTableSubmit()
+    {
+        try
+        {
+            if (isEditing)
+            {
+                var command = new UpdateJudgingTableCommand
+                {
+                    Id = currentTable.Id,
+                    Name = currentTable.Name,
+                    ContestId = currentTable.ContestId,
+                    JudgeIds = currentTable.JudgeIds,
+                    BeerIds = currentTable.BeerIds
+                };
+
+                await Mediator.Send(command);
+                ToastService.ShowSuccess("Judging table updated successfully");
+            }
+            else
+            {
+                var command = new CreateJudgingTableCommand
+                {
+                    Name = currentTable.Name,
+                    ContestId = currentTable.ContestId,
+                    JudgeIds = currentTable.JudgeIds,
+                    BeerIds = currentTable.BeerIds
+                };
+
+                await Mediator.Send(command);
+                ToastService.ShowSuccess("Judging table created successfully");
+            }
+
+            // Refresh the data
+            await LoadJudgingTables();
+            CloseTableForm();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+    }
+
+    private async Task EditTable(string tableId)
+    {
+        try
+        {
+            var table = await Mediator.Send(new GetJudgingTableByIdQuery { Id = tableId });
+            
+            currentTable = new JudgingTableModel
+            {
+                Id = table.Id,
+                Name = table.Name,
+                ContestId = table.ContestId,
+                JudgeIds = new List<string>(table.JudgeIds),
+                BeerIds = new List<string>(table.BeerIds)
+            };
+
+            await LoadJudgesAndBeers(table.ContestId);
+            
+            // Remove the current table's judges from unassigned judges
+            foreach (var judgeId in table.JudgeIds)
+            {
+                var judge = unassignedJudges.FirstOrDefault(j => j.Id == judgeId);
+                if (judge != null)
+                {
+                    unassignedJudges.Remove(judge);
+                }
+            }
+
+            // Remove the current table's beers from unassigned beers
+            foreach (var beerId in table.BeerIds)
+            {
+                var beer = unassignedBeers.FirstOrDefault(b => b.Id == beerId);
+                if (beer != null)
+                {
+                    unassignedBeers.Remove(beer);
+                    sortedUnassignedBeers.Remove(beer);
+                }
+            }
+
+            isEditing = true;
+            showTableForm = true;
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteTable(string tableId)
+    {
+        try
+        {
+            await Mediator.Send(new DeleteJudgingTableCommand { Id = tableId });
+            ToastService.ShowSuccess("Judging table deleted successfully");
+            
+            // Refresh the data
+            await LoadJudgingTables();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+    }
+}

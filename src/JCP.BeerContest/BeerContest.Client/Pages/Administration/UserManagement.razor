@@ -1,0 +1,186 @@
+@page "/user-management"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using BeerContest.Domain.Models
+@using BeerContest.Application.Features.Users.Commands.UpdateUserRole
+@using BeerContest.Domain.Repositories
+@using BeerContest.Web.Services
+@using MediatR
+@inject IUserRepository UserRepository
+@inject IMediator Mediator
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ClaimsService ClaimsService
+
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>User Management</PageTitle>
+
+<h3>User Management</h3>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="alert alert-info mb-4">
+        <p>Use this page to assign roles to users. Changes will take effect the next time the user logs in.</p>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.DisplayName</td>
+                        <td>@user.Email</td>
+                        <td>@string.Join(", ", user.Roles)</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Participant) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Participant)">
+                                    Participant
+                                </button>
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Judge) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Judge)">
+                                    Judge
+                                </button>
+                                <button class="btn btn-sm @(user.Roles.Contains(UserRole.Administrator) ? "btn-primary" : "btn-outline-primary")"
+                                @onclick="() => ToggleUserRole(user.Id, UserRole.Administrator)">
+                                    Administrator
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isError ? "alert-danger" : "alert-success")">
+            @message
+        </div>
+    }
+}
+
+@code {
+    private List<User> users;
+    private string currentUserId;
+    private string message;
+    private bool isError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Get current user ID
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Get the user ID from claims
+            var emailClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Email);
+            if (emailClaim != null)
+            {
+                var currentUser = await UserRepository.GetByEmailAsync(emailClaim.Value);
+                if (currentUser != null)
+                {
+                    currentUserId = currentUser.Id;
+                }
+            }
+        }
+
+        // Load all users
+        users = (await UserRepository.GetAllAsync()).ToList();
+    }
+
+    private async Task ToggleUserRole(string userId, UserRole role)
+    {
+        try
+        {
+            // Get the user
+            var user = users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                message = "User not found.";
+                isError = true;
+                return;
+            }
+
+            // Determine if we're adding or removing the role
+            bool isAdd = !user.Roles.Contains(role);
+
+            // Create the command
+            var command = new UpdateUserRoleCommand
+            {
+                UserId = userId,
+                Role = role,
+                IsAdd = isAdd,
+                AdminId = currentUserId
+            };
+
+            // Send the command
+            var result = await Mediator.Send(command);
+
+            if (result)
+            {
+                // Update the local list
+                if (isAdd)
+                {
+                    if (!user.Roles.Contains(role))
+                    {
+                        user.Roles.Add(role);
+                    }
+                }
+                else
+                {
+                    if (user.Roles.Contains(role))
+                    {
+                        user.Roles.Remove(role);
+                    }
+                    
+                    // Ensure user has at least one role
+                    if (user.Roles.Count == 0)
+                    {
+                        user.Roles.Add(UserRole.Participant);
+                    }
+                }
+
+                // Refresh the user's claims if they're currently logged in
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var currentUserEmail = authState.User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+                
+                if (currentUserEmail == user.Email)
+                {
+                    await ClaimsService.RefreshUserClaimsAsync(userId);
+                    message = $"Roles updated successfully. The change has been applied immediately.";
+                }
+                else
+                {
+                    message = $"Roles updated successfully. The change will take effect the next time the user logs in.";
+                }
+                isError = false;
+            }
+            else
+            {
+                message = "Failed to update roles.";
+                isError = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+            isError = true;
+        }
+    }
+}

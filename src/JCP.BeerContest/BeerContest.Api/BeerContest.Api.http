@@ -1,0 +1,6 @@
+@BeerContest.Api_HostAddress = http://localhost:5239
+
+GET {{BeerContest.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
