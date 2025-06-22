@@ -24,8 +24,8 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("Email", email);
+            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("Email", email);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
@@ -43,8 +43,8 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role)
         {
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("Role", role);
+            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("Role", role);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents

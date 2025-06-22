@@ -1,30 +1,48 @@
+using BeerContest.Infrastructure.Services;
 using Google.Cloud.Firestore;
-using Microsoft.Extensions.Configuration;
 
 namespace BeerContest.Infrastructure.Firestore
 {
     public class BeerContestContext
     {
-        private readonly FirestoreDb _firestoreDb;
+        private readonly ISecureFirebaseService _firebaseService;
+        private FirestoreDb? _firestoreDb;
 
-        public BeerContestContext(IConfiguration configuration)
+        public BeerContestContext(ISecureFirebaseService firebaseService)
         {
-            string projectId = configuration["GoogleCloud:ProjectId"];
-            string keyFilePath = configuration["GoogleCloud:Credentials:Path"];
-
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", keyFilePath);
-
-
-            _firestoreDb = FirestoreDb.Create(projectId);
+            _firebaseService = firebaseService;
         }
 
-        public CollectionReference UsersCollection => _firestoreDb.Collection("users");
-        public CollectionReference BeersCollection => _firestoreDb.Collection("beers");
-        public CollectionReference ContestsCollection => _firestoreDb.Collection("contests");
-
-        public async Task<T> GetDocumentAsync<T>(string collectionName, string documentId) where T : class
+        private async Task<FirestoreDb> GetFirestoreDbAsync()
         {
-            DocumentReference docRef = _firestoreDb.Collection(collectionName).Document(documentId);
+            if (_firestoreDb == null)
+            {
+                _firestoreDb = await _firebaseService.GetFirestoreDbAsync();
+            }
+            return _firestoreDb;
+        }
+
+        public async Task<CollectionReference> GetUsersCollectionAsync()
+        {
+            var db = await GetFirestoreDbAsync();
+            return db.Collection("users");
+        }
+
+        public async Task<CollectionReference> GetBeersCollectionAsync()
+        {
+            var db = await GetFirestoreDbAsync();
+            return db.Collection("beers");
+        }
+
+        public async Task<CollectionReference> GetContestsCollectionAsync()
+        {
+            var db = await GetFirestoreDbAsync();
+            return db.Collection("contests");
+        }
+        public async Task<T?> GetDocumentAsync<T>(string collectionName, string documentId) where T : class
+        {
+            var db = await GetFirestoreDbAsync();
+            DocumentReference docRef = db.Collection(collectionName).Document(documentId);
             DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
             if (snapshot.Exists)
@@ -41,11 +59,12 @@ namespace BeerContest.Infrastructure.Firestore
             }
 
             return null;
-        }
-
+        }        
+        
         public async Task<IEnumerable<T>> GetCollectionAsync<T>(string collectionName) where T : class
         {
-            Query query = _firestoreDb.Collection(collectionName);
+            var db = await GetFirestoreDbAsync();
+            Query query = db.Collection(collectionName);
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
 
             List<T> items = new List<T>();
@@ -72,7 +91,8 @@ namespace BeerContest.Infrastructure.Firestore
         {
             try
             {
-                CollectionReference colRef = _firestoreDb.Collection(collectionName);
+                var db = await GetFirestoreDbAsync();
+                CollectionReference colRef = db.Collection(collectionName);
                 DocumentReference docRef = await colRef.AddAsync(item);
                 return docRef.Id;
             }
@@ -83,12 +103,13 @@ namespace BeerContest.Infrastructure.Firestore
             }
         }
 
-        public Task SetDocumentAsync<T>(string collectionName, string documentId, T item)
+        public async Task SetDocumentAsync<T>(string collectionName, string documentId, T item)
         {
             try
             {
-                DocumentReference docRef = _firestoreDb.Collection(collectionName).Document(documentId);
-                return docRef.SetAsync(item);
+                var db = await GetFirestoreDbAsync();
+                DocumentReference docRef = db.Collection(collectionName).Document(documentId);
+                await docRef.SetAsync(item);
             }
             catch (Exception ex)
             {
@@ -97,21 +118,24 @@ namespace BeerContest.Infrastructure.Firestore
             }
         }
 
-        public Task UpdateDocumentAsync(string collectionName, string documentId, Dictionary<string, object> updates)
+        public async Task UpdateDocumentAsync(string collectionName, string documentId, Dictionary<string, object> updates)
         {
-            DocumentReference docRef = _firestoreDb.Collection(collectionName).Document(documentId);
-            return docRef.UpdateAsync(updates);
+            var db = await GetFirestoreDbAsync();
+            DocumentReference docRef = db.Collection(collectionName).Document(documentId);
+            await docRef.UpdateAsync(updates);
         }
 
-        public Task DeleteDocumentAsync(string collectionName, string documentId)
+        public async Task DeleteDocumentAsync(string collectionName, string documentId)
         {
-            DocumentReference docRef = _firestoreDb.Collection(collectionName).Document(documentId);
-            return docRef.DeleteAsync();
-        }
-
-        public Query CreateQuery(string collectionName)
+            var db = await GetFirestoreDbAsync();
+            DocumentReference docRef = db.Collection(collectionName).Document(documentId);
+            await docRef.DeleteAsync();
+        }        
+        
+        public async Task<Query> CreateQueryAsync(string collectionName)
         {
-            return _firestoreDb.Collection(collectionName);
+            var db = await GetFirestoreDbAsync();
+            return db.Collection(collectionName);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace BeerContest.Infrastructure.Repositories
         private readonly BeerContestContext _firestoreContext;
         private const string TableCollectionName = "judging_tables";
         private const string BeerCollectionName = "beers";
-        private const string JudgeCollectionName = "judges";
+        private const string CollectionName = "judges";
         private readonly IBeerRepository _beerRepository;
         private readonly IJudgeRepository _judgeRepository;
 
@@ -27,8 +27,8 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<IEnumerable<JudgingTable>> GetAllAsync(string contestId)
         {
-            Query query = _firestoreContext.CreateQuery(TableCollectionName)
-                .WhereEqualTo("ContestId", contestId);
+            var query = await _firestoreContext.CreateQueryAsync(TableCollectionName);
+            query = query.WhereEqualTo("ContestId", contestId);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents
@@ -88,10 +88,10 @@ namespace BeerContest.Infrastructure.Repositories
         public async Task<IEnumerable<Judge>> GetUnassignedJudgesAsync(string contestId)
         {
             // Get all judges for the contest
-            Query judgeQuery = _firestoreContext.CreateQuery(JudgeCollectionName)
-                .WhereEqualTo("ContestId", contestId);
+            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("ContestId", contestId);
 
-            QuerySnapshot judgeSnapshot = await judgeQuery.GetSnapshotAsync();
+            QuerySnapshot judgeSnapshot = await query.GetSnapshotAsync();
             var allJudges = judgeSnapshot.Documents
                 .Select(d => d.ConvertTo<FirestoreJudge>().ToJudge())
                 .ToList();

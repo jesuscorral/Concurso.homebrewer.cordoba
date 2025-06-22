@@ -3,6 +3,7 @@ using BeerContest.Application.Features.Users.Commands.RegisterGoogleUser;
 using BeerContest.Application.Features.Users.Queries.GetUserById;
 using BeerContest.Domain.Models;
 using BeerContest.Infrastructure;
+using BeerContest.Web.Infrastructure.Extensions;
 using BeerContest.Web.Services;
 using Blazored.Toast;
 using Blazorise;
@@ -14,6 +15,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.ConfigureAppConfiguration();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -28,9 +31,9 @@ builder.Services.AddAuthentication(options =>
 .AddCookie()
 .AddGoogle(options =>
 {
-    var googleAuthSection = builder.Configuration.GetSection("Authentication:Google");
-    options.ClientId = googleAuthSection["ClientId"];
-    options.ClientSecret = googleAuthSection["ClientSecret"];
+    options.ClientId = builder.Configuration[Constants.Google.Authentication.CLIENT_ID] ?? throw new InvalidOperationException("Google Client ID is not configured.");
+    options.ClientSecret = builder.Configuration[Constants.Google.Authentication.CLIENT_SECRET] ?? throw new InvalidOperationException("Google Client Secret is not configured.");
+    
     // Use the default callback path for Google authentication
     options.CallbackPath = "/signin-google"; // Default ASP.NET Core callback path
     options.Scope.Add("email");
@@ -126,6 +129,9 @@ builder.Services.AddScoped<ClaimsService>();
 // Add HttpClient factory
 builder.Services.AddHttpClient();
 
+// Add health checks
+builder.Services.AddHealthChecks();
+
 builder.Services.AddBlazoredToast();
 
 builder.Services
@@ -150,10 +156,17 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Initialize Firebase service
+var firebaseService = app.Services.GetRequiredService<BeerContest.Infrastructure.Services.ISecureFirebaseService>();
+await firebaseService.InitializeAsync();
+
 app.MapRazorComponents<BeerContest.Web.Components.App>()
     .AddInteractiveServerRenderMode();
 
 // Map controller endpoints
 app.MapControllers();
+
+// Map health check endpoint
+app.MapHealthChecks("/health");
 
 app.Run();

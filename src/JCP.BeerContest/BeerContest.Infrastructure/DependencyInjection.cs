@@ -1,6 +1,7 @@
 using BeerContest.Domain.Repositories;
 using BeerContest.Infrastructure.Firestore;
 using BeerContest.Infrastructure.Repositories;
+using BeerContest.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,9 +11,11 @@ namespace BeerContest.Infrastructure
     {
         public static IServiceCollection AddContests(this IServiceCollection services, IConfiguration configuration)
         {
+            // Register secure Firebase service
+            services.AddSingleton<ISecureFirebaseService, SecureFirebaseService>();
 
             // Register Firestore context
-            services.AddSingleton(new BeerContestContext(configuration));
+            services.AddSingleton<BeerContestContext>();
 
             return services;
         }

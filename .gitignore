@@ -365,3 +365,15 @@ FodyWeavers.xsd
 .vscode/settings.json
 /Sidra/src/Sidra.Supervisor.Manager/ClientApp/package-lock.json
 /Sidra/src/Sidra.Supervisor.Manager/app_data/plugins
+
+# Firebase service account keys (sensitive secrets)
+*firebase-adminsdk*.json
+*firebase*.json
+firebase-service-account*.json
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.development
+*.env

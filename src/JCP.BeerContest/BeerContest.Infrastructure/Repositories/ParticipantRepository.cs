@@ -25,14 +25,13 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<Participant?> GetByEmailUserAsync(string emailUser)
         {
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("EmailUser", emailUser);
+            var collection = await _firestoreContext.GetCollectionAsync<FirestoreParticipant>(CollectionName);
 
-            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            return querySnapshot.Documents
-                .Select(d => d.ConvertTo<FirestoreParticipant>().ToParticipant())
-                .FirstOrDefault();
+            var query = collection.AsQueryable()
+                .Where(fp => fp.EmailUser == emailUser);
 
+            var firestoreParticipant = query.FirstOrDefault();
+            return firestoreParticipant?.ToParticipant();
         }
     }
 }

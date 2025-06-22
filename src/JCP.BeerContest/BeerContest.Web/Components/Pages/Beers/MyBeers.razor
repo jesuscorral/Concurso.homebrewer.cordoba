@@ -6,8 +6,6 @@
 @using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 @using BeerContest.Application.Features.Beers.Commands.DeleteBeer
 @using BeerContest.Domain.Models
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
 @using MediatR
 @inject IMediator Mediator
@@ -119,7 +117,6 @@
     private string email;
     private List<Contest> contests = new();
     private string message;
-    private bool isError;
     private bool isLoading = true;
 
     [CascadingParameter]
@@ -132,10 +129,9 @@
         var user = await GetUser();
 
 
-        if (user.Identity.IsAuthenticated)
+        if (user?.Identity?.IsAuthenticated == true)
         {
             beers = await GetBeers(user);
-
         }
         else
         {
@@ -185,7 +181,6 @@
         catch (Exception ex)
         {
             message = $"Error loading contests: {ex.Message}";
-            isError = true;
         }
         finally
         {

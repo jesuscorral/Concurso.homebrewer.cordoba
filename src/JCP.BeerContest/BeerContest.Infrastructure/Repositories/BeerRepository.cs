@@ -33,8 +33,8 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<IEnumerable<Beer>> GetByContestAsync(string contestId)
         {
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("ContestId", contestId);
+            var query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("ContestId", contestId);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             return querySnapshot.Documents
@@ -45,8 +45,9 @@ namespace BeerContest.Infrastructure.Repositories
         public async Task<IEnumerable<BeerWithContestStatus>> GetByParticipantAsync(string participantEmail)
         {
             // Get beers by participant email
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("ParticipantEmail", participantEmail);
+            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("ParticipantEmail", participantEmail);
+
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
             var beers = querySnapshot.Documents
@@ -92,8 +93,8 @@ namespace BeerContest.Infrastructure.Repositories
         public async Task<IEnumerable<BeerWithContestStatus>> GetByParticipantAndContestIdAsync(string participantEmail, string contestId)
         {
             // Get beers by participant email
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("ParticipantEmail", participantEmail)
+            var query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("ParticipantEmail", participantEmail)
                 .WhereEqualTo("ContestId", contestId);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
@@ -156,8 +157,8 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<int> GetBrewerBeerCountAsync(string brewerId, string contestId)
         {
-            Query query = _firestoreContext.CreateQuery(CollectionName)
-                .WhereEqualTo("BrewerId", brewerId)
+            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
+            query = query.WhereEqualTo("BrewerId", brewerId)
                 .WhereEqualTo("ContestId", contestId);
 
             QuerySnapshot querySnapshot = await query.GetSnapshotAsync();

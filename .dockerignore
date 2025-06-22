@@ -1,0 +1,69 @@
+# .dockerignore file for Blazor application
+
+# Build output directories
+**/bin/
+**/obj/
+**/out/
+**/TestResults/
+
+# Visual Studio and VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userprefs
+.DS_Store
+
+# Package managers
+**/node_modules/
+**/npm-debug.log
+**/yarn-error.log
+**/package-lock.json
+**/yarn.lock
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation and README files
+README.md
+LICENSE
+*.md
+
+# Firebase local files
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Docker files (avoid recursive copying)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Temporary files
+tmp/
+temp/
+
+# Application specific ignores
+dist/
+deploy-commands.txt
+build-for-firebase.bat
