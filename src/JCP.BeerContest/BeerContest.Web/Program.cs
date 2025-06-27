@@ -116,8 +116,8 @@ builder.Services.AddAuthorization(options =>
 
 // Add application services
 builder.Services.AddApplication();
-builder.Services.AddRepositories(builder.Configuration);
-builder.Services.AddContests(builder.Configuration);
+builder.Services.AddRepositories();
+builder.Services.InitializeDatabase(builder.Configuration);
 builder.Services.AddControllers();
 
 // Add HttpContextAccessor
@@ -156,9 +156,9 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Initialize Firebase service
-var firebaseService = app.Services.GetRequiredService<BeerContest.Infrastructure.Services.ISecureFirebaseService>();
-await firebaseService.InitializeAsync();
+//// Initialize Firebase service
+//var firebaseService = app.Services.GetRequiredService<BeerContest.Infrastructure.Services.ISecureFirebaseService>();
+//await firebaseService.InitializeAsync(builder.Configuration);
 
 app.MapRazorComponents<BeerContest.Web.Components.App>()
     .AddInteractiveServerRenderMode();

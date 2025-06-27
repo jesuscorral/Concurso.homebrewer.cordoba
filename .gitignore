@@ -377,3 +377,7 @@ firebase-service-account*.json
 .env.production
 .env.development
 *.env
+
+# Local secrets files
+secrets.json
+*/secrets.json
