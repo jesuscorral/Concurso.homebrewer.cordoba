@@ -9,8 +9,8 @@ namespace BeerContest.Infrastructure.Firestore
 
         public BeerContestContext(IConfiguration configuration)
         {
-            string projectId = configuration["GoogleCloud:ProjectId"];
-            string keyFilePath = configuration["GoogleCloud:Credentials:Path"];
+            string projectId = configuration["GoogleCloud:ProjectId"] ?? throw new InvalidOperationException("GoogleCloud:ProjectId configuration is required");
+            string keyFilePath = configuration["GoogleCloud:Credentials:Path"] ?? throw new InvalidOperationException("GoogleCloud:Credentials:Path configuration is required");
 
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", keyFilePath);
 

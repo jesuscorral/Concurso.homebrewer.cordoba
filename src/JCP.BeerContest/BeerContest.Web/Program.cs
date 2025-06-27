@@ -43,7 +43,10 @@ builder.Services.AddAuthentication(options =>
     {
         try
         {
-            var identity = (ClaimsIdentity)context.Principal.Identity;
+            if (context.Principal?.Identity is not ClaimsIdentity identity)
+            {
+                return;
+            }
             
             // Extract claims
             var googleId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -155,10 +158,6 @@ app.UseAntiforgery();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-//// Initialize Firebase service
-//var firebaseService = app.Services.GetRequiredService<BeerContest.Infrastructure.Services.ISecureFirebaseService>();
-//await firebaseService.InitializeAsync(builder.Configuration);
 
 app.MapRazorComponents<BeerContest.Web.Components.App>()
     .AddInteractiveServerRenderMode();

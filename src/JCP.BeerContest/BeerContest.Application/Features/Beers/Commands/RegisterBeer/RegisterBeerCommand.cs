@@ -36,7 +36,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
         public async Task<string> Handle(RegisterBeerCommand request, CancellationToken cancellationToken)
         {
             // TODO: Check if the contest is open for registration
-            // TODO: Añadir settings del concurso donde definir las fechas y demás requisitos
+            // TODO: Aï¿½adir settings del concurso donde definir las fechas y demï¿½s requisitos
 
             //TODO: Check if the brewer has already registered the maximum number of beers
             //int beerCount = await _beerRepository.GetBrewerBeerCountAsync(request.BrewerId, request.ContestId);

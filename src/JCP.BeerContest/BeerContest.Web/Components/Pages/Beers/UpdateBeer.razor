@@ -144,14 +144,14 @@
     private List<string> classicStyles = BeerStyles.GetClassicStyles();
     private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
     private bool isLoading = true;
-    private string userEmail;
+    private string? userEmail;
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity?.IsAuthenticated == true)
         {
             userEmail = user.FindFirst(ClaimTypes.Email)?.Value;
 

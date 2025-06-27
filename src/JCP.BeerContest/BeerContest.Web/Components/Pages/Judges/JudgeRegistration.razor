@@ -128,14 +128,14 @@
 
         var command = new RegisterJudgeCommand
         {
-            Name = judge.Name,
-            Surname = judge.Surname,
-            Phone = judge.Phone,
+            Name = judge.Name ?? string.Empty,
+            Surname = judge.Surname ?? string.Empty,
+            Phone = judge.Phone ?? string.Empty,
             Email = emailUser,
-            Preferences = judge.Preferences,
-            BcjpId = judge.BcjpId,
-            ContestId = judge.ContestId,
-            ContestName = judge.ContestName
+            Preferences = judge.Preferences ?? string.Empty,
+            BcjpId = judge.BcjpId ?? string.Empty,
+            ContestId = judge.ContestId ?? string.Empty,
+            ContestName = judge.ContestName ?? string.Empty
         };
 
         await Mediator.Send(command);
@@ -149,13 +149,13 @@
 
     public class JudgeModel
     {
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Phone { get; set; }
-        public string Email { get; set; }
-        public string Preferences { get; set; }
-        public string BcjpId { get; set; }
-        public string ContestId { get; set; }
-        public string ContestName { get; set; }
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public string? Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Preferences { get; set; }
+        public string? BcjpId { get; set; }
+        public string? ContestId { get; set; }
+        public string? ContestName { get; set; }
     }
 }

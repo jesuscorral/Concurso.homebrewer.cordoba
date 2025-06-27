@@ -75,9 +75,9 @@ else
 }
 
 @code {
-    private List<User> users;
-    private string currentUserId;
-    private string message;
+    private List<User>? users;
+    private string? currentUserId;
+    private string? message;
     private bool isError;
 
     protected override async Task OnInitializedAsync()
@@ -86,7 +86,7 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
+        if (user.Identity?.IsAuthenticated == true)
         {
             // Get the user ID from claims
             var emailClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Email);
@@ -108,6 +108,14 @@ else
     {
         try
         {
+            // Check if users list is loaded
+            if (users == null)
+            {
+                message = "Users not loaded yet.";
+                isError = true;
+                return;
+            }
+
             // Get the user
             var user = users.FirstOrDefault(u => u.Id == userId);
             if (user == null)

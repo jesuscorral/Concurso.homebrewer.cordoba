@@ -67,6 +67,7 @@ namespace BeerContest.Web.Controllers
         public async Task<IActionResult> Logout(string? returnUrl = "/")
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            returnUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
             return Redirect(returnUrl);
         }
 

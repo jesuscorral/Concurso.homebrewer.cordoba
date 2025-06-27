@@ -1,0 +1,34 @@
+Generar un CI/CD para desplegar automaticamente:
+     - Para desplegar automaticamente hace falta desplegar la infra y popular los secretos, esos secretos deberán estar almacenados como secretos en github
+     
+
+Crear un keyvault con estos secrets:
+
+Authentication--Google--ClientId => 169610184036-teev9osk95dp8ff74tgkt1gac9rmvi2l.apps.googleusercontent.com
+Authentication--Google--ClientSecret => rtYoG5MXxXtqBhYY82Qse2Fh
+GoogleCloud--ProjectId => concursohomebrewercordob-6d540
+Firebase--Service--Account => az keyvault secret set --vault-name https://jcp-6201-kva.vault.azure.net/ --name Firebase--Service--Account --file .\src\concursohomebrewercordob-6d540-firebase-adminsdk-fbsvc-fc9e56c9ec.json
+
+
+  "Authentication": {
+    "Google": {
+      "ClientId": "169610184036-teev9osk95dp8ff74tgkt1gac9rmvi2l.apps.googleusercontent.com",
+      "ClientSecret": "rtYoG5MXxXtqBhYY82Qse2Fh"
+    }
+  },
+  
+  "GoogleCloud": {
+    "ProjectId": "concursohomebrewercordob-6d540",
+    "Credentials": {
+      "Path": "C:\\MyPersonalWS\\Concurso.homebrewer.cordoba\\src\\concursohomebrewercordob-6d540-firebase-adminsdk-fbsvc-fc9e56c9ec.json"
+    }
+  },
+  
+  
+  // Initialize Firebase App here (once during app startup)
+var firebaseCredentialsJson = builder.Configuration["FirebaseCredentialsJson"]; // or load from Key Vault, etc.
+var googleCredential = GoogleCredential.FromJson(firebaseCredentialsJson);
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = googleCredential
+});

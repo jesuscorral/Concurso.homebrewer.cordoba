@@ -7,7 +7,7 @@ namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
 {
     public class AssignBeersToJudgeCommand : IRequest<bool>
     {
-        public string JudgeId { get; set; }
+        public required string JudgeId { get; set; }
         public List<string> BeerIds { get; set; } = new List<string>();
     }
 
