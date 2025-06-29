@@ -140,7 +140,7 @@ else
             // Send the command
             var result = await Mediator.Send(command);
 
-            if (result)
+            if (result.Succeeded)
             {
                 // Update the local list
                 if (isAdd)

@@ -305,7 +305,7 @@
     private async Task LoadContests()
     {
         var contests = await Mediator.Send(new GetAllContestsQuery());
-        availableContests = contests.Where(c => c.Status != ContestStatus.Completed).ToList();
+        availableContests = contests.Data.Where(c => c.Status != ContestStatus.Completed).ToList();
     }
 
     private async Task LoadJudgingTables()
@@ -313,7 +313,7 @@
         if (availableContests != null && availableContests.Any())
         {
             var contestId = availableContests.First().Id;
-            judgingTables = (await Mediator.Send(new GetAllJudgingTablesQuery { ContestId = contestId })).ToList();
+            judgingTables = (await Mediator.Send(new GetAllJudgingTablesQuery { ContestId = contestId })).Data.ToList();
 
             await LoadJudgesAndBeers(contestId);
         }
@@ -329,12 +329,12 @@
             return;
 
         var judgesQuery = new GetUnassignedJudgesQuery { ContestId = contestId };
-        unassignedJudges = (await Mediator.Send(judgesQuery)).ToList();
+        unassignedJudges = (await Mediator.Send(judgesQuery)).Data.ToList();
 
 
         // Load all judges for the contest
         var allJudgesQuery = new GetAllJudgesByContestCommand { ContestId = contestId};
-        allJudges = (await Mediator.Send(allJudgesQuery)).ToList();
+        allJudges = (await Mediator.Send(allJudgesQuery)).Data.ToList();
 
         // Add judges that are already assigned to tables
         foreach (var table in judgingTables)
@@ -351,10 +351,10 @@
 
         // Load all beers for the contest
         var beersQuery = new GetUnassignedBeersQuery { ContestId = contestId };
-        unassignedBeers = (await Mediator.Send(beersQuery)).ToList();
-        
+        unassignedBeers = (await Mediator.Send(beersQuery)).Data.ToList();
+
         var allBeersQuery = new GetallBeeryByContestCommand { ContestId = contestId };
-        allBeers =  (await Mediator.Send(allBeersQuery)).ToList();
+        allBeers =  (await Mediator.Send(allBeersQuery)).Data.ToList();
 
         // Add beers that are already assigned to tables
         foreach (var table in judgingTables)
@@ -373,7 +373,8 @@
         SortBeersBy(beerSortBy);
 
         // Check if all beers are assigned
-        areAllBeersAssigned = await Mediator.Send(new AreAllBeersAssignedQuery { ContestId = contestId });
+        var ret = await Mediator.Send(new AreAllBeersAssignedQuery { ContestId = contestId });
+        areAllBeersAssigned = ret.Succeeded; 
     }
 
     private void SortBeersBy(string sortBy)
@@ -525,8 +526,9 @@
     {
         try
         {
-            var table = await Mediator.Send(new GetJudgingTableByIdQuery { Id = tableId });
-            
+            var ret = await Mediator.Send(new GetJudgingTableByIdQuery { Id = tableId });
+            var table = ret.Data ?? throw new Exception("Judging table not found");
+
             currentTable = new JudgingTableModel
             {
                 Id = table.Id,

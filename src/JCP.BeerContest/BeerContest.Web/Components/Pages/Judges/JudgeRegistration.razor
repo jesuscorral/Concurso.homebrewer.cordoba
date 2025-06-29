@@ -110,10 +110,19 @@
     private JudgeModel judge = new JudgeModel();
     private IEnumerable<Contest> availableContests;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var contests = await Mediator.Send(new GetAllContestsQuery());
-        availableContests = contests.Where(c => c.Status != ContestStatus.Judging && c.Status != ContestStatus.Completed);
+    @code {  
+        protected override async Task OnInitializedAsync()  
+        {  
+            var contests = await Mediator.Send(new GetAllContestsQuery());  
+            if (contests?.Data != null) // Ensure contests.Data is not null before calling Where  
+            {  
+                availableContests = contests.Data.Where(c => c.Status != ContestStatus.Judging && c.Status != ContestStatus.Completed);  
+            }  
+            else  
+            {  
+                availableContests = Enumerable.Empty<Contest>(); // Provide an empty collection if contests.Data is null  
+            }  
+        }  
     }
 
     private async Task HandleRegistrationAsync()

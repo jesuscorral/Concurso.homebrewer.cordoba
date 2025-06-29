@@ -1,11 +1,16 @@
 using BeerContest.Application.Common.Behaviors;
+using BeerContest.Application.Common.Interfaces;
+using BeerContest.Application.Common.Models;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
 {
-    public class RegisterGoogleUserCommand : IRequest<string>
+    public class RegisterGoogleUserCommand : IApiRequest<string>
     {
         public required string Id { get; set; } // This is the unique identifier for the user in your system
         public required string GoogleId { get; set; }
@@ -14,7 +19,7 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
         public List<UserRole> Roles { get; set; } = new List<UserRole> { UserRole.Participant }; // Default role is Participant
     }
 
-    public class RegisterGoogleUserCommandHandler : IRequestHandler<RegisterGoogleUserCommand, string>
+    public class RegisterGoogleUserCommandHandler : IApiRequestHandler<RegisterGoogleUserCommand, string>
     {
         private readonly IUserRepository _userRepository;
 
@@ -23,40 +28,63 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
             _userRepository = userRepository;
         }
 
-        public async Task<string> Handle(RegisterGoogleUserCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(RegisterGoogleUserCommand request, CancellationToken cancellationToken)
         {
-            // Check if user already exists
-            var existingUser = await _userRepository.GetByEmailAsync(request.Email);
-            if (existingUser != null)
+            try
             {
-                // Update the existing user with Google ID if not already set
-                if (string.IsNullOrEmpty(existingUser.GoogleId))
+                // Check if user already exists
+                User? existingUser = null;
+                
+                try
                 {
-                    existingUser.GoogleId = request.GoogleId;
+                    existingUser = await _userRepository.GetByEmailAsync(request.Email);
+                }
+                catch (KeyNotFoundException)
+                {
+                    // User doesn't exist, that's expected in some cases
+                }
+                
+                if (existingUser != null)
+                {
+                    // Update the existing user with Google ID if not already set
+                    if (string.IsNullOrEmpty(existingUser.GoogleId))
+                    {
+                        existingUser.GoogleId = request.GoogleId;
+                        await _userRepository.UpdateAsync(existingUser);
+                    }
+
+                    // Update last login time
+                    existingUser.LastLoginAt = DateTime.UtcNow;
                     await _userRepository.UpdateAsync(existingUser);
+
+                    return ApiResponse<string>.Success(
+                        existingUser.Id, 
+                        "User login successful"
+                    );
                 }
 
-                // Update last login time
-                existingUser.LastLoginAt = DateTime.UtcNow;
-                await _userRepository.UpdateAsync(existingUser);
+                // Create a new user
+                var user = new User
+                {
+                    Id = request.Id, // Use the provided ID or generate a new one if necessary
+                    GoogleId = request.GoogleId,
+                    Email = request.Email,
+                    DisplayName = request.DisplayName,
+                    Roles = request.Roles, 
+                    CreatedAt = DateTime.UtcNow,
+                    LastLoginAt = DateTime.UtcNow
+                };
 
-                //return existingUser.GoogleId;
-                return existingUser.Id;
+                var userId = await _userRepository.CreateAsync(user);
+                return ApiResponse<string>.Success(userId, "User registered successfully");
             }
-
-            // Create a new user
-            var user = new User
+            catch (Exception ex)
             {
-                Id = request.Id, // Use the provided ID or generate a new one if necessary
-                GoogleId = request.GoogleId,
-                Email = request.Email,
-                DisplayName = request.DisplayName,
-                Roles = request.Roles, 
-                CreatedAt = DateTime.UtcNow,
-                LastLoginAt = DateTime.UtcNow
-            };
-
-            return await _userRepository.CreateAsync(user);
+                return ApiResponse<string>.Failure(
+                    "Failed to register user",
+                    new List<string> { ex.Message }
+                );
+            }
         }
     }
 

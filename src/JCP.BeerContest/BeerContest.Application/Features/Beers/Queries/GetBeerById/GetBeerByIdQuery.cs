@@ -1,15 +1,16 @@
+using BeerContest.Application.Common.Interfaces;
+using BeerContest.Application.Common.Models;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using MediatR;
 
 namespace BeerContest.Application.Features.Beers.Queries.GetBeerById
 {
-    public class GetBeerByIdQuery : IRequest<Beer>
+    public class GetBeerByIdQuery : IApiRequest<Beer>
     {
         public required string Id { get; set; }
     }
 
-    public class GetBeerByIdQueryHandler : IRequestHandler<GetBeerByIdQuery, Beer>
+    public class GetBeerByIdQueryHandler : IApiRequestHandler<GetBeerByIdQuery, Beer>
     {
         private readonly IBeerRepository _beerRepository;
 
@@ -18,9 +19,13 @@ namespace BeerContest.Application.Features.Beers.Queries.GetBeerById
             _beerRepository = beerRepository;
         }
 
-        public async Task<Beer> Handle(GetBeerByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<Beer>> Handle(GetBeerByIdQuery request, CancellationToken cancellationToken)
         {
-            return await _beerRepository.GetByIdAsync(request.Id);
+            var beer = await _beerRepository.GetByIdAsync(request.Id);
+
+            return ApiResponse<Beer>.Success(
+                   beer,
+                   $"Successfully retrieved");
         }
     }
 }

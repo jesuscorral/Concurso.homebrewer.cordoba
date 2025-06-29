@@ -6,6 +6,7 @@
 @using BeerContest.Application.Features.Beers.Queries.GetParticipantBeers
 @using BeerContest.Application.Features.Beers.Commands.DeleteBeer
 @using BeerContest.Domain.Models
+@using BeerContest.Application.Common.Models
 @using System.Security.Claims
 @using MediatR
 @inject IMediator Mediator
@@ -22,7 +23,7 @@
         <div class="container mt-4">
             <h2 class="mb-4">My Registered Beers</h2>
 
-            @if (beers == null  || isLoading)
+            @if (isLoading)
             {
                 <div class="d-flex justify-content-center">
                     <div class="spinner-border" role="status">
@@ -30,7 +31,13 @@
                     </div>
                 </div>
             }
-            else if (!beers.Any())
+            else if (errorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @errorMessage
+                </div>
+            }
+            else if (beers == null || !beers.Any())
             {
                 <div class="alert alert-info" role="alert">
                     You haven't registered any beers yet.
@@ -113,14 +120,14 @@
 </AuthorizeView>
 
 @code {
-    private IEnumerable<BeerWithContestStatus> beers;
-    private string email;
+    private IEnumerable<BeerWithContestStatus> beers = new List<BeerWithContestStatus>();
+    private string email = string.Empty;
     private List<Contest> contests = new();
-    private string message;
+    private string? errorMessage;
     private bool isLoading = true;
 
     [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private Task<AuthenticationState> authenticationStateTask { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -128,10 +135,9 @@
 
         var user = await GetUser();
 
-
         if (user?.Identity?.IsAuthenticated == true)
         {
-            beers = await GetBeers(user);
+            await GetBeers(user);
         }
         else
         {
@@ -140,6 +146,7 @@
 
         isLoading = false;
     }
+
     private async Task<ClaimsPrincipal> GetUser()
     {
         var authState = await authenticationStateTask;
@@ -147,11 +154,9 @@
         return user;
     }
 
-    private async Task<IEnumerable<BeerWithContestStatus>> GetBeers(ClaimsPrincipal user)
+    private async Task GetBeers(ClaimsPrincipal user)
     {
-        IEnumerable<BeerWithContestStatus> beersWithContestSatus;
-
-        email = user.FindFirst(ClaimTypes.Email)?.Value;
+        email = user.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
         if (!string.IsNullOrEmpty(email) && contests?.Any() == true)
         {
@@ -160,50 +165,83 @@
                     ParticipantEmail = email
                 };
 
-            beersWithContestSatus = await Mediator.Send(query);
+            var response = await Mediator.Send(query);
+            
+            if (response.Succeeded)
+            {
+                beers = response.Data ?? new List<BeerWithContestStatus>();
+                if (beers.Any() && !string.IsNullOrEmpty(response.Message))
+                {
+                    ToastService.ShowInfo(response.Message);
+                }
+            }
+            else
+            {
+                errorMessage = response.Message;
+                if (response.Errors.Any())
+                {
+                    errorMessage += ": " + string.Join(", ", response.Errors);
+                }
+                beers = new List<BeerWithContestStatus>();
+            }
         }
         else
         {
-            beersWithContestSatus = new List<BeerWithContestStatus>();
+            beers = new List<BeerWithContestStatus>();
         }
-
-        return beersWithContestSatus;
-
     }
 
     private async Task LoadContests()
     {
         try
         {
-            var result = await Mediator.Send(new GetAllContestsQuery());
-            contests = result.ToList();
+            var response = await Mediator.Send(new GetAllContestsQuery());
+            
+            if (response.Succeeded)
+            {
+                contests = response.Data?.ToList() ?? new List<Contest>();
+            }
+            else
+            {
+                errorMessage = response.Message;
+                if (response.Errors.Any())
+                {
+                    errorMessage += ": " + string.Join(", ", response.Errors);
+                }
+                contests = new List<Contest>();
+            }
         }
         catch (Exception ex)
         {
-            message = $"Error loading contests: {ex.Message}";
-        }
-        finally
-        {
-            isLoading = false;
-            StateHasChanged();
+            errorMessage = $"Error loading contests: {ex.Message}";
+            contests = new List<Contest>();
         }
     }
-
 
     private async Task DeleteBeer(string beerId)
     {
         try
         {
-            await Mediator.Send(new DeleteBeerCommand { BeerId = beerId });
-
-            var user = await GetUser();
-            beers = await GetBeers(user);
-
-            ToastService.ShowSuccess("Beer deleted successfully", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            var result = await Mediator.Send(new DeleteBeerCommand { BeerId = beerId });
+            
+            if (result.Succeeded)
+            {
+                ToastService.ShowSuccess(result.Message ?? "Beer deleted successfully");
+                
+                // Refresh the list
+                var user = await GetUser();
+                await GetBeers(user);
+            }
+            else
+            {
+                ToastService.ShowError(result.Message ?? "Failed to delete beer", 
+                    settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            }
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error deleting beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            ToastService.ShowError($"Error deleting beer: {ex.Message}", 
+                settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
         }
     }
 
@@ -212,5 +250,4 @@
         // Navigate to update page
         Navigation.NavigateTo($"/update-beer/{beerId}");
     }
-
 }

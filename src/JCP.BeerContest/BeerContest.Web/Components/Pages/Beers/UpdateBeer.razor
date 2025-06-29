@@ -173,14 +173,15 @@
         try
         {
             // Get the beer by ID
-            beer = await Mediator.Send(new GetBeerByIdQuery { Id = BeerId });
-
+            var beerResponse = await Mediator.Send(new GetBeerByIdQuery { Id = BeerId });
+            beer = beerResponse?.Data;
             // Check if the beer belongs to the current user
-            if (beer == null || beer.ParticipantEmail != userEmail)
+            if (beerResponse?.Data == null || beerResponse?.Data.ParticipantEmail != userEmail)
             {
                 beer = null;
                 return;
             }
+            else { }
 
             // Set available styles based on the beer's category
             if (beer.Category == BeerCategory.ClassicStyles)

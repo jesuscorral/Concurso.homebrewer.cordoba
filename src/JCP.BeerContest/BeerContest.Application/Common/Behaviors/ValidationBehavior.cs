@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using BeerContest.Application.Common.Models;
 using MediatR;
 
 namespace BeerContest.Application.Common.Behaviors
@@ -32,11 +29,49 @@ namespace BeerContest.Application.Common.Behaviors
 
                 if (failures.Count != 0)
                 {
+                    // For ApiResponse wrapped types, return a failure response instead of throwing an exception
+                    Type responseType = typeof(TResponse);
+                    
+                    if (typeof(ApiResponse).IsAssignableFrom(responseType))
+                    {
+                        return CreateValidationFailureResponse(failures);
+                    }
+                    
                     throw new ValidationException(failures);
                 }
             }
 
             return await next();
+        }
+
+        private TResponse CreateValidationFailureResponse(List<ValidationFailure> failures)
+        {
+            var errorMessages = failures.Select(f => $"{f.PropertyName}: {f.ErrorMessage}").ToList();
+            Type responseType = typeof(TResponse);
+            
+            // If it's a generic ApiResponse<T>
+            if (responseType.IsGenericType && 
+                responseType.GetGenericTypeDefinition() == typeof(ApiResponse<>))
+            {
+                var typeArg = responseType.GetGenericArguments()[0];
+                var genericType = typeof(ApiResponse<>).MakeGenericType(typeArg);
+                var failureMethod = genericType.GetMethod("Failure", new[] { typeof(string), typeof(List<string>) });
+                
+                if (failureMethod != null)
+                {
+                    var result = failureMethod.Invoke(null, new object[] { "Validation failed", errorMessages });
+                    return (TResponse)result;
+                }
+            }
+            
+            // If it's a non-generic ApiResponse
+            if (typeof(ApiResponse).IsAssignableFrom(responseType))
+            {
+                var result = ApiResponse.Failure("Validation failed", errorMessages);
+                return (TResponse)(object)result;
+            }
+            
+            throw new InvalidOperationException($"Cannot create validation failure response for type {responseType.Name}");
         }
     }
 

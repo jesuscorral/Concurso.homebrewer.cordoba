@@ -1,17 +1,19 @@
 using BeerContest.Application.Common.Behaviors;
+using BeerContest.Application.Common.Interfaces;
+using BeerContest.Application.Common.Models;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
 
 namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
 {
-    public class AssignBeersToJudgeCommand : IRequest<bool>
+    public class AssignBeersToJudgeCommand : IApiRequest<bool>
     {
         public required string JudgeId { get; set; }
         public List<string> BeerIds { get; set; } = new List<string>();
     }
 
-    public class AssignBeersToJudgeCommandHandler : IRequestHandler<AssignBeersToJudgeCommand, bool>
+    public class AssignBeersToJudgeCommandHandler : IApiRequestHandler<AssignBeersToJudgeCommand, bool>
     {
         private readonly IBeerRepository _beerRepository;
         private readonly IUserRepository _userRepository;
@@ -24,7 +26,7 @@ namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
             _userRepository = userRepository;
         }
 
-        public async Task<bool> Handle(AssignBeersToJudgeCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<bool>> Handle(AssignBeersToJudgeCommand request, CancellationToken cancellationToken)
         {
             // Verify that the user is a judge
             var user = await _userRepository.GetByIdAsync(request.JudgeId);
@@ -40,8 +42,13 @@ namespace BeerContest.Application.Features.Beers.Commands.AssignBeersToJudge
 
             // Assign beers to the judge
             await _beerRepository.AssignBeersToJudgeAsync(request.JudgeId, request.BeerIds);
-            
-            return true;
+
+            var ret = true;
+
+            return ApiResponse<bool>.Success(
+                   ret,
+                   $"Successfully updated");
+
         }
     }
 

@@ -1,20 +1,25 @@
 using BeerContest.Application.Common.Behaviors;
+using BeerContest.Application.Common.Interfaces;
+using BeerContest.Application.Common.Models;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
 {
-    public class UpdateUserRoleCommand : IRequest<bool>
+    public class UpdateUserRoleCommand : IApiRequest<bool>
     {
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
         public UserRole Role { get; set; }
         public bool IsAdd { get; set; } // True to add the role, false to remove it
-        public string AdminId { get; set; } // ID of the administrator making the change
+        public required string AdminId { get; set; } // ID of the administrator making the change
         public bool RefreshClaims { get; set; } = true; // Whether to refresh the user's claims
     }
 
-    public class UpdateUserRoleCommandHandler : IRequestHandler<UpdateUserRoleCommand, bool>
+    public class UpdateUserRoleCommandHandler : IApiRequestHandler<UpdateUserRoleCommand, bool>
     {
         private readonly IUserRepository _userRepository;
 
@@ -23,54 +28,67 @@ namespace BeerContest.Application.Features.Users.Commands.UpdateUserRole
             _userRepository = userRepository;
         }
 
-        public async Task<bool> Handle(UpdateUserRoleCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<bool>> Handle(UpdateUserRoleCommand request, CancellationToken cancellationToken)
         {
-            // Verify that the admin user exists and is an administrator
-            var adminUser = await _userRepository.GetByIdAsync(request.AdminId);
-            if (adminUser == null)
+            try
             {
-                throw new Exception($"Admin user with ID {request.AdminId} not found");
-            }
-
-            if (!adminUser.Roles.Contains(UserRole.Administrator))
-            {
-                throw new Exception($"User with ID {request.AdminId} is not an administrator");
-            }
-
-            // Get the user to update
-            var user = await _userRepository.GetByIdAsync(request.UserId);
-            if (user == null)
-            {
-                throw new Exception($"User with ID {request.UserId} not found");
-            }
-
-            // Update the user's roles
-            if (request.IsAdd)
-            {
-                // Add the role if it doesn't already exist
-                if (!user.Roles.Contains(request.Role))
+                // Verify that the admin user exists and is an administrator
+                var adminUser = await _userRepository.GetByIdAsync(request.AdminId);
+                if (adminUser == null)
                 {
-                    user.Roles.Add(request.Role);
+                    return ApiResponse<bool>.Failure($"Admin user with ID {request.AdminId} not found");
                 }
-            }
-            else
-            {
-                // Remove the role if it exists
-                if (user.Roles.Contains(request.Role))
+
+                if (!adminUser.Roles.Contains(UserRole.Administrator))
                 {
-                    user.Roles.Remove(request.Role);
+                    return ApiResponse<bool>.Failure($"User with ID {request.AdminId} is not an administrator");
+                }
+
+                // Get the user to update
+                var user = await _userRepository.GetByIdAsync(request.UserId);
+                if (user == null)
+                {
+                    return ApiResponse<bool>.Failure($"User with ID {request.UserId} not found");
+                }
+
+                // Update the user's roles
+                if (request.IsAdd)
+                {
+                    // Add the role if it doesn't already exist
+                    if (!user.Roles.Contains(request.Role))
+                    {
+                        user.Roles.Add(request.Role);
+                    }
+                }
+                else
+                {
+                    // Remove the role if it exists
+                    if (user.Roles.Contains(request.Role))
+                    {
+                        user.Roles.Remove(request.Role);
+                    }
+                    
+                    // Ensure user has at least one role
+                    if (user.Roles.Count == 0)
+                    {
+                        user.Roles.Add(UserRole.Participant);
+                    }
                 }
                 
-                // Ensure user has at least one role
-                if (user.Roles.Count == 0)
-                {
-                    user.Roles.Add(UserRole.Participant);
-                }
+                await _userRepository.UpdateAsync(user);
+                
+                string message = request.IsAdd 
+                    ? $"Role {request.Role} added to user successfully" 
+                    : $"Role {request.Role} removed from user successfully";
+                
+                return ApiResponse<bool>.Success(true, message);
             }
-            
-            await _userRepository.UpdateAsync(user);
-            
-            return true;
+            catch (Exception ex)
+            {
+                return ApiResponse<bool>.Failure(
+                    "Failed to update user role", 
+                    new List<string> { ex.Message });
+            }
         }
     }
 

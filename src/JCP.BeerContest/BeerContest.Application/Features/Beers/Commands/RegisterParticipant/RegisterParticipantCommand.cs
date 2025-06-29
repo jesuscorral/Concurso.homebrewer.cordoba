@@ -1,11 +1,12 @@
 using BeerContest.Application.Common.Behaviors;
+using BeerContest.Application.Common.Interfaces;
+using BeerContest.Application.Common.Models;
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using MediatR;
 
 namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
 {
-    public class RegisterParticipantCommand : IRequest<string>
+    public class RegisterParticipantCommand : IApiRequest<string>
     {
         public required string ACCEMemberNumber { get; set; }
         public required string FullName { get; set; }
@@ -14,7 +15,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
         public required string EmailUser { get; set; }
     }
 
-    public class RegisterParticipantCommandHandler : IRequestHandler<RegisterParticipantCommand, string>
+    public class RegisterParticipantCommandHandler : IApiRequestHandler<RegisterParticipantCommand, string>
     {
         private readonly IParticipantRepository _participantRepository;
 
@@ -24,28 +25,42 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
             _participantRepository = participantRepository;
         }
 
-        public async Task<string> Handle(RegisterParticipantCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(RegisterParticipantCommand request, CancellationToken cancellationToken)
         {
-            var participant = new Participant
+            try
             {
-                Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the participant
-                ACCEMemberNumber = request.ACCEMemberNumber,
-                FullName = request.FullName,
-                BirthDate = request.BirthDate,
-                Phone = request.Phone,
-                EmailUser = request.EmailUser,
-            };
+                if (string.IsNullOrWhiteSpace(request.EmailUser))
+                {
+                    return ApiResponse<string>.Failure("Email is required");
+                }
 
-            var existsParticipant = await _participantRepository.GetByEmailUserAsync(participant.EmailUser);
-            if (existsParticipant == null)
-            {
-                var participantCreated = await _participantRepository.CreateAsync(participant);
-                return participantCreated;
+                var participant = new Participant
+                {
+                    Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the participant
+                    ACCEMemberNumber = request.ACCEMemberNumber,
+                    FullName = request.FullName,
+                    BirthDate = request.BirthDate,
+                    Phone = request.Phone,
+                    EmailUser = request.EmailUser,
+                };
+
+                var existsParticipant = await _participantRepository.GetByEmailUserAsync(participant.EmailUser);
+                if (existsParticipant == null)
+                {
+                    var participantCreated = await _participantRepository.CreateAsync(participant);
+                    return ApiResponse<string>.Success(participantCreated, "Participant created");
+
+                }
+                else
+                {
+                    return ApiResponse<string>.Success(existsParticipant.Id, "Participant already exists");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return existsParticipant.Id;
+                return ApiResponse<string>.Failure("Failed to create participant", new List<string> { ex.Message });
             }
+
 
         }
     }

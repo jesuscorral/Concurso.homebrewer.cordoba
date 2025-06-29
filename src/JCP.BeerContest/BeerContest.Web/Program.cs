@@ -74,7 +74,8 @@ builder.Services.AddAuthentication(options =>
             var userId = await mediator.Send(command);
             
             // Get user role
-            var user = await mediator.Send(new GetUserByIdQuery { Id = userId });
+            var ret = await mediator.Send(new GetUserByIdQuery { Id = userId.Data });
+            var user = ret.Data;
             if (user != null)
             {
                 // Get the claims service

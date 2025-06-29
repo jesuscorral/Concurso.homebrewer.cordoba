@@ -217,7 +217,7 @@
         try
         {
             var result = await Mediator.Send(new GetAllContestsQuery());
-            contests = result.ToList();
+            contests = result.Data.ToList();
         }
         catch (Exception ex)
         {
@@ -231,8 +231,8 @@
         try
         {
             selectedContestId = id;
-            var contest = await Mediator.Send(new GetContestByIdQuery { Id = id });
-            
+            var ret = await Mediator.Send(new GetContestByIdQuery { Id = id });
+            var contest = ret.Data;
             if (contest != null)
             {
                 // Map the contest to the form model
@@ -304,7 +304,7 @@
 
                 var result = await Mediator.Send(command);
                 
-                if (result)
+                if (result.Succeeded)
                 {
                     message = "Contest updated successfully.";
                     isError = false;
@@ -344,8 +344,7 @@
                 };
 
                 var result = await Mediator.Send(command);
-                
-                if (!string.IsNullOrEmpty(result))
+                if (!string.IsNullOrEmpty(result.Data))
                 {
                     message = "Contest created successfully.";
                     isError = false;

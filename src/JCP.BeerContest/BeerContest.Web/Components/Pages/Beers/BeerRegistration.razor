@@ -10,6 +10,7 @@
 @using BeerContest.Application.Features.Contests.Queries.GetAllContests
 @using BeerContest.Domain.Models
 @using BeerContest.Web.Helpers
+@using BeerContest.Application.Common.Models
 @using MediatR
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -29,6 +30,12 @@
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Cargando...</span>
             </div>
+        </div>
+    }
+    else if (errorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
         </div>
     }
     else if (maxBeerRached)
@@ -190,7 +197,7 @@
     private List<string> classicStyles = BeerStyles.GetClassicStyles();
     private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
     private List<Contest> contests = new();
-    private string message;
+    private string? errorMessage;
     private bool isLoading = true;
     private bool maxBeerRached = false;
     [CascadingParameter]
@@ -237,39 +244,58 @@
         var authState = await authenticationStateTask;
         var user = authState.User;
 
-        IEnumerable<BeerWithContestStatus> beersWithContestStatus; 
+        IEnumerable<BeerWithContestStatus> beersWithContestStatus = new List<BeerWithContestStatus>(); 
 
         var email = user.FindFirst(ClaimTypes.Email)?.Value;
 
         if (!string.IsNullOrEmpty(email) && contests?.Any(x => x.Status == ContestStatus.RegistrationOpen) == true)
         {
-            var query = new GetParticipantBeersByContestIdQuery
+            try
+            {
+                var query = new GetParticipantBeersByContestIdQuery
                 {
                     ParticipantEmail = email,
                     ContestId = contests.FirstOrDefault(x => x.Status == ContestStatus.RegistrationOpen)?.Id
                 };
 
-            beersWithContestStatus = await Mediator.Send(query);
-        }
-        else
-        {
-            beersWithContestStatus = new List<BeerWithContestStatus>();
+                var response = await Mediator.Send(query);
+                
+                if (response.Succeeded)
+                {
+                    beersWithContestStatus = response.Data ?? new List<BeerWithContestStatus>();
+                }
+                else
+                {
+                    ToastService.ShowError(response.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error retrieving beers: {ex.Message}";
+            }
         }
 
         return beersWithContestStatus;
-
     }
 
     private async Task LoadContests()
     {
         try
         {
-            var result = await Mediator.Send(new GetAllContestsQuery());
-            contests = result.ToList();
+            var response = await Mediator.Send(new GetAllContestsQuery());
+            
+            if (response.Succeeded)
+            {
+                contests = response.Data?.ToList() ?? new List<Contest>();
+            }
+            else
+            {
+                errorMessage = response.Message;
+            }
         }
         catch (Exception ex)
         {
-            message = $"Error loading contests: {ex.Message}";
+            errorMessage = $"Error loading contests: {ex.Message}";
         }
         finally
         {
@@ -283,22 +309,39 @@
         try
         {
             var participantCommand = await BuildRegisterParticipantCommand(beerRegistration);
-            var participantId = await Mediator.Send(participantCommand);
-
+            var participantResponse = await Mediator.Send(participantCommand);
+            
+            if (!participantResponse.Succeeded)
+            {
+                ToastService.ShowError(participantResponse.Message);
+                return;
+            }
+            
+            var participantId = participantResponse.Data;
+            
             var beerCommand = await BuildRegisterBeerCommand(beerRegistration, participantId);
-            var beerId = await Mediator.Send(beerCommand);
-
-            // TODO - Fix it
-            ToastService.ShowSuccess("Cerveza registrada correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
-
-            await CheckMaxBeerReached();
-            // Clear the form
-            ResetForm();
+            var beerResponse = await Mediator.Send(beerCommand);
+            
+            if (beerResponse.Succeeded)
+            {
+                ToastService.ShowSuccess(beerResponse.Message ?? "Cerveza registrada correctamente", 
+                    settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+                
+                await CheckMaxBeerReached();
+                // Clear the form
+                ResetForm();
+            }
+            else
+            {
+                ToastService.ShowError(beerResponse.Message ?? "Error al registrar la cerveza", 
+                    settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error registering beer: {ex.Message}");
-            ToastService.ShowError("Error al registrar la cerveza", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+            ToastService.ShowError($"Error al registrar la cerveza: {ex.Message}", 
+                settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
         }
     }
 
