@@ -1,28 +1,17 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using BeerContest.Domain.Models;
-using BeerContest.Domain.Repositories;
 using MediatR;
 
 namespace BeerContest.Application.Features.Beers.Queries.GetJudgeAssignedBeers
 {
     public class GetJudgeAssignedBeersQuery : IRequest<IEnumerable<Beer>>
     {
-        public string JudgeId { get; set; }
+        public required string JudgeId { get; set; }
     }
 
     public class GetJudgeAssignedBeersQueryHandler : IRequestHandler<GetJudgeAssignedBeersQuery, IEnumerable<Beer>>
     {
-        private readonly IBeerRepository _beerRepository;
-        private readonly IUserRepository _userRepository;
-
-        public GetJudgeAssignedBeersQueryHandler(
-            IBeerRepository beerRepository,
-            IUserRepository userRepository)
+        public GetJudgeAssignedBeersQueryHandler()
         {
-            _beerRepository = beerRepository;
-            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<Beer>> Handle(GetJudgeAssignedBeersQuery request, CancellationToken cancellationToken)

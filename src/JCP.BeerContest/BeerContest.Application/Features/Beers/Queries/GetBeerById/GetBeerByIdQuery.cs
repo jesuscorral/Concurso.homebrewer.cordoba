@@ -6,7 +6,7 @@ namespace BeerContest.Application.Features.Beers.Queries.GetBeerById
 {
     public class GetBeerByIdQuery : IRequest<Beer>
     {
-        public string Id { get; set; }
+        public required string Id { get; set; }
     }
 
     public class GetBeerByIdQueryHandler : IRequestHandler<GetBeerByIdQuery, Beer>

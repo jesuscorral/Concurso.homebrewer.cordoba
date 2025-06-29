@@ -1,17 +1,13 @@
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.JudgingTables.Commands.CreateJudgingTable
 {
     public class CreateJudgingTableCommand : IRequest<string>
     {
-        public string Name { get; set; }
-        public string ContestId { get; set; }
+        public required string Name { get; set; }
+        public required string ContestId { get; set; }
         public List<string> JudgeIds { get; set; } = new List<string>();
         public List<string> BeerIds { get; set; } = new List<string>();
     }
@@ -29,6 +25,7 @@ namespace BeerContest.Application.Features.JudgingTables.Commands.CreateJudgingT
         {
             var judgingTable = new JudgingTable
             {
+                Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 ContestId = request.ContestId,
                 JudgeIds = request.JudgeIds,

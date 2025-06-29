@@ -1,13 +1,11 @@
 using BeerContest.Domain.Repositories;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.JudgingTables.Queries.AreAllBeersAssigned
 {
     public class AreAllBeersAssignedQuery : IRequest<bool>
     {
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class AreAllBeersAssignedQueryHandler : IRequestHandler<AreAllBeersAssignedQuery, bool>

@@ -2,7 +2,6 @@ using BeerContest.Domain.Repositories;
 using BeerContest.Infrastructure.Common.Abstractions;
 using BeerContest.Infrastructure.Common.Implementations;
 using BeerContest.Infrastructure.Repositories;
-using BeerContest.Infrastructure.Repositories.Enhanced;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BeerContest.Infrastructure

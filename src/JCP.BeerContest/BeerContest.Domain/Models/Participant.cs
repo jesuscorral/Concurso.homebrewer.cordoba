@@ -2,12 +2,12 @@
 {
     public class Participant
     {
-        public string Id { get; set; }
-        public string ACCEMemberNumber { get; set; }
-        public string FullName { get; set; }
+        public required string Id { get; set; }
+        public required string ACCEMemberNumber { get; set; }
+        public required string FullName { get; set; }
         public DateTime BirthDate { get; set; }
-        public string Phone { get; set; }
-        public string EmailUser { get; set; }
+        public required string Phone { get; set; }
+        public required string EmailUser { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

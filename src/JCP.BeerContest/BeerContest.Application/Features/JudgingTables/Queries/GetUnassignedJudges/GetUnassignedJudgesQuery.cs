@@ -6,7 +6,7 @@ namespace BeerContest.Application.Features.JudgingTables.Queries.GetUnassignedJu
 {
     public class GetUnassignedJudgesQuery : IRequest<IEnumerable<Judge>>
     {
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class GetUnassignedJudgesQueryHandler : IRequestHandler<GetUnassignedJudgesQuery, IEnumerable<Judge>>

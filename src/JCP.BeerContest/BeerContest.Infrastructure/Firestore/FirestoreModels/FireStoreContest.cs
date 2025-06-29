@@ -7,16 +7,16 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     public class FireStoreContest
     {
         [FirestoreDocumentId]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [FirestoreProperty]
-        public string Edition { get; set; }
+        public required string Edition { get; set; }
 
         [FirestoreProperty]
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         [FirestoreProperty]
-        public string OrganizerEmail { get; set; }
+        public required string OrganizerEmail { get; set; }
 
         [FirestoreProperty]
         public DateTime RegistrationStartDate { get; set; }

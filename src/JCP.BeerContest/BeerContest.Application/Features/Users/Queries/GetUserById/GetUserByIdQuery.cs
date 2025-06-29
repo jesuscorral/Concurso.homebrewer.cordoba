@@ -9,7 +9,7 @@ namespace BeerContest.Application.Features.Users.Queries.GetUserById
         public string Id { get; set; }
     }
 
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User?>
     {
         private readonly IUserRepository _userRepository;
 
@@ -20,6 +20,7 @@ namespace BeerContest.Application.Features.Users.Queries.GetUserById
 
         public async Task<User> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
+            // TODO - Gestionar posible null
             return await _userRepository.GetByIdAsync(request.Id);
         }
     }

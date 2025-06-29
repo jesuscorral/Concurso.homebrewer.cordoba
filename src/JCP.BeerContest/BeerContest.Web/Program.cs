@@ -64,6 +64,7 @@ builder.Services.AddAuthentication(options =>
             // Register or get existing user
             var command = new RegisterGoogleUserCommand
             {
+                Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the user
                 GoogleId = googleId,
                 Email = email,
                 DisplayName = name,

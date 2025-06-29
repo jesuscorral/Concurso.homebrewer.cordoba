@@ -7,22 +7,22 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     public class FirestoreParticipant
     {
         [FirestoreDocumentId]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [FirestoreProperty]
-        public string ACCEMemberNumber { get; set; }
+        public required string ACCEMemberNumber { get; set; }
 
         [FirestoreProperty]
-        public string FullName { get; set; }
+        public required string FullName { get; set; }
 
         [FirestoreProperty]
         public DateTime BirthDate { get; set; }
 
         [FirestoreProperty]
-        public string Phone { get; set; }
+        public required string Phone { get; set; }
 
         [FirestoreProperty]
-        public string EmailUser { get; set; } // Email User from Users table
+        public required string EmailUser { get; set; } // Email User from Users table
 
         [FirestoreProperty]
         public DateTime CreatedAt { get; set; }

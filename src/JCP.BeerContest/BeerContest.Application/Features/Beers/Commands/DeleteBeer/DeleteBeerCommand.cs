@@ -5,7 +5,7 @@ namespace BeerContest.Application.Features.Beers.Commands.DeleteBeer
 {
     public class DeleteBeerCommand : IRequest<bool>
     {
-        public string BeerId { get; set; }
+        public required string BeerId { get; set; }
     }
 
     public class DeleteBeerCommandHandler : IRequestHandler<DeleteBeerCommand, bool>

@@ -5,7 +5,7 @@ using BeerContest.Infrastructure.Common.Implementations;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
 using Microsoft.Extensions.Logging;
 
-namespace BeerContest.Infrastructure.Repositories.Enhanced
+namespace BeerContest.Infrastructure.Repositories
 {
     /// <summary>
     /// Enhanced User repository using the new base repository pattern

@@ -1,15 +1,12 @@
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.JudgingTables.Queries.GetAllJudgingTables
 {
     public class GetAllJudgingTablesQuery : IRequest<IEnumerable<JudgingTable>>
     {
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class GetAllJudgingTablesQueryHandler : IRequestHandler<GetAllJudgingTablesQuery, IEnumerable<JudgingTable>>

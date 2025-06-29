@@ -7,11 +7,11 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
 {
     public class RegisterParticipantCommand : IRequest<string>
     {
-        public string ACCEMemberNumber { get; set; }
-        public string FullName { get; set; }
+        public required string ACCEMemberNumber { get; set; }
+        public required string FullName { get; set; }
         public DateTime BirthDate { get; set; }
-        public string Phone { get; set; }
-        public string EmailUser { get; set; }
+        public required string Phone { get; set; }
+        public required string EmailUser { get; set; }
     }
 
     public class RegisterParticipantCommandHandler : IRequestHandler<RegisterParticipantCommand, string>
@@ -28,6 +28,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterParticipant
         {
             var participant = new Participant
             {
+                Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the participant
                 ACCEMemberNumber = request.ACCEMemberNumber,
                 FullName = request.FullName,
                 BirthDate = request.BirthDate,

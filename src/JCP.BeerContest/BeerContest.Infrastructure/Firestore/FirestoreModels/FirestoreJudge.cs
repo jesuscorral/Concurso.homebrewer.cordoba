@@ -7,31 +7,31 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     public class FirestoreJudge
     {
         [FirestoreDocumentId]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [FirestoreProperty]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [FirestoreProperty]
-        public string Surname { get; set; }
+        public required string Surname { get; set; }
 
         [FirestoreProperty]
-        public string Phone { get; set; }
+        public required string Phone { get; set; }
 
         [FirestoreProperty]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [FirestoreProperty]
-        public string Preferences { get; set; }
+        public required string Preferences { get; set; }
 
         [FirestoreProperty]
-        public string BcjpId { get; set; }
+        public required string BcjpId { get; set; }
 
         [FirestoreProperty]
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
 
         [FirestoreProperty]
-        public string ContestName { get; set; }
+        public required string ContestName { get; set; }
 
         [FirestoreProperty]
         public DateTime CreatedAt { get; set; }

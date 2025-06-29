@@ -7,10 +7,10 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
 {
     public class RegisterGoogleUserCommand : IRequest<string>
     {
-        public string Id { get; set; } // This is the unique identifier for the user in your system
-        public string GoogleId { get; set; }
-        public string Email { get; set; }
-        public string DisplayName { get; set; }
+        public required string Id { get; set; } // This is the unique identifier for the user in your system
+        public required string GoogleId { get; set; }
+        public required string Email { get; set; }
+        public required string DisplayName { get; set; }
         public List<UserRole> Roles { get; set; } = new List<UserRole> { UserRole.Participant }; // Default role is Participant
     }
 
@@ -47,6 +47,7 @@ namespace BeerContest.Application.Features.Users.Commands.RegisterGoogleUser
             // Create a new user
             var user = new User
             {
+                Id = request.Id, // Use the provided ID or generate a new one if necessary
                 GoogleId = request.GoogleId,
                 Email = request.Email,
                 DisplayName = request.DisplayName,

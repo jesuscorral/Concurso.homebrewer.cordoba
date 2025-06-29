@@ -1,18 +1,13 @@
-using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BeerContest.Application.Features.JudgingTables.Commands.UpdateJudgingTable
 {
     public class UpdateJudgingTableCommand : IRequest<Unit>
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ContestId { get; set; }
+        public required string Id { get; set; }
+        public required string Name { get; set; }
+        public required string ContestId { get; set; }
         public List<string> JudgeIds { get; set; } = new List<string>();
         public List<string> BeerIds { get; set; } = new List<string>();
     }

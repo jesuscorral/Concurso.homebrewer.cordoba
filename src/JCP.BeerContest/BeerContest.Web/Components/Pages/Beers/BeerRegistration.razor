@@ -191,7 +191,6 @@
     private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
     private List<Contest> contests = new();
     private string message;
-    private bool isError;
     private bool isLoading = true;
     private bool maxBeerRached = false;
     [CascadingParameter]
@@ -271,7 +270,6 @@
         catch (Exception ex)
         {
             message = $"Error loading contests: {ex.Message}";
-            isError = true;
         }
         finally
         {
@@ -322,7 +320,8 @@
                 ParticipantEmail = emailUser,
                 EntryInstructions = beerRegistration.EntryInstructions,
                 ParticipantId = participantId,
-                ContestId = contests.FirstOrDefault(x => x.Status == ContestStatus.RegistrationOpen)?.Id // By default only will be open one Contest to register
+                // TODO - Gestionar null
+                ContestId = contests?.FirstOrDefault(x => x.Status == ContestStatus.RegistrationOpen)?.Id // By default only will be open one Contest to register
             };
     }
 

@@ -6,7 +6,7 @@ namespace BeerContest.Application.Features.Beers.Queries.GetallBeeryByContest
 {
     public class GetallBeeryByContestCommand : IRequest<IEnumerable<Beer>>
     {
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class GetallBeeryByContestCommandHandler : IRequestHandler<GetallBeeryByContestCommand, IEnumerable<Beer>>

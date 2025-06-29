@@ -6,8 +6,8 @@ namespace BeerContest.Application.Features.Beers.Queries.GetParticipantBeersByCo
 {
     public class GetParticipantBeersByContestIdQuery : IRequest<IEnumerable<BeerWithContestStatus>>
     {
-        public string ParticipantEmail { get; set; }
-        public string ContestId { get; set; }
+        public required string ParticipantEmail { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class GetParticipantBeersQueryHandler : IRequestHandler<GetParticipantBeersByContestIdQuery, IEnumerable<BeerWithContestStatus>>

@@ -7,13 +7,13 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     public class FirestoreBeer
     {
         [FirestoreDocumentId]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [FirestoreProperty]
         public int CategoryId { get; set; }
 
         [FirestoreProperty]
-        public string BeerStyle { get; set; }
+        public required string BeerStyle { get; set; }
 
         [FirestoreProperty]
         public double AlcoholContent { get; set; }
@@ -25,28 +25,28 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         public DateTime BottleDate { get; set; }
 
         [FirestoreProperty]
-        public string Malts { get; set; }
+        public required string Malts { get; set; }
 
         [FirestoreProperty]
-        public string Hops { get; set; }
+        public required string Hops { get; set; }
 
         [FirestoreProperty]
-        public string Yeast { get; set; }
+        public required string Yeast { get; set; }
 
         [FirestoreProperty]
-        public string Additives { get; set; }
+        public required string Additives { get; set; }
         
         [FirestoreProperty]
-        public string ParticipantId { get; set; }
+        public required string ParticipantId { get; set; }
 
         [FirestoreProperty]
-        public string ParticipantEmail { get; set; }
+        public required string ParticipantEmail { get; set; }
 
         [FirestoreProperty]
-        public string ContestId { get; set; }
+        public required string ContestId { get; set; }
 
         [FirestoreProperty]
-        public string EntryInstructions { get; set; }
+        public required string EntryInstructions { get; set; }
 
         [FirestoreProperty]
         public DateTime CreatedAt { get; set; }

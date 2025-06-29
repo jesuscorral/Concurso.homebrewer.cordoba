@@ -9,18 +9,18 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
     {
         // Beer information
         public BeerCategory Category { get; set; }
-        public string BeerStyle { get; set; }
+        public required string BeerStyle { get; set; }
         public double AlcoholContent { get; set; }
         public DateTime ElaborationDate { get; set; }
         public DateTime BottleDate { get; set; }
-        public string Malts { get; set; }
-        public string Hops { get; set; }
-        public string Yeast { get; set; }
-        public string Additives { get; set; }
-        public string ParticipantId { get; set; }
-        public string ParticipantEmail { get; set; }
-        public string EntryInstructions { get; set; }
-        public string ContestId { get; set; }
+        public required string Malts { get; set; }
+        public required string Hops { get; set; }
+        public required string Yeast { get; set; }
+        public required string Additives { get; set; }
+        public required string ParticipantId { get; set; }
+        public required string ParticipantEmail { get; set; }
+        public required string EntryInstructions { get; set; }
+        public required string ContestId { get; set; }
     }
 
     public class RegisterBeerCommandHandler : IRequestHandler<RegisterBeerCommand, string>

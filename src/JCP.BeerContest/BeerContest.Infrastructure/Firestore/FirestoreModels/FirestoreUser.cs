@@ -7,19 +7,19 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
     public class FirestoreUser
     {
         [FirestoreDocumentId]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [FirestoreProperty]
-        public string GoogleId { get; set; }
+        public required string GoogleId { get; set; }
 
         [FirestoreProperty]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [FirestoreProperty]
-        public string DisplayName { get; set; }
+        public required string DisplayName { get; set; }
 
         [FirestoreProperty]
-        public List<int> RoleIds { get; set; }
+        public required List<int> RoleIds { get; set; }
 
         [FirestoreProperty]
         public DateTime CreatedAt { get; set; }
