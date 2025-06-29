@@ -42,7 +42,6 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         [FirestoreProperty]
         public string ParticipantEmail { get; set; }
 
-
         [FirestoreProperty]
         public string ContestId { get; set; }
 

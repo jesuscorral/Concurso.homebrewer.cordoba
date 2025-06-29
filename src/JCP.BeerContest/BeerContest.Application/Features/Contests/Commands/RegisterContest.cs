@@ -39,6 +39,7 @@ namespace BeerContest.Application.Features.Contests.Commands
             // Create the contest
             var contest = new Contest
             {
+                Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the contest
                 Edition = request.Edition,
                 Description = request.Description,
                 OrganizerEmail = request.OrganizerEmail,

@@ -24,6 +24,9 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         [FirestoreProperty]
         public string EmailUser { get; set; } // Email User from Users table
 
+        [FirestoreProperty]
+        public DateTime CreatedAt { get; set; }
+
         public static FirestoreParticipant FromParticipant(Participant participant)
         {
             return new FirestoreParticipant
@@ -33,7 +36,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 FullName = participant.FullName,
                 BirthDate = participant.BirthDate.ToUniversalTime(),
                 Phone = participant.Phone,
-                EmailUser = participant.EmailUser 
+                EmailUser = participant.EmailUser,
+                CreatedAt = participant.CreatedAt.ToUniversalTime()
             };
         }
 
@@ -46,7 +50,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 FullName = FullName,
                 BirthDate = BirthDate.ToLocalTime(),
                 Phone = Phone,
-                EmailUser = EmailUser
+                EmailUser = EmailUser,
+                CreatedAt = CreatedAt.ToLocalTime()
             };
         }
     }

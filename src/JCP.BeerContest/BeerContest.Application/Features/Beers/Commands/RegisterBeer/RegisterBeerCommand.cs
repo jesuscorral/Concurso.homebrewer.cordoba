@@ -48,6 +48,7 @@ namespace BeerContest.Application.Features.Beers.Commands.RegisterBeer
             // Create the beer
             var beer = new Beer
             {
+                Id = Guid.NewGuid().ToString(), // Generate a new unique ID for the beer
                 Category = request.Category,
                 BeerStyle = request.BeerStyle,
                 AlcoholContent = request.AlcoholContent,

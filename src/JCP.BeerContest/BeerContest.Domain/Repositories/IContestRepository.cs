@@ -29,6 +29,6 @@ namespace BeerContest.Domain.Repositories
         /// </summary>
         /// <param name="contest">The updated contest information</param>
         /// <returns>True if the update was successful, false otherwise</returns>
-        Task<bool> UpdateAsync(Contest contest);
+        Task UpdateAsync(Contest contest);
     }
 }

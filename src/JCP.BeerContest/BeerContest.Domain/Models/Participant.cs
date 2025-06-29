@@ -8,5 +8,6 @@
         public DateTime BirthDate { get; set; }
         public string Phone { get; set; }
         public string EmailUser { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -33,6 +33,9 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         [FirestoreProperty]
         public string ContestName { get; set; }
 
+        [FirestoreProperty]
+        public DateTime CreatedAt { get; set; }
+
         public static FirestoreJudge FromJudge(Judge judge)
         {
             return new FirestoreJudge
@@ -45,7 +48,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Preferences = judge.Preferences,
                 BcjpId = judge.BcjpId,
                 ContestId = judge.ContestId,
-                ContestName = judge.ContestName
+                ContestName = judge.ContestName,
+                CreatedAt = judge.CreatedAt.ToUniversalTime()
             };
         }
 
@@ -61,7 +65,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Preferences = Preferences,
                 BcjpId = BcjpId,
                 ContestId = ContestId,
-                ContestName = ContestName
+                ContestName = ContestName,
+                CreatedAt = CreatedAt.ToLocalTime()
             };
         }
     }

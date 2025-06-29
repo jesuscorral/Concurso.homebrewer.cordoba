@@ -23,7 +23,7 @@ namespace BeerContest.Application.Features.JudgingTables.Queries.GetAllJudgingTa
 
         public async Task<IEnumerable<JudgingTable>> Handle(GetAllJudgingTablesQuery request, CancellationToken cancellationToken)
         {
-            return await _judgingTableRepository.GetAllAsync(request.ContestId);
+            return await _judgingTableRepository.GetByContestIdAsync(request.ContestId);
         }
     }
 }

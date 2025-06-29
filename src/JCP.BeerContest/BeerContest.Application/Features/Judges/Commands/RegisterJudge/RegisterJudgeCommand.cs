@@ -41,7 +41,7 @@ namespace BeerContest.Application.Features.Judges.Commands.RegisterJudge
                 ContestName = request.ContestName
             };
 
-            return await _judgeRepository.AddJudgeAsync(judge);
+            return await _judgeRepository.CreateAsync(judge);
         }
     }
 

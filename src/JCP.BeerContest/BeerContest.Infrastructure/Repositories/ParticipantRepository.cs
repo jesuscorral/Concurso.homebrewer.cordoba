@@ -1,37 +1,68 @@
 ﻿using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using BeerContest.Infrastructure.Firestore;
+using BeerContest.Infrastructure.Common.Abstractions;
+using BeerContest.Infrastructure.Common.Implementations;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
-using Google.Cloud.Firestore;
+using Microsoft.Extensions.Logging;
 
 namespace BeerContest.Infrastructure.Repositories
 {
-    public class ParticipantRepository : IParticipantRepository
+    public class ParticipantRepository : FirestoreRepositoryBase<Participant, FirestoreParticipant, string>, IParticipantRepository
     {
-        private readonly BeerContestContext _firestoreContext;
-        private const string CollectionName = "participants";
-
-        public ParticipantRepository(BeerContestContext firestoreContext)
+        protected override string CollectionName => "participants";
+        
+        public ParticipantRepository(IFirestoreContext context,
+        ILogger<ParticipantRepository> logger)
+            : base(context, logger)
         {
-            _firestoreContext = firestoreContext;
         }
+
+        protected override Participant ToDomainEntity(FirestoreParticipant firestoreModel)
+        {
+            return firestoreModel.ToParticipant();
+        }
+
+        protected override FirestoreParticipant ToFirestoreModel(Participant entity)
+        {
+            return FirestoreParticipant.FromParticipant(entity);
+        }
+
+        protected override string KeyToString(string key) => key;
+
+        protected override string StringToKey(string documentId) => documentId;
+
 
         public async Task<string> CreateAsync(Participant participant)
         {
-            var firestoreParticipant = FirestoreParticipant.FromParticipant(participant);
-            var id = await _firestoreContext.AddDocumentAsync(CollectionName, firestoreParticipant);
-            return id; 
+             try
+            {
+                participant.CreatedAt = DateTime.UtcNow;
+                var id = await AddAsync(participant);
+                _logger.LogInformation("Created Participant {ParticipantId}", id);
+                return id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to create participant {ParticipantEmail}", participant.EmailUser);
+                throw;
+            }
+
         }
 
-        public async Task<Participant?> GetByEmailUserAsync(string emailUser)
+        public async Task<Participant> GetByEmailUserAsync(string emailUser)
         {
-            var collection = await _firestoreContext.GetCollectionAsync<FirestoreParticipant>(CollectionName);
+            try
+            {
+                var participants = await FindAsync(query => query.WhereEqualTo("EmailUser", emailUser));
+                var participant = participants.FirstOrDefault();
+                return participant ?? throw new InvalidOperationException($"Participant with email {emailUser} not found");
 
-            var query = collection.AsQueryable()
-                .Where(fp => fp.EmailUser == emailUser);
-
-            var firestoreParticipant = query.FirstOrDefault();
-            return firestoreParticipant?.ToParticipant();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get participant by email: {emailUser}", emailUser);
+                throw;
+            }
         }
     }
 }

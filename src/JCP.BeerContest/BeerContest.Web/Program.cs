@@ -119,8 +119,8 @@ builder.Services.AddAuthorization(options =>
 
 // Add application services
 builder.Services.AddApplication();
+builder.Services.InitializeDatabase();
 builder.Services.AddRepositories();
-builder.Services.InitializeDatabase(builder.Configuration);
 builder.Services.AddControllers();
 
 // Add HttpContextAccessor

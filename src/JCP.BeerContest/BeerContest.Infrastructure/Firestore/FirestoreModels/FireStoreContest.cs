@@ -55,6 +55,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
         [FirestoreProperty]
         public int MaxBeersPerParticipant { get; set; } = 3; // Default limit of 3 beers per participant
 
+        [FirestoreProperty]
+        public DateTime CreatedAt { get; set; }
 
         public static FireStoreContest FromContest(Contest contest)
         {
@@ -75,7 +77,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Rules = contest.Rules,
                 Categories = contest.Categories,
                 Status = contest.Status,
-                MaxBeersPerParticipant = contest.MaxBeersPerParticipant
+                MaxBeersPerParticipant = contest.MaxBeersPerParticipant,
+                CreatedAt = contest.CreatedAt.ToUniversalTime()
             };
         }
 
@@ -98,7 +101,8 @@ namespace BeerContest.Infrastructure.Firestore.FirestoreModels
                 Rules = this.Rules,
                 Categories = this.Categories,
                 Status = this.Status,
-                MaxBeersPerParticipant = this.MaxBeersPerParticipant
+                MaxBeersPerParticipant = this.MaxBeersPerParticipant,
+                CreatedAt = this.CreatedAt.ToLocalTime()
             };
         }
 

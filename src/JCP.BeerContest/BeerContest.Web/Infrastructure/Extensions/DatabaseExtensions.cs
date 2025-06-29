@@ -1,14 +1,15 @@
-﻿using BeerContest.Infrastructure.Firestore;
+﻿using BeerContest.Infrastructure.Common.Abstractions;
+using BeerContest.Infrastructure.Firestore;
 
 namespace BeerContest.Web.Infrastructure.Extensions
 {
     public static class DatabaseExtensions
     {
-        public static IServiceCollection InitializeDatabase(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection InitializeDatabase(this IServiceCollection services)
         {
-            // Register Firestore context
-            services.AddSingleton(new BeerContestContext(configuration));
-
+             // Register enhanced Firestore context
+            services.AddSingleton<IFirestoreContext, EnhancedFirestoreContext>();
+            
             return services;
         }
 

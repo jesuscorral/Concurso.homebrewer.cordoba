@@ -174,7 +174,18 @@
 
 @code {
 
-    private BeerRegistrationModel beerRegistration = new();
+    private BeerRegistrationModel beerRegistration = new()
+    {
+        ACCEMemberNumber = string.Empty,
+        FullName = string.Empty,
+        Phone = string.Empty,
+        BeerStyle = string.Empty,
+        Malts = string.Empty,
+        Hops = string.Empty,
+        Yeast = string.Empty,
+        Additives = string.Empty,
+        EntryInstructions = string.Empty
+    };
     private List<string> availableStyles = new();
     private List<string> classicStyles = BeerStyles.GetClassicStyles();
     private List<string> historicalStyles = BeerStyles.GetHistoricalStyles();
@@ -332,10 +343,20 @@
     private void ResetForm()
     {
         // Create a new instance to reset all fields
-        beerRegistration = new BeerRegistrationModel();
-
+        beerRegistration = new()
+        {
+            ACCEMemberNumber = string.Empty,
+            FullName = string.Empty,
+            Phone = string.Empty,
+            BeerStyle = string.Empty,
+            Malts = string.Empty,
+            Hops = string.Empty,
+            Yeast = string.Empty,
+            Additives = string.Empty,
+            EntryInstructions = string.Empty,
+            Category = BeerCategory.ClassicStyles
+        };
         // Set default category and styles
-        beerRegistration.Category = BeerCategory.ClassicStyles;
         availableStyles = classicStyles;
         // Force UI refresh
         StateHasChanged();

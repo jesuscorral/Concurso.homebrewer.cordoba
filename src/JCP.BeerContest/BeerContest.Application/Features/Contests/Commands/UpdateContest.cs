@@ -65,7 +65,8 @@ namespace BeerContest.Application.Features.Contests.Commands
             };
 
             // Save the updated contest to the repository
-            return await _contestRepository.UpdateAsync(contest);
+            await _contestRepository.UpdateAsync(contest);
+            return true;
         }
     }
 

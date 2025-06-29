@@ -1,40 +1,67 @@
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using BeerContest.Infrastructure.Firestore;
+using BeerContest.Infrastructure.Common.Abstractions;
+using BeerContest.Infrastructure.Common.Implementations;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
-using Google.Cloud.Firestore;
+using Microsoft.Extensions.Logging;
 
 namespace BeerContest.Infrastructure.Repositories
 {
-    public class JudgeRepository : IJudgeRepository
+    public class JudgeRepository : FirestoreRepositoryBase<Judge, FirestoreJudge, string>, IJudgeRepository
     {
-        private readonly BeerContestContext _firestoreContext;
-        private const string CollectionName = "judges";
+        protected override string CollectionName => "judges";
 
-        public JudgeRepository(BeerContestContext context)
+        public JudgeRepository(IFirestoreContext context, 
+            ILogger<JudgeRepository> logger)
+            : base(context, logger)
         {
-            _firestoreContext = context;
         }
 
-        public async Task<string> AddJudgeAsync(Judge judge)
+        protected override Judge ToDomainEntity(FirestoreJudge firestoreModel)
         {
-            var firestoreJudge = FirestoreJudge.FromJudge(judge);
+            return firestoreModel.ToJudge();
+        }
 
-            string id = await _firestoreContext.AddDocumentAsync(CollectionName, firestoreJudge);
+        protected override FirestoreJudge ToFirestoreModel(Judge entity)
+        {
+            return FirestoreJudge.FromJudge(entity);
+        }
 
-            return id;  
+        protected override string KeyToString(string key) => key;
+
+        protected override string StringToKey(string documentId) => documentId;
+
+
+        public async Task<string> CreateAsync(Judge judge)
+        {
+            
+            try
+            {
+                judge.CreatedAt = DateTime.UtcNow;
+                var id = await AddAsync(judge);
+                _logger.LogInformation("Created judge {JudgeId}", id);
+                return id;
+            }
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogError(ex, "Failed to create judge: {Message}", ex.Message);
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Judge>> GetAllByContestAsync(string contestId)
         {
-            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
-
-            query = query.WhereEqualTo("ContestId", contestId);
-
-            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            return querySnapshot.Documents
-                .Select(d => d.ConvertTo<FirestoreJudge>().ToJudge())
-                .ToList();
+            try
+            { 
+                    var judges = await FindAsync(query => query.WhereEqualTo("ContestId", contestId));
+                    _logger.LogInformation("Retrieved {Count} judges for contest {ContestId}", judges.Count(), contestId);
+                    return judges;      
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get judges for contest {contest}", contestId);
+                throw;
+            }
         }
     }
 }

@@ -16,7 +16,6 @@ namespace BeerContest.Domain.Repositories
         /// </summary>
         /// <param name="emailUser"></param>
         /// <returns></returns>
-        Task<Participant?> GetByEmailUserAsync(string emailUser);
-
+        Task<Participant> GetByEmailUserAsync(string emailUser);
     }
 }

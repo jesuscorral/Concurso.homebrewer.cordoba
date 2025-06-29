@@ -6,7 +6,7 @@ namespace BeerContest.Domain.Repositories
 {
     public interface IJudgingTableRepository
     {
-        Task<IEnumerable<JudgingTable>> GetAllAsync(string contestId);
+        Task<IEnumerable<JudgingTable>> GetByContestIdAsync(string contestId);
         Task<JudgingTable> GetByIdAsync(string id);
         Task<string> CreateAsync(JudgingTable table);
         Task UpdateAsync(JudgingTable table);

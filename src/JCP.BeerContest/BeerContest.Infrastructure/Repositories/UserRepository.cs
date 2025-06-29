@@ -1,74 +1,98 @@
 using BeerContest.Domain.Models;
 using BeerContest.Domain.Repositories;
-using BeerContest.Infrastructure.Firestore;
+using BeerContest.Infrastructure.Common.Abstractions;
+using BeerContest.Infrastructure.Common.Implementations;
 using BeerContest.Infrastructure.Firestore.FirestoreModels;
-using Google.Cloud.Firestore;
+using Microsoft.Extensions.Logging;
 
-namespace BeerContest.Infrastructure.Repositories
+namespace BeerContest.Infrastructure.Repositories.Enhanced
 {
-    public class UserRepository : IUserRepository
+    /// <summary>
+    /// Enhanced User repository using the new base repository pattern
+    /// </summary>
+    public class UserRepository : FirestoreRepositoryBase<User, FirestoreUser, string>, IUserRepository
     {
-        private readonly BeerContestContext _firestoreContext;
-        private const string CollectionName = "users";
+        protected override string CollectionName => "users";
 
-        public UserRepository(BeerContestContext firestoreContext)
+        public UserRepository(
+            IFirestoreContext context, 
+            ILogger<UserRepository> logger) 
+            : base(context, logger)
         {
-            _firestoreContext = firestoreContext;
         }
 
-        public async Task<User?> GetByIdAsync(string id)
+        protected override User ToDomainEntity(FirestoreUser firestoreModel)
         {
-            var user = await _firestoreContext.GetDocumentAsync<FirestoreUser>(CollectionName, id);
-            return user?.ToUser();
+            return firestoreModel.ToUser();
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        protected override FirestoreUser ToFirestoreModel(User entity)
         {
-            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
-            query = query.WhereEqualTo("Email", email);
-
-            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-
-            var firestoreUsers = querySnapshot.Documents
-                .Select(d => d.ConvertTo<FirestoreUser>())
-                .FirstOrDefault();
-            return firestoreUsers?.ToUser();
+            return FirestoreUser.FromUser(entity);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            var firestoreUsers = await _firestoreContext.GetCollectionAsync<FirestoreUser>(CollectionName);
-            return firestoreUsers.Select(fb => fb.ToUser());
-        }
+        protected override string KeyToString(string key) => key;
 
-        public async Task<IEnumerable<User>> GetByRoleAsync(UserRole role)
-        {
-            Query query = await _firestoreContext.CreateQueryAsync(CollectionName);
-            query = query.WhereEqualTo("Role", role);
+        protected override string StringToKey(string documentId) => documentId;
 
-            QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
-            return querySnapshot.Documents
-                .Select(d => d.ConvertTo<User>())
-                .ToList();
+        // IUserRepository specific methods
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            try
+            {
+                _logger.LogDebug("Getting user by email: {Email}", email);
+                
+                var users = await FindAsync(query => query.WhereEqualTo("Email", email));
+                var user = users.FirstOrDefault();
+                
+                return user ?? throw new KeyNotFoundException($"User with email {email} not found.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user by email {Email}", email);
+                throw;
+            }
         }
 
         public async Task<string> CreateAsync(User user)
         {
-            user.CreatedAt = DateTime.UtcNow;
-            var firestoreUser = FirestoreUser.FromUser(user);
-            var id = await _firestoreContext.AddDocumentAsync(CollectionName, firestoreUser);
-            return id;
+            try
+            {
+                user.CreatedAt = DateTime.UtcNow;
+                var id = await AddAsync(user);
+                _logger.LogInformation("Created user {UserId} with email {Email}", id, user.Email);
+                return id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating user with email {Email}", user.Email);
+                throw;
+            }
         }
 
-        public Task UpdateAsync(User user)
+        public async Task UpdateAsync(User user)
         {
-            var firestoreUser = FirestoreUser.FromUser(user);
-            return _firestoreContext.SetDocumentAsync(CollectionName, user.Id, firestoreUser);
+            try
+            {
+                await UpdateAsync(user.Id, user);
+                _logger.LogInformation("Updated user {UserId}", user.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating user {UserId}", user.Id);
+                throw;
+            }
         }
 
-        public Task DeleteAsync(string id)
+        // Explicit implementations for IUserRepository (delegating to base class)
+        async Task<User?> IUserRepository.GetByIdAsync(string id)
         {
-            return _firestoreContext.DeleteDocumentAsync(CollectionName, id);
+            return await GetByIdAsync(id);
+        }
+
+        async Task<IEnumerable<User>> IUserRepository.GetAllAsync()
+        {
+            return await GetAllAsync();
         }
     }
 }
