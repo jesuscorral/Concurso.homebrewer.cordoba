@@ -98,6 +98,11 @@ builder.Services.AddAuthentication(options =>
                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
                 logger.LogInformation($"User authenticated with roles: {string.Join(", ", user.Roles)}");
             }
+            else
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogWarning("User not found after registration. User ID: {UserId}", userId);
+            }
         }
         catch (Exception ex)
         {
