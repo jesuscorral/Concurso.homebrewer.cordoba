@@ -1,46 +1,78 @@
 ﻿@page "/"
-@using BeerContest.Domain.Models
-@using MediatR
-@inject IMediator Mediator
+@using System.Timers
+@implements IDisposable
 
 <PageTitle>Home - Beer Contest</PageTitle>
 
-<div class="container">
-    <div class="row mb-5">
-        <div class="col-12">
-            <div class="jumbotron bg-light p-5 rounded">
-                <h1 class="display-4">Welcome to the Artisanal Beer Contest!</h1>
-                <p class="lead">Showcase your brewing skills and compete with the best artisanal brewers.</p>
-                <hr class="my-4">
-                <p>Register your beers, participate in the contest, and get feedback from expert judges.</p>
-                <a class="btn btn-primary btn-lg" href="contests" role="button">View Contests</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-12">
-            <h2>Active Contests</h2>
-        </div>
-    </div>
-
-   
-    <div class="row mt-5">
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Register Your Beer</h5>
-                    <p class="card-text">Submit your artisanal beer to participate in the contest.</p>
-                    <a href="register-beer" class="btn btn-outline-primary">Register Now</a>
+<div style="min-height: 100vh; background: url('/images/beer-background.jpg') no-repeat center center; background-size: cover; position: relative;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(44, 30, 15, 0.8);"></div>
+    
+    <div style="position: relative; z-index: 2; padding: 5rem 1rem; max-width: 900px; margin: 0 auto; text-align: center; color: white;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; color: var(--beer-amber); margin-bottom: 1rem;">Artisanal Beer Contest</h1>
+        
+        <h2 style="font-size: 1.5rem; margin-bottom: 3rem; color: white;">Showcase your brewing skills and compete with the best</h2>
+        
+        <div style="margin-bottom: 3rem;">
+            <h3>Registration Closes In:</h3>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                <div style="background: rgba(139, 69, 19, 0.8); padding: 1rem; border-radius: 8px; min-width: 100px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--beer-gold);">@daysLeft</div>
+                    <div style="font-size: 0.9rem; color: white; text-transform: uppercase;">Days</div>
+                </div>
+                <div style="background: rgba(139, 69, 19, 0.8); padding: 1rem; border-radius: 8px; min-width: 100px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--beer-gold);">@hoursLeft</div>
+                    <div style="font-size: 0.9rem; color: white; text-transform: uppercase;">Hours</div>
+                </div>
+                <div style="background: rgba(139, 69, 19, 0.8); padding: 1rem; border-radius: 8px; min-width: 100px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--beer-gold);">@minutesLeft</div>
+                    <div style="font-size: 0.9rem; color: white; text-transform: uppercase;">Minutes</div>
+                </div>
+                <div style="background: rgba(139, 69, 19, 0.8); padding: 1rem; border-radius: 8px; min-width: 100px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                    <div style="font-size: 3rem; font-weight: 700; color: var(--beer-gold);">@secondsLeft</div>
+                    <div style="font-size: 0.9rem; color: white; text-transform: uppercase;">Seconds</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Contest Rules</h5>
-                    <p class="card-text">Learn about the rules and guidelines for the beer contest.</p>
-                    <a href="rules" class="btn btn-outline-primary">View Rules</a>
+        
+        <div>
+            <a href="/register-beer" style="display: inline-block; background: var(--beer-amber); color: white; padding: 1rem 2.5rem; font-weight: 600; font-size: 1.2rem; border-radius: 50px; text-decoration: none; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                <i class="fa fa-trophy me-2"></i> Register Your Beer Now!
+            </a>
+            <div style="margin-top: 1.5rem;">
+                <a href="/rules" style="color: white; text-decoration: none;">
+                    <i class="fa fa-info-circle me-2"></i>Contest Rules
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="background-color: var(--beer-dark); color: white; padding: 4rem 1rem;">
+    <div class="container">
+        <h3 style="text-align: center; margin-bottom: 3rem;">Why Participate?</h3>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px; height: 100%; text-align: center;">
+                    <i class="fa fa-medal mb-3" style="font-size: 2.5rem; color: var(--beer-amber);"></i>
+                    <h4>Recognition</h4>
+                    <p>Get your craft beer recognized by experts and enthusiasts in the field.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px; height: 100%; text-align: center;">
+                    <i class="fa fa-comments mb-3" style="font-size: 2.5rem; color: var(--beer-amber);"></i>
+                    <h4>Expert Feedback</h4>
+                    <p>Receive detailed feedback from certified judges to improve your brewing.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px; height: 100%; text-align: center;">
+                    <i class="fa fa-users mb-3" style="font-size: 2.5rem; color: var(--beer-amber);"></i>
+                    <h4>Community</h4>
+                    <p>Connect with fellow brewers and enthusiasts who share your passion.</p>
                 </div>
             </div>
         </div>
@@ -48,5 +80,65 @@
 </div>
 
 @code {
-
+    // Target date for the countdown (June 30, 2025)
+    private DateTime targetDate = new DateTime(2025, 6, 30);
+    private Timer? timer;
+    
+    // Countdown values
+    private int daysLeft;
+    private int hoursLeft;
+    private int minutesLeft;
+    private int secondsLeft;
+    
+    protected override void OnInitialized()
+    {
+        // Set up timer to update every second
+        timer = new Timer(1000);
+        timer.Elapsed += TimerElapsed;
+        timer.AutoReset = true;
+        timer.Enabled = true;
+        
+        // Calculate initial values
+        UpdateCountdown();
+    }
+    
+    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        // Update countdown values
+        UpdateCountdown();
+        
+        // Request UI update
+        InvokeAsync(StateHasChanged);
+    }
+    
+    private void UpdateCountdown()
+    {
+        TimeSpan remaining = targetDate - DateTime.Now;
+        
+        // Handle case where date is in the past
+        if (remaining.TotalSeconds <= 0)
+        {
+            daysLeft = 0;
+            hoursLeft = 0;
+            minutesLeft = 0;
+            secondsLeft = 0;
+            return;
+        }
+        
+        // Calculate the components
+        daysLeft = remaining.Days;
+        hoursLeft = remaining.Hours;
+        minutesLeft = remaining.Minutes;
+        secondsLeft = remaining.Seconds;
+    }
+    
+    public void Dispose()
+    {
+        if (timer != null)
+        {
+            timer.Stop();
+            timer.Elapsed -= TimerElapsed;
+            timer.Dispose();
+        }
+    }
 }

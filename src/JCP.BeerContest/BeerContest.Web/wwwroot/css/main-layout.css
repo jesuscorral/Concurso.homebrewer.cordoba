@@ -1,0 +1,35 @@
+body {
+    padding-top: 70px; /* Height of navbar */
+}
+
+.navbar .navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar .nav-link.active {
+    color: var(--beer-amber) !important;
+    font-weight: bold;
+}
+
+.navbar .nav-link {
+    color: #fff;
+    transition: color 0.2s;
+}
+
+.navbar .nav-link:hover {
+    color: var(--beer-gold) !important;
+}
+
+.navbar .navbar-toggler {
+    border: none;
+    outline: none;
+}
+
+.navbar .navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar .fa-beer {
+    color: var(--beer-amber);
+}
