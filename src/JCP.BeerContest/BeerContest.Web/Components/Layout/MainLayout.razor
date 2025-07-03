@@ -1,54 +1,61 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.Components.Authorization
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <i class="fa fa-beer me-2 text-amber"></i>
+
+<nav class="main-navbar">
+    <div class="navbar-content">
+        <a class="navbar-logo" href="/">
+            <i class="fa fa-beer"></i>
             <span>Beer Contest</span>
         </a>
-        <button class="navbar-toggler" type="button" @onclick="ToggleNavMenu" aria-controls="navbarNav" aria-expanded="@(!collapseNavMenu)" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-burger" @onclick="ToggleNavMenu" aria-label="Toggle navigation">
+            <span class="navbar-burger-icon"></span>
         </button>
-        <div class="collapse navbar-collapse @(collapseNavMenu ? string.Empty : "show")" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/rules">Contest Rules</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/beers">Beers</NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="/contest">Contest</NavLink>
-                </li>
-            </ul>
-            <ul class="navbar-nav mb-2 mb-lg-0">
+        <div class="navbar-links @(collapseNavMenu ? "collapsed" : "expanded")">
+            <div class="navbar-link-group">
+                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                <NavLink class="nav-link" href="/rules">Contest Rules</NavLink>
+            </div>
+            <div class="navbar-auth-group">
                 <AuthorizeView>
                     <NotAuthorized>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/Account/Register">Register</NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/Account/Login">Login</NavLink>
-                        </li>
+                        <NavLink class="nav-link" href="/Account/Register">Register</NavLink>
+                        <NavLink class="nav-link" href="/Account/Login">Login</NavLink>
                     </NotAuthorized>
                     <Authorized>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="/Account/Logout">Logout</NavLink>
-                        </li>
+                        <NavLink class="nav-link" href="/beers">Beers</NavLink>
+                        <NavLink class="nav-link" href="/Account/Logout">Logout</NavLink>
                     </Authorized>
                 </AuthorizeView>
-            </ul>
+            </div>
         </div>
     </div>
 </nav>
 
-<main class="container mt-5 pt-4">
+<main class="main-content">
     @Body
 </main>
+
+<footer class="main-footer">
+    <div class="footer-content">
+        <div class="footer-logo">
+            <i class="fa fa-beer"></i>
+            <span class="footer-title">Beer Contest</span>
+        </div>
+        <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/rules">Rules</a>
+            <a href="/beers">Beers</a>
+            <a href="/contest">Contest</a>
+            <a href="https://instagram.com/" target="_blank" rel="noopener" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+        <div class="footer-copyright">
+            &copy; @DateTime.Now.Year Beer Contest. All rights reserved.
+        </div>
+    </div>
+</footer>
 
 @code {
     private bool collapseNavMenu = true;

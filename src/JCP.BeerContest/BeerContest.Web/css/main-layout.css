@@ -198,3 +198,12 @@ body {
     color: #aaa;
     font-size: 0.9rem;
 }
+@media (max-width: 768px) {
+    .footer-content {
+        gap: 0.5rem;
+    }
+    .footer-links {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
