@@ -2,60 +2,64 @@
 @using Microsoft.AspNetCore.Components.Authorization
 
 
-<nav class="main-navbar">
-    <div class="navbar-content">
-        <a class="navbar-logo" href="/">
-            <i class="fa fa-beer"></i>
-            <span>Beer Contest</span>
-        </a>
-        <button class="navbar-burger" @onclick="ToggleNavMenu" aria-label="Toggle navigation">
-            <span class="navbar-burger-icon"></span>
-        </button>
-        <div class="navbar-links @(collapseNavMenu ? "collapsed" : "expanded")">
-            <div class="navbar-link-group">
-                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-                <NavLink class="nav-link" href="/rules">Contest Rules</NavLink>
-            </div>
-            <div class="navbar-auth-group">
-                <AuthorizeView>
-                    <NotAuthorized>
-                        <NavLink class="nav-link" href="/Account/Register">Register</NavLink>
-                        <NavLink class="nav-link" href="/Account/Login">Login</NavLink>
-                    </NotAuthorized>
-                    <Authorized>
-                        <NavLink class="nav-link" href="/beers">Beers</NavLink>
-                        <NavLink class="nav-link" href="/Account/Logout">Logout</NavLink>
-                    </Authorized>
-                </AuthorizeView>
-            </div>
-        </div>
-    </div>
-</nav>
 
-<main class="main-content">
-    @Body
-</main>
-
-<footer class="main-footer">
-    <div class="footer-content">
-        <div class="footer-logo">
-            <i class="fa fa-beer"></i>
-            <span class="footer-title">Beer Contest</span>
-        </div>
-        <div class="footer-links">
-            <a href="/">Home</a>
-            <a href="/rules">Rules</a>
-            <a href="/beers">Beers</a>
-            <a href="/contest">Contest</a>
-            <a href="https://instagram.com/" target="_blank" rel="noopener" title="Instagram">
-                <i class="fab fa-instagram"></i>
+<div class="app-wrapper">
+    <nav class="main-navbar">
+        <div class="navbar-content">
+            <a class="navbar-logo" href="/">
+                <i class="fa fa-beer"></i>
+                <span>Beer Contest</span>
             </a>
+            <button class="navbar-burger" @onclick="ToggleNavMenu" aria-label="Toggle navigation">
+                <span class="navbar-burger-icon"></span>
+            </button>
+            <div class="navbar-links @(collapseNavMenu ? "collapsed" : "expanded")">
+                <div class="navbar-link-group">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                    <NavLink class="nav-link" href="/rules">Contest Rules</NavLink>
+                </div>
+                <div class="navbar-auth-group">
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <NavLink class="nav-link" href="/Account/Register">Register</NavLink>
+                            <NavLink class="nav-link" href="/Account/Login">Login</NavLink>
+                        </NotAuthorized>
+                        <Authorized>
+                            <NavLink class="nav-link" href="/beers">Beers</NavLink>
+                            <NavLink class="nav-link" href="/Account/Logout">Logout</NavLink>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
         </div>
-        <div class="footer-copyright">
-            &copy; @DateTime.Now.Year Beer Contest. All rights reserved.
+    </nav>
+
+    <main class="main-content">
+       
+        @Body
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fa fa-beer"></i>
+                <span class="footer-title">Beer Contest</span>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/rules">Rules</a>
+                <a href="/beers">Beers</a>
+                <a href="/contest">Contest</a>
+                <a href="https://instagram.com/" target="_blank" rel="noopener" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <div class="footer-copyright">
+                &copy; @DateTime.Now.Year Beer Contest. All rights reserved.
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
+</div>
 
 @code {
     private bool collapseNavMenu = true;
