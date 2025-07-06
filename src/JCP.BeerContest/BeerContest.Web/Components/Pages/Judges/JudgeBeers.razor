@@ -19,7 +19,7 @@
 @using MediatR
 @inject IMediator Mediator
 @inject NavigationManager Navigation
-@inject IToastService ToastService
+@inject BeerContest.Web.Services.ToastService ToastService
 @attribute [Authorize(Roles = "Judge,Administrator")]
 
 <PageTitle>Judge Beers</PageTitle>

@@ -13,7 +13,7 @@
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
-@inject IToastService ToastService
+@inject IJSRuntime JS
 
 @attribute [Authorize(Roles = "Participant, Judge")]
 
@@ -195,7 +195,7 @@
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error loading beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            await JS.InvokeVoidAsync("alert", $"Error loading beer: {ex.Message}");
             beer = null;
         }
     }
@@ -243,12 +243,12 @@
 
             await Mediator.Send(command);
 
-            ToastService.ShowSuccess("Beer updated successfully", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            await JS.InvokeVoidAsync("alert", "Beer updated successfully");
             NavigationManager.NavigateTo("/my-beers");
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error updating beer: {ex.Message}", settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            await JS.InvokeVoidAsync("alert", $"Error updating beer: {ex.Message}");
         }
     }
 

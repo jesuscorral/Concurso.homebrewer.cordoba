@@ -1,70 +1,89 @@
-﻿@inherits LayoutComponentBase
+@using BeerContest.Domain.Models
 @using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
-
-
-<div class="app-wrapper">
-    <nav class="main-navbar">
-        <div class="navbar-content">
-            <a class="navbar-logo" href="/">
-                <i class="fa fa-beer"></i>
-                <span>Beer Contest</span>
+<div class="page">
+    <!-- Top Navigation Bar -->
+    <header class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand" href="">
+                <i class="fa fa-beer fa-lg text-amber"></i>
             </a>
-            <button class="navbar-burger" @onclick="ToggleNavMenu" aria-label="Toggle navigation">
-                <span class="navbar-burger-icon"></span>
+
+            <!-- Mobile menu toggle -->
+            <button class="navbar-toggler" type="button" @onclick="ToggleNav" aria-expanded="@isNavOpen">
+                <i class="fa fa-bars"></i>
             </button>
-            <div class="navbar-links @(collapseNavMenu ? "collapsed" : "expanded")">
-                <div class="navbar-link-group">
-                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-                    <NavLink class="nav-link" href="/rules">Contest Rules</NavLink>
-                </div>
-                <div class="navbar-auth-group">
+
+            <!-- Navigation Menu -->
+            <div class="navbar-collapse @(isNavOpen ? "show" : "collapse")">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="" @onclick="CloseNav">
+                            <i class="fa fa-home" aria-hidden="true"></i> Home
+                        </a>
+                    </li>
                     <AuthorizeView>
-                        <NotAuthorized>
-                            <NavLink class="nav-link" href="/Account/Register">Register</NavLink>
-                            <NavLink class="nav-link" href="/Account/Login">Login</NavLink>
-                        </NotAuthorized>
-                        <Authorized>
-                            <NavLink class="nav-link" href="/beers">Beers</NavLink>
-                            <NavLink class="nav-link" href="/Account/Logout">Logout</NavLink>
-                        </Authorized>
-                    </AuthorizeView>
-                </div>
+                        <AuthorizeView Roles="@($"{UserRole.Participant}")">
+                            <Authorized Context="authContext">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="my-beers" @onclick="CloseNav">
+                                        <i class="fa fa-beer" aria-hidden="true"></i> My Beers
+                                    </a>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                    </AuthorizeView>        
+                    <li class="nav-item">
+                        <a class="nav-link" href="beer-registration" @onclick="CloseNav">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Register Beer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register-judge" @onclick="CloseNav">
+                            <i class="fa fa-gavel" aria-hidden="true"></i> Register as Judge
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </nav>
+    </header>
 
+    <!-- Main Content -->
     <main class="main-content">
-       
-        @Body
-    </main>
-
-    <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fa fa-beer"></i>
-                <span class="footer-title">Beer Contest</span>
-            </div>
-            <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/rules">Rules</a>
-                <a href="/beers">Beers</a>
-                <a href="/contest">Contest</a>
-                <a href="https://instagram.com/" target="_blank" rel="noopener" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
-            <div class="footer-copyright">
-                &copy; @DateTime.Now.Year Beer Contest. All rights reserved.
-            </div>
+        <div class="container-fluid px-4 py-3">
+            @Body
         </div>
-    </footer>
+    </main>
+</div>
+
+<!-- Include navigation JavaScript -->
+<script src="~/js/navigation.js"></script>
+
+<div id="blazor-error-ui">
+    @if (System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+    {
+        <text>An error has occurred. This application may no longer respond until reloaded.</text>
+    }
+    else
+    {
+        <text>An unexpected error has occurred.</text>
+    }
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
-    private void ToggleNavMenu()
+    private bool isNavOpen = false;
+
+    private void ToggleNav()
     {
-        collapseNavMenu = !collapseNavMenu;
+        isNavOpen = !isNavOpen;
+    }
+
+    private void CloseNav()
+    {
+        isNavOpen = false;
     }
 }

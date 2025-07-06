@@ -5,7 +5,6 @@ using BeerContest.Domain.Models;
 using BeerContest.Infrastructure;
 using BeerContest.Web.Infrastructure.Extensions;
 using BeerContest.Web.Services;
-using Blazored.Toast;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
@@ -135,14 +134,13 @@ builder.Services.AddHttpContextAccessor();
 
 // Add ClaimsService
 builder.Services.AddScoped<ClaimsService>();
+builder.Services.AddScoped<ToastService>();
 
 // Add HttpClient factory
 builder.Services.AddHttpClient();
 
 // Add health checks
 builder.Services.AddHealthChecks();
-
-builder.Services.AddBlazoredToast();
 
 builder.Services
     .AddBlazorise()

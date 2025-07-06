@@ -9,7 +9,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IToastService ToastService
+@inject BeerContest.Web.Services.ToastService ToastService
 
 @attribute [Authorize(Roles = "Participant, Judge")]
 
@@ -149,7 +149,7 @@
 
         await Mediator.Send(command);
 
-        ToastService.ShowSuccess("Registrado correctamente", settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+        ToastService.ShowSuccess("Registrado correctamente");
 
         // Reset all fields after successful registration
         judge = new JudgeModel();

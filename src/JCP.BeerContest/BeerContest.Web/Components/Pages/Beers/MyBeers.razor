@@ -12,7 +12,7 @@
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
-@inject IToastService ToastService
+@inject BeerContest.Web.Services.ToastService ToastService
 
 @attribute [Authorize(Roles = "Participant, Judge")]
 
@@ -226,7 +226,7 @@
             
             if (result.Succeeded)
             {
-                ToastService.ShowSuccess(result.Message ?? "Beer deleted successfully");
+                // ToastService.ShowSuccess(result.Message ?? "Beer deleted successfully");
                 
                 // Refresh the list
                 var user = await GetUser();
@@ -234,14 +234,14 @@
             }
             else
             {
-                ToastService.ShowError(result.Message ?? "Failed to delete beer", 
-                    settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+                // ToastService.ShowError(result.Message ?? "Failed to delete beer", 
+                    // settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
             }
         }
         catch (Exception ex)
         {
-            ToastService.ShowError($"Error deleting beer: {ex.Message}", 
-                settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
+            // ToastService.ShowError($"Error deleting beer: {ex.Message}", 
+                // settings => { settings.Timeout = 5; settings.PauseProgressOnHover = true; });
         }
     }
 

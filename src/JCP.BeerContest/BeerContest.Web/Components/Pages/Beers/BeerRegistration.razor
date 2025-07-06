@@ -1,4 +1,4 @@
-﻿@page "/register-beer"
+@page "/register-beer"
 @using System.ComponentModel.DataAnnotations
 @using System.Linq.Expressions
 @using System.Security.Claims
@@ -17,7 +17,7 @@
 @inject IMediator Mediator
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
-@inject IToastService ToastService
+@inject BeerContest.Web.Services.ToastService ToastService
 
 @attribute [Authorize(Roles = "Participant, Judge")]
 
@@ -41,7 +41,7 @@
     else if (maxBeerRached)
     {
         <div class="alert alert-warning" role="alert">
-            Has alcanzado el límite máximo de 3 cervezas registradas. Por favor, elimina una cerveza antes de registrar una nueva.
+            Has alcanzado el l�mite m�ximo de 3 cervezas registradas. Por favor, elimina una cerveza antes de registrar una nueva.
         </div>
     }
     else if (contests.Any(x => x.Status == ContestStatus.RegistrationOpen))
@@ -52,11 +52,11 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Información del Participante</h4>
+                    <h4>Informaci�n del Participante</h4>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label for="memberNumber" class="form-label">Número socio ACCE</label>
+                        <label for="memberNumber" class="form-label">N�mero socio ACCE</label>
                         <InputText id="memberNumber" @bind-Value="beerRegistration.ACCEMemberNumber" class="form-control" />
                         <ValidationMessage For="@(() => beerRegistration.ACCEMemberNumber)" />
                     </div>
@@ -74,7 +74,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Teléfono</label>
+                        <label for="phone" class="form-label">Tel�fono</label>
                         <InputText id="phone" @bind-Value="beerRegistration.Phone" class="form-control" />
                         <ValidationMessage For="@(() => beerRegistration.Phone)" />
                     </div>
@@ -83,7 +83,7 @@
 
             <div class="card mb-4">
                 <div class="card-header">
-                    <h4>Categoría de Cerveza</h4>
+                    <h4>Categor�a de Cerveza</h4>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -91,7 +91,7 @@
                             <InputRadioGroup @bind-Value="beerRegistration.Category" @bind-Value:after="CategoryChanged" Name="category">
                                 <div class="mb-2">
                                     <InputRadio Value="@(BeerCategory.ClassicStyles)" id="classicStyles" class="form-check-input" />
-                                    <label class="form-check-label" for="classicStyles">Estilos clásicos</label>
+                                    <label class="form-check-label" for="classicStyles">Estilos cl�sicos</label>
                                 </div>
                                 <div>
                                     <InputRadio Value="@(BeerCategory.HistoricalAndSpecialtyBeers)" id="historicalStyles" class="form-check-input" />
@@ -128,7 +128,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="elaborationDate" class="form-label">Fecha de elaboración</label>
+                        <label for="elaborationDate" class="form-label">Fecha de elaboraci�n</label>
                         <InputDate id="elaborationDate" @bind-Value="beerRegistration.ElaborationDate" class="form-control" />
                         <ValidationMessage For="@(() => beerRegistration.ElaborationDate)" />
                     </div>
@@ -143,7 +143,7 @@
                         <ValidationMessage For="@(() => beerRegistration.Malts)" />
                     </div>
                     <div class="mb-3">
-                        <label for="hops" class="form-label">Lúpulos utilizados</label>
+                        <label for="hops" class="form-label">L�pulos utilizados</label>
                         <InputText id="hops" @bind-Value="beerRegistration.Hops" class="form-control" />
                         <ValidationMessage For="@(() => beerRegistration.Hops)" />
                     </div>
@@ -324,8 +324,7 @@
             
             if (beerResponse.Succeeded)
             {
-                ToastService.ShowSuccess(beerResponse.Message ?? "Cerveza registrada correctamente", 
-                    settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+                ToastService.ShowSuccess(beerResponse.Message ?? "Cerveza registrada correctamente");
                 
                 await CheckMaxBeerReached();
                 // Clear the form
@@ -333,15 +332,13 @@
             }
             else
             {
-                ToastService.ShowError(beerResponse.Message ?? "Error al registrar la cerveza", 
-                    settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+                ToastService.ShowError(beerResponse.Message ?? "Error al registrar la cerveza");
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error registering beer: {ex.Message}");
-            ToastService.ShowError($"Error al registrar la cerveza: {ex.Message}", 
-                settings => { settings.Timeout = 15; settings.PauseProgressOnHover = true; settings.ExtendedTimeout = 1; });
+            ToastService.ShowError($"Error al registrar la cerveza: {ex.Message}");
         }
     }
 
