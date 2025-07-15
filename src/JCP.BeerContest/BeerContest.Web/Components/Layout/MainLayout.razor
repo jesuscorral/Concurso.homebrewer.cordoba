@@ -2,59 +2,59 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 
-<div class="page">
+<div class="modern-layout">
     <!-- Top Navigation Bar -->
-    <header class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <!-- Brand -->
-            <a class="navbar-brand" href="">
-                <i class="fa fa-beer fa-lg text-amber"></i>
+    <header class="modern-navbar">
+        <div class="navbar-container">
+            <!-- Brand Logo -->
+            <a class="brand-logo" href="">
+                <i class="fa fa-beer"></i>
+                <span>Beer Contest</span>
             </a>
 
-            <!-- Mobile menu toggle -->
-            <button class="navbar-toggler" type="button" @onclick="ToggleNav" aria-expanded="@isNavOpen">
-                <i class="fa fa-bars"></i>
-            </button>
+            <!-- Navigation Links (Left Side) -->
+            <nav class="nav-links @(isNavOpen ? "nav-open" : "")">
+                <a class="nav-link" href="" @onclick="CloseNav">Home</a>
+                <a class="nav-link" href="rules" @onclick="CloseNav">Contest Rules</a>
+                <a class="nav-link" href="categories" @onclick="CloseNav">Categories</a>
+                <AuthorizeView>
+                    <AuthorizeView Roles="@($"{UserRole.Participant}")">
+                        <Authorized Context="authContext">
+                            <a class="nav-link" href="my-beers" @onclick="CloseNav">My Beers</a>
+                        </Authorized>
+                    </AuthorizeView>
+                </AuthorizeView>
+                <a class="nav-link" href="register-judge" @onclick="CloseNav">Judge Registration</a>
+            </nav>
 
-            <!-- Navigation Menu -->
-            <div class="navbar-collapse @(isNavOpen ? "show" : "collapse")">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="" @onclick="CloseNav">
-                            <i class="fa fa-home" aria-hidden="true"></i> Home
-                        </a>
-                    </li>
-                    <AuthorizeView>
-                        <AuthorizeView Roles="@($"{UserRole.Participant}")">
-                            <Authorized Context="authContext">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="my-beers" @onclick="CloseNav">
-                                        <i class="fa fa-beer" aria-hidden="true"></i> My Beers
-                                    </a>
-                                </li>
-                            </Authorized>
-                        </AuthorizeView>
-                    </AuthorizeView>        
-                    <li class="nav-item">
-                        <a class="nav-link" href="beer-registration" @onclick="CloseNav">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Register Beer
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register-judge" @onclick="CloseNav">
-                            <i class="fa fa-gavel" aria-hidden="true"></i> Register as Judge
-                        </a>
-                    </li>
-                </ul>
+            <!-- Auth Section (Right Side) -->
+            <div class="auth-section">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <a class="auth-link login-link" href="Account/Login">Log In</a>
+                        <a class="auth-link register-link" href="Account/Register">Register</a>
+                    </NotAuthorized>
+                    <Authorized>
+                        <div class="user-menu">
+                            <span class="user-name">Welcome, @(context.User.Identity?.Name ?? "User")</span>
+                            <a class="auth-link logout-link" href="Account/Logout">Logout</a>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
             </div>
+
+            <!-- Mobile menu toggle -->
+            <button class="mobile-menu-toggle" @onclick="ToggleNav" aria-expanded="@isNavOpen">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container-fluid px-4 py-3">
-            @Body
-        </div>
+        @Body
     </main>
 </div>
 

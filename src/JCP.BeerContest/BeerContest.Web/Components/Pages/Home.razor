@@ -1,45 +1,90 @@
 ﻿@page "/"
 @using System.Timers
 @implements IDisposable
+@inject NavigationManager Navigation
 
 <PageTitle>Home - Beer Contest</PageTitle>
 
-<div class="home-bg">
-    <div class="home-bg-overlay"></div>
-    <div class="home-content">
-        <h1 class="home-title">Artisanal Beer Contest</h1>
-        <h2 class="home-subtitle">Showcase your brewing skills and compete with the best</h2>
-        <div class="home-countdown">
-            <h3>Registration Closes In:</h3>
-            <div class="home-countdown-boxes">
-                <div class="home-countdown-box">
-                    <div class="home-countdown-value">@daysLeft</div>
-                    <div class="home-countdown-label">Days</div>
+<div class="hero-section">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                <span class="title-main">WHEAT LAGER</span>
+                <span class="title-accent">Red Hops</span>
+            </h1>
+            <p class="hero-description">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
+                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.
+            </p>
+            <button class="hero-cta-btn" @onclick="NavigateToRegistration">
+                <i class="fa fa-arrow-right"></i>
+                SEE MORE
+            </button>
+        </div>
+        
+        <div class="hero-visual">
+            <div class="beer-showcase">
+                <div class="beer-glass"></div>
+                <div class="beer-bottle"></div>
+            </div>
+            
+            <div class="ingredients-section">
+                <h3 class="ingredients-title">INGREDIENTS:</h3>
+                <div class="ingredient-item">
+                    <i class="ingredient-icon fa fa-wheat"></i>
+                    <div class="ingredient-text">
+                        <strong>Lorem Ipsum Dolor</strong>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                    </div>
                 </div>
-                <div class="home-countdown-box">
-                    <div class="home-countdown-value">@hoursLeft</div>
-                    <div class="home-countdown-label">Hours</div>
+                <div class="ingredient-item">
+                    <i class="ingredient-icon fa fa-leaf"></i>
+                    <div class="ingredient-text">
+                        <strong>Lorem Ipsum Dolor</strong>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                    </div>
                 </div>
-                <div class="home-countdown-box">
-                    <div class="home-countdown-value">@minutesLeft</div>
-                    <div class="home-countdown-label">Minutes</div>
-                </div>
-                <div class="home-countdown-box">
-                    <div class="home-countdown-value">@secondsLeft</div>
-                    <div class="home-countdown-label">Seconds</div>
+                <div class="ingredient-item">
+                    <i class="ingredient-icon fa fa-tint"></i>
+                    <div class="ingredient-text">
+                        <strong>Lorem Ipsum Dolor</strong>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div>
-            <a href="/register-beer" class="home-register-btn">
-                <i class="fa fa-trophy me-2"></i> Register Your Beer Now!
-            </a>
-            <div>
-                <a href="/rules" class="home-rules-link">
-                    <i class="fa fa-info-circle me-2"></i>Contest Rules
-                </a>
+    </div>
+    
+    <!-- Contest Call to Action -->
+    <div class="contest-cta">
+        <div class="contest-info">
+            <h2 class="contest-title">Join the Beer Contest!</h2>
+            <p class="contest-description">
+                Showcase your brewing skills and compete with the best brewers in the region.
+            </p>
+            <div class="countdown-section">
+                <span class="countdown-label">Registration closes in:</span>
+                <div class="countdown-timer">
+                    <div class="countdown-item">
+                        <span class="countdown-number">@daysLeft</span>
+                        <span class="countdown-unit">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number">@hoursLeft</span>
+                        <span class="countdown-unit">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number">@minutesLeft</span>
+                        <span class="countdown-unit">Minutes</span>
+                    </div>
+                </div>
             </div>
         </div>
+        <button class="register-beer-btn" @onclick="NavigateToRegistration">
+            <i class="fa fa-plus"></i>
+            Register Your Beer
+        </button>
     </div>
 </div>
 
@@ -97,7 +142,16 @@
         secondsLeft = remaining.Seconds;
     }
     
+    private void NavigateToRegistration()
+    {
+        Navigation.NavigateTo("/register-beer");
+    }
+    
     public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}
     {
         if (timer != null)
         {
