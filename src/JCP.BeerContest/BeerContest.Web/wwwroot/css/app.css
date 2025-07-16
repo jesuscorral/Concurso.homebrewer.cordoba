@@ -1,0 +1,1183 @@
+/* =======================================================
+   BEER CONTEST APPLICATION - CONSOLIDATED STYLES
+   ======================================================= */
+
+/* =======================================================
+   CSS CUSTOM PROPERTIES (CSS VARIABLES)
+   ======================================================= */
+:root {
+    /* Brand Colors */
+    --primary-amber: #FFA500;
+    --primary-gold: #FFD700;
+    --primary-brown: #8B4513;
+    --primary-dark: #2C1E0F;
+    --primary-foam: #F5F5DC;
+    --accent-orange: #FF6B35;
+    --accent-red: #B22222;
+    --accent-green: #2E8B57;
+    
+    /* Neutral Colors */
+    --text-dark: #2C3E50;
+    --text-light: #BDC3C7;
+    --text-muted: #6C757D;
+    --bg-light: #F8F9FA;
+    --bg-dark: #1A1A1A;
+    --bg-white: #FFFFFF;
+    
+    /* Shadows */
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.2);
+    --shadow-heavy: rgba(0, 0, 0, 0.3);
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+    --radius-full: 50rem;
+    
+    /* Font Sizes */
+    --font-xs: 0.75rem;
+    --font-sm: 0.875rem;
+    --font-base: 1rem;
+    --font-lg: 1.125rem;
+    --font-xl: 1.25rem;
+    --font-2xl: 1.5rem;
+    --font-3xl: 1.875rem;
+    --font-4xl: 2.25rem;
+    --font-5xl: 3rem;
+    --font-6xl: 4rem;
+}
+
+/* =======================================================
+   RESET & BASE STYLES
+   ======================================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+}
+
+/* =======================================================
+   LAYOUT COMPONENTS
+   ======================================================= */
+
+/* Modern Layout Container */
+.modern-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main Content Area */
+.main-content {
+    margin-top: 80px;
+    flex: 1;
+}
+
+/* =======================================================
+   NAVIGATION STYLES
+   ======================================================= */
+
+/* Modern Navigation Bar */
+.modern-navbar {
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 165, 0, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.navbar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+}
+
+/* Brand Logo */
+.brand-logo {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-2xl);
+    font-weight: bold;
+    color: var(--primary-amber);
+    text-decoration: none;
+    transition: color var(--transition-normal);
+}
+
+.brand-logo i {
+    margin-right: var(--spacing-sm);
+    font-size: 1.8rem;
+}
+
+.brand-logo:hover {
+    color: var(--primary-gold);
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    margin-left: var(--spacing-xxl);
+}
+
+.nav-link {
+    color: var(--bg-white);
+    text-decoration: none;
+    font-weight: 500;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 165, 0, 0.2), transparent);
+    transition: left var(--transition-slow);
+}
+
+.nav-link:hover::before {
+    left: 100%;
+}
+
+.nav-link:hover {
+    color: var(--primary-amber);
+    background: rgba(255, 165, 0, 0.1);
+}
+
+/* Authentication Section */
+.auth-section {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.auth-link {
+    color: var(--bg-white);
+    text-decoration: none;
+    padding: 0.75rem var(--spacing-lg);
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.login-link:hover {
+    color: var(--primary-amber);
+    border-color: var(--primary-amber);
+}
+
+.register-link {
+    background: linear-gradient(45deg, var(--primary-amber), var(--accent-orange));
+    color: var(--bg-white);
+}
+
+.register-link:hover {
+    background: linear-gradient(45deg, var(--accent-orange), var(--primary-amber));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3);
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.user-name {
+    color: var(--primary-amber);
+    font-weight: 500;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background: var(--bg-white);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-normal);
+}
+
+/* =======================================================
+   HERO SECTION STYLES
+   ======================================================= */
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+        url('/images/beer-background.jpg') center/cover;
+    filter: blur(1px);
+    z-index: -1;
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xxl);
+    align-items: center;
+    min-height: 70vh;
+}
+
+.hero-text {
+    color: var(--bg-white);
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: var(--font-5xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.2;
+}
+
+.title-main {
+    display: block;
+    font-size: var(--font-6xl);
+    letter-spacing: 2px;
+}
+
+.title-accent {
+    display: block;
+    color: var(--primary-amber);
+    font-style: italic;
+    font-size: var(--font-4xl);
+    margin-top: -var(--spacing-sm);
+}
+
+.hero-description {
+    font-size: var(--font-xl);
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: linear-gradient(45deg, var(--primary-amber), var(--accent-orange));
+    color: var(--bg-white);
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--font-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 165, 0, 0.4);
+}
+
+/* Hero Visual Elements */
+.hero-visual {
+    position: relative;
+    z-index: 2;
+}
+
+.beer-showcase {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-xxl);
+}
+
+.beer-glass {
+    width: 200px;
+    height: 300px;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 215, 0, 0.8) 20%,
+        rgba(255, 165, 0, 0.9) 100%
+    );
+    border-radius: 10px 10px 40px 40px;
+    position: relative;
+    box-shadow: 0 20px 40px var(--shadow-heavy);
+    margin-right: var(--spacing-xl);
+}
+
+.beer-glass::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-sm);
+}
+
+.beer-bottle {
+    width: 80px;
+    height: 250px;
+    background: linear-gradient(
+        to bottom,
+        rgba(139, 69, 19, 0.9) 0%,
+        rgba(101, 67, 33, 0.9) 100%
+    );
+    border-radius: 10px 10px 20px 20px;
+    position: relative;
+    box-shadow: 0 15px 30px var(--shadow-heavy);
+}
+
+.beer-bottle::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 40px;
+    background: rgba(139, 69, 19, 0.9);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.ingredients-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ingredients-title {
+    color: var(--bg-white);
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.ingredient-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    color: var(--bg-white);
+}
+
+.ingredient-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-amber);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-xl);
+    color: var(--bg-white);
+    flex-shrink: 0;
+}
+
+.ingredient-text strong {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-amber);
+}
+
+.ingredient-text p {
+    font-size: var(--font-sm);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* =======================================================
+   CONTEST CTA SECTION
+   ======================================================= */
+
+.contest-cta {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-brown));
+    padding: var(--spacing-xxl) var(--spacing-xl);
+    text-align: center;
+    color: var(--bg-white);
+}
+
+.contest-info {
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xxl);
+}
+
+.contest-title {
+    font-size: var(--font-4xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-amber);
+}
+
+.contest-description {
+    font-size: var(--font-xl);
+    margin-bottom: var(--spacing-xl);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.countdown-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.countdown-label {
+    font-size: var(--font-lg);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--spacing-md);
+    display: block;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-md);
+}
+
+.countdown-item {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 165, 0, 0.3);
+}
+
+.countdown-number {
+    display: block;
+    font-size: var(--font-4xl);
+    font-weight: 700;
+    color: var(--primary-amber);
+    line-height: 1;
+}
+
+.countdown-unit {
+    font-size: var(--font-sm);
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.register-beer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-xxl);
+    background: linear-gradient(45deg, var(--primary-amber), var(--accent-orange));
+    color: var(--bg-white);
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--font-xl);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.register-beer-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 165, 0, 0.4);
+}
+
+/* =======================================================
+   TOAST NOTIFICATIONS
+   ======================================================= */
+
+.toast-container {
+    position: fixed;
+    top: 100px;
+    right: var(--spacing-xl);
+    z-index: 1050;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    pointer-events: none;
+}
+
+.toast {
+    min-width: 300px;
+    max-width: 400px;
+    padding: 0;
+    background: var(--bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    pointer-events: auto;
+    animation: slideIn 0.3s ease-out;
+    border-left: 4px solid;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 12px;
+}
+
+.toast-icon {
+    font-size: var(--font-xl);
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-message {
+    flex: 1;
+    font-size: var(--font-sm);
+    line-height: 1.4;
+    color: var(--text-dark);
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.toast-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Toast Types */
+.toast-success {
+    border-left-color: var(--accent-green);
+}
+
+.toast-success .toast-icon {
+    color: var(--accent-green);
+}
+
+.toast-error {
+    border-left-color: var(--accent-red);
+}
+
+.toast-error .toast-icon {
+    color: var(--accent-red);
+}
+
+.toast-info {
+    border-left-color: #17a2b8;
+}
+
+.toast-info .toast-icon {
+    color: #17a2b8;
+}
+
+.toast-warning {
+    border-left-color: #ffc107;
+}
+
+.toast-warning .toast-icon {
+    color: #ffc107;
+}
+
+/* =======================================================
+   UTILITY CLASSES
+   ======================================================= */
+
+/* Text Utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-primary { color: var(--primary-amber); }
+.text-white { color: var(--bg-white); }
+.text-muted { color: var(--text-muted); }
+
+/* Background Utilities */
+.bg-primary { background-color: var(--primary-amber); }
+.bg-dark { background-color: var(--primary-dark); }
+.bg-light { background-color: var(--bg-light); }
+
+/* Spacing Utilities */
+.m-0 { margin: 0; }
+.p-0 { padding: 0; }
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.mb-5 { margin-bottom: var(--spacing-xl); }
+
+/* Display Utilities */
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+
+/* Flexbox Utilities */
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* =======================================================
+   FORM ELEMENTS
+   ======================================================= */
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: var(--font-base);
+    line-height: 1.5;
+    color: var(--text-dark);
+    background-color: var(--bg-white);
+    border: 1px solid #ced4da;
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus {
+    border-color: var(--primary-amber);
+    box-shadow: 0 0 0 0.2rem rgba(255, 165, 0, 0.25);
+    outline: 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--font-base);
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.btn-primary {
+    color: var(--bg-white);
+    background-color: var(--primary-amber);
+    border-color: var(--primary-amber);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-gold);
+    border-color: var(--primary-gold);
+    transform: translateY(-1px);
+}
+
+/* =======================================================
+   BLAZOR ERROR UI
+   ======================================================= */
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+/* =======================================================
+   ANIMATIONS
+   ======================================================= */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Apply animations */
+.hero-text {
+    animation: slideInLeft 0.8s ease-out;
+}
+
+.hero-visual {
+    animation: slideInRight 0.8s ease-out;
+}
+
+.contest-cta {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* =======================================================
+   RESPONSIVE DESIGN
+   ======================================================= */
+
+/* Tablets */
+@media (max-width: 768px) {
+    .navbar-container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(26, 26, 26, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: var(--spacing-xl);
+        border-top: 1px solid rgba(255, 165, 0, 0.2);
+        margin-left: 0;
+        gap: var(--spacing-md);
+    }
+    
+    .nav-links.nav-open {
+        display: flex;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .auth-section {
+        gap: var(--spacing-sm);
+    }
+    
+    .auth-link {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-sm);
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+        padding: var(--spacing-xl) var(--spacing-md);
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: var(--font-4xl);
+    }
+    
+    .title-main {
+        font-size: var(--font-5xl);
+    }
+    
+    .title-accent {
+        font-size: var(--font-3xl);
+    }
+    
+    .hero-description {
+        font-size: var(--font-base);
+    }
+    
+    .beer-showcase {
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .beer-glass {
+        width: 150px;
+        height: 225px;
+        margin-right: var(--spacing-md);
+    }
+    
+    .beer-bottle {
+        width: 60px;
+        height: 188px;
+    }
+    
+    .ingredients-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .countdown-timer {
+        gap: var(--spacing-md);
+    }
+    
+    .countdown-item {
+        padding: var(--spacing-md);
+    }
+    
+    .countdown-number {
+        font-size: var(--font-3xl);
+    }
+    
+    .contest-title {
+        font-size: var(--font-3xl);
+    }
+    
+    .contest-description {
+        font-size: var(--font-base);
+    }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: var(--font-3xl);
+    }
+    
+    .title-main {
+        font-size: var(--font-4xl);
+    }
+    
+    .title-accent {
+        font-size: var(--font-2xl);
+    }
+    
+    .countdown-timer {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: center;
+    }
+    
+    .countdown-item {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .register-beer-btn {
+        padding: var(--spacing-md) var(--spacing-xl);
+        font-size: var(--font-lg);
+    }
+}
+
+/* Small Mobile Phones */
+@media (max-width: 375px) {
+    .brand-logo {
+        font-size: var(--font-xl);
+    }
+    
+    .brand-logo span {
+        display: none;
+    }
+    
+    .hero-content {
+        padding: var(--spacing-md);
+    }
+    
+    .hero-title {
+        font-size: var(--font-2xl);
+    }
+    
+    .title-main {
+        font-size: var(--font-3xl);
+    }
+    
+    .title-accent {
+        font-size: var(--font-xl);
+    }
+    
+    .hero-description {
+        font-size: var(--font-sm);
+    }
+    
+    .hero-cta-btn {
+        padding: 0.8rem var(--spacing-lg);
+        font-size: var(--font-base);
+    }
+    
+    .beer-glass {
+        width: 120px;
+        height: 180px;
+    }
+    
+    .beer-bottle {
+        width: 50px;
+        height: 150px;
+    }
+    
+    .ingredients-section {
+        padding: var(--spacing-md);
+    }
+    
+    .ingredients-title {
+        font-size: var(--font-xl);
+    }
+    
+    .ingredient-item {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .ingredient-icon {
+        width: 35px;
+        height: 35px;
+        font-size: var(--font-base);
+    }
+    
+    .ingredient-text strong {
+        font-size: var(--font-sm);
+    }
+    
+    .ingredient-text p {
+        font-size: var(--font-xs);
+    }
+    
+    .contest-cta {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .contest-title {
+        font-size: var(--font-2xl);
+    }
+    
+    .contest-description {
+        font-size: var(--font-sm);
+    }
+    
+    .register-beer-btn {
+        padding: 0.8rem var(--spacing-lg);
+        font-size: var(--font-base);
+    }
+}
+
+/* =======================================================
+   ACCESSIBILITY & PREFERENCES
+   ======================================================= */
+
+/* Focus Management */
+.nav-link:focus,
+.auth-link:focus,
+.hero-cta-btn:focus,
+.register-beer-btn:focus,
+.btn:focus {
+    outline: 2px solid var(--primary-amber);
+    outline-offset: 2px;
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .nav-link {
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+    
+    .auth-link {
+        padding: var(--spacing-md) var(--spacing-lg);
+        min-height: 44px;
+    }
+    
+    .hero-cta-btn {
+        min-height: 44px;
+    }
+    
+    .register-beer-btn {
+        min-height: 44px;
+    }
+    
+    .countdown-item {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .modern-navbar {
+        background: #000;
+        border-bottom: 2px solid var(--primary-amber);
+    }
+    
+    .nav-link {
+        color: var(--bg-white);
+    }
+    
+    .nav-link:hover {
+        background: var(--primary-amber);
+        color: #000;
+    }
+    
+    .hero-background {
+        filter: blur(1px) contrast(1.2);
+    }
+    
+    .hero-title {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+    
+    .hero-description {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .hero-background {
+        transform: none !important;
+    }
+    
+    .nav-link::before {
+        display: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-dark: #E8E8E8;
+        --bg-light: #1A1A1A;
+    }
+    
+    .ingredients-section {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .countdown-item {
+        background: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Print styles */
+@media print {
+    .modern-navbar,
+    .hero-cta-btn,
+    .register-beer-btn,
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    
+    .hero-background {
+        display: none !important;
+    }
+    
+    .hero-content {
+        color: #000 !important;
+        background: var(--bg-white) !important;
+    }
+    
+    .contest-cta {
+        background: var(--bg-white) !important;
+        color: #000 !important;
+    }
+}
+
+/* Selection styling */
+::selection {
+    background: var(--primary-amber);
+    color: #000;
+}
+
+::-moz-selection {
+    background: var(--primary-amber);
+    color: #000;
+}
