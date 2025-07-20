@@ -55,12 +55,12 @@ namespace BeerContest.Infrastructure.Repositories
 
         public async Task<IEnumerable<Contest>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
         public async Task<Contest> GetByIdAsync(string id)
         {
-            var contest = await GetByIdAsync(id);
+            var contest = await base.GetByIdAsync(id);
             return contest ?? throw new InvalidOperationException($"Contest with Id {id} not found");
         }
 

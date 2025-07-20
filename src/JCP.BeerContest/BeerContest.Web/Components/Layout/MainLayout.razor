@@ -9,22 +9,39 @@
             <!-- Brand Logo -->
             <a class="brand-logo" href="">
                 <i class="fa fa-beer"></i>
-                <span>Beer Contest</span>
             </a>
 
             <!-- Navigation Links (Left Side) -->
             <nav class="nav-links @(isNavOpen ? "nav-open" : "")">
                 <a class="nav-link" href="" @onclick="CloseNav">Home</a>
                 <a class="nav-link" href="rules" @onclick="CloseNav">Contest Rules</a>
-                <a class="nav-link" href="categories" @onclick="CloseNav">Categories</a>
-                <AuthorizeView>
-                    <AuthorizeView Roles="@($"{UserRole.Participant}")">
-                        <Authorized Context="authContext">
-                            <a class="nav-link" href="my-beers" @onclick="CloseNav">My Beers</a>
-                        </Authorized>
-                    </AuthorizeView>
-                </AuthorizeView>
                 <a class="nav-link" href="register-judge" @onclick="CloseNav">Judge Registration</a>
+                <a class="nav-link" href="register-beer" @onclick="CloseNav">Beer Registration</a>
+                
+                <AuthorizeView>
+                    <Authorized>
+                        
+                        <AuthorizeView Roles="@($"{UserRole.Participant}")">
+                            <Authorized Context="authContext">
+                                <a class="nav-link" href="my-beers" @onclick="CloseNav">My Beers</a>
+                            </Authorized>
+                        </AuthorizeView>
+
+                        <AuthorizeView Roles="@($"{UserRole.Judge}")">
+                            <Authorized Context="authContext">
+                                <a class="nav-link" href="judge-beers" @onclick="CloseNav">Judge Beers</a>
+                            </Authorized>
+                        </AuthorizeView>
+
+                        <AuthorizeView Roles="@($"{UserRole.Administrator}")">
+                            <Authorized Context="authContext">
+                                <a class="nav-link" href="contest-management" @onclick="CloseNav">Contest Management</a>
+                                <a class="nav-link" href="user-management" @onclick="CloseNav">User Management</a>
+                                <a class="nav-link" href="generate-labels" @onclick="CloseNav">Generate Labels</a>
+                            </Authorized>
+                        </AuthorizeView>
+                    </Authorized>
+                </AuthorizeView>
             </nav>
 
             <!-- Auth Section (Right Side) -->
