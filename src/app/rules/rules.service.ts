@@ -12,7 +12,7 @@ export class RulesService  implements OnInit{
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b>VIII Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
+              content: `El "<b>IX Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
                         <br/><br/>
                         Este concurso se enmarca dentro de las actividades para el fomento de la cultura cerveza que fomenta la asociación <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a>.
@@ -21,7 +21,7 @@ export class RulesService  implements OnInit{
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `23 de Noviembre de 2024 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `22 de Noviembre de 2025 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -179,7 +179,7 @@ export class RulesService  implements OnInit{
         title:"Plazos",
         content:`<ul>
           <li>
-              Plazo de inscripción del 1 de Septiembre al 01 de Noviembre.
+              Plazo de inscripción del 1 de Septiembre al 20 de Octubre.
           </li>
           <br/>
           <li>
@@ -269,7 +269,7 @@ export class RulesService  implements OnInit{
       new Rule({
         icon:"military_tech",
         title:"Rally ACCE",
-        content:` El "VIII Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
+        content:` El "IX Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
       }),
       new Rule({
         icon:"toc",
