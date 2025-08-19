@@ -170,7 +170,8 @@ export class RulesService  implements OnInit{
         <br/>
         Sobre esta cuota se aplicarán los siguientes descuentos: <br/><br>
         - 2 € de descuento a quienes presenten 3 cervezas y sean socios ACCE. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
-        - Los participantes que realicen sus envíos desde fuera de la península podrán aplicarse un descuento especial del 50% sobre la cuota que le pertenezca.
+
+        - Los participantes que realicen sus envíos desde fuera de la península podrán aplicarse un descuento especial del 50% sobre la cuota que le pertenezca. <br/><br/>
 
         Nº cuenta: <b>ES34 2100 4887 2622 0004 9961 </b>  (Indicar: Concurso y Nombre + Apellidos)<br/><br/>   
 
