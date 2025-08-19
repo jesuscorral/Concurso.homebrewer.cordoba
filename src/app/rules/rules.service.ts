@@ -71,7 +71,7 @@ export class RulesService  implements OnInit{
               <br/>
               <li>
                   Se deberá presentar al concurso, sin marcar, ni etiquetar y sin ninguna marca que pueda revelar
-                  su procedencia, al menos 3 botellas de 33 Cl o de 50 Cl, preferentemente de vidrio o pet marrón.
+                  su procedencia, al menos 3 botellas o latas de 33 Cl o de 50 Cl, preferentemente de vidrio o pet marrón.
                   Se admitirán chapas o tapón cerámico de cualquier color siempre que no tengan ningún marcado. <br/>
       
                   Aquellos participantes que presenten menos botellas del mínimo marcado, de tamaños diferentes a
@@ -170,7 +170,8 @@ export class RulesService  implements OnInit{
         <br/>
         Sobre esta cuota se aplicarán los siguientes descuentos: <br/><br>
         - 2 € de descuento a quienes presenten 3 cervezas y sean socios ACCE. (hay que indicar número de socio en el formulario de inscripción). <br/><br/>
-  
+        - Los participantes que realicen sus envíos desde fuera de la península podrán aplicarse un descuento especial del 50% sobre la cuota que le pertenezca.
+
         Nº cuenta: <b>ES34 2100 4887 2622 0004 9961 </b>  (Indicar: Concurso y Nombre + Apellidos)<br/><br/>   
 
         Enviar justificante de pago a <a href="mailto:homebrewercordoba@gmail.com">homebrewercordoba@gmail.com</a> para completar el proceso de inscripción. <br/><br/>`}),
@@ -251,7 +252,7 @@ export class RulesService  implements OnInit{
         </li>
         <br/>
         <li>
-          En caso de disponer de otros premios aportados por patrocinadores para los primeros clasificados, se anunciará en redes.    
+          El resto de premios se irán anunciando en redes sociales.    
         </li>
       </ul>`
       }),
