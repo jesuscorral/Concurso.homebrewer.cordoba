@@ -31,7 +31,10 @@
   "devDependencies": {
     "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.5",
-    "tslint": "~6.1.0",
-    "typescript": "~6.0.3"
+    "@eslint/js": "^10.0.1",
+    "angular-eslint": "22.0.0",
+    "eslint": "^10.3.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "8.60.1"
   }
 }
