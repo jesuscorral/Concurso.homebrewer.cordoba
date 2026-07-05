@@ -5,7 +5,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes';
+import { appConfig } from './app/app.config';
 
 if (environment.production) {
   enableProdMode();

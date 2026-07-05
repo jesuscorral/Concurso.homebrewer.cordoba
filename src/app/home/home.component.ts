@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GlobalConstants } from '../shared/global-constants';
+import { SeoService } from '../shared/seo/seo.service';
 
 @Component({
     selector: 'app-home',

@@ -6,6 +6,9 @@ import { RegistrationComponent } from './registration/registration.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactComponent } from './contact/contact.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { GlobalConstants as C } from './shared/global-constants';
+
+const siteName = 'Concurso Homebrewer Córdoba';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
