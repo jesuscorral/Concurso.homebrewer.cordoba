@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, afterNextRender, inject, signal } from '@angular/core';
 import { CookieConsentService } from './cookie-consent.service';
 
 @Component({
@@ -9,15 +9,23 @@ import { CookieConsentService } from './cookie-consent.service';
 export class CookieBannerComponent {
   private readonly consent = inject(CookieConsentService);
 
-  visible = this.consent.status === null;
+  // Se decide tras el primer render en el navegador: el banner no forma parte
+  // del HTML prerenderizado y no provoca desajustes de hidratación.
+  readonly visible = signal(false);
+
+  constructor() {
+    afterNextRender(() => {
+      this.visible.set(this.consent.status === null);
+    });
+  }
 
   accept(): void {
     this.consent.accept();
-    this.visible = false;
+    this.visible.set(false);
   }
 
   reject(): void {
     this.consent.reject();
-    this.visible = false;
+    this.visible.set(false);
   }
 }
