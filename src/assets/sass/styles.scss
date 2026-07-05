@@ -1,23 +1,23 @@
-@import "styles/variables";
+@use "styles/variables";
 
-@import "styles/typography";
+@use "styles/typography";
 
 // Core CSS
-@import "styles/misc";
-@import "styles/tooltips-and-popovers";
-@import "styles/sections";
-@import "styles/navbars";
-@import "styles/images";
-@import "styles/cards";
-@import "styles/footers";
+@use "styles/misc";
+@use "styles/tooltips-and-popovers";
+@use "styles/sections";
+@use "styles/navbars";
+@use "styles/images";
+@use "styles/cards";
+@use "styles/footers";
 
 // Fancy Stuff
-@import "styles/dropdown";
+@use "styles/dropdown";
 //
 // icons
-@import "styles/icons";
+@use "styles/icons";
 //
-@import "styles/tabs-navs-pagination";
+@use "styles/tabs-navs-pagination";
 
-@import "styles/responsive";
-@import "styles/examples";
+@use "styles/responsive";
+@use "styles/examples";
