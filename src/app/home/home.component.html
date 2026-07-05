@@ -1,39 +1,62 @@
-<div class="wrapper">
-    <div class="page-header section-dark" style="background-image: url('assets/img/homepage/bg.webp')">
-        <div class="filter"></div>
-        <div class="content-center">
-            <div class="container">
-                <div class="title-brand">
-                    <h1 class="presentation-title">{{ editionNumber }} Concurso homebrewer Córdoba</h1>
-                </div>
-
-                <h2 class="presentation-subtitle text-center">{{day}} {{month}}, {{year}} - Córdoba</h2>
-                <div class="row pt-5">
-                    <div class="w-50 mx-auto">
-                        <a routerLink="/registration" class="myButton">Inscríbete</a>
-                    </div>
-                </div>
+<div class="wrapper home-page">
+    <header class="hero" style="background-image: url('assets/img/homepage/bg.webp')">
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="hero-content container">
+            <p class="edition-badge">
+                <span class="badge-star" aria-hidden="true">✦</span>
+                10ª edición
+                <span class="badge-star" aria-hidden="true">✦</span>
+            </p>
+            <h1 class="hero-title">{{ editionNumber }} Concurso homebrewer Córdoba</h1>
+            <h2 class="hero-date">{{day}} {{month}}, {{year}} - Córdoba</h2>
+            <div class="hero-actions">
+                <a routerLink="/registration" class="btn-cta">Inscríbete</a>
             </div>
         </div>
-    </div>
-    <div class="section profile-content">
+        <a class="scroll-cue" href="#novedad" aria-label="Bajar al contenido">
+            <span class="chevron" aria-hidden="true"></span>
+        </a>
+    </header>
+
+    <section class="home-section judges" id="novedad">
         <div class="container">
-            <h3 class="pt-4">El concurso</h3>
-            <p class="pt-3">
-                El <b>Concurso Homebrewer Córdoba</b> es un concurso de cerveza casera organizado por
-                <b>The Real CordobALE - CerveCataClub</b>, certamen oficial <b>BJCP</b> (Beer Judge
-                Certification Program). Cerveceros caseros de toda España presentan sus elaboraciones,
-                que se evalúan siguiendo las guías de estilo del BJCP. La {{editionNumber}} edición se
-                celebra en <b>Córdoba</b> el {{day}} de {{month}} de {{year}}.
-            </p>
-            <p>
-                El plazo de inscripción va del <b>{{startRegistrationDate}}</b> al
-                <b>{{endRegistrationDate}}</b> y la recepción de botellas, del {{startReceptionDate}}
-                al {{endReceptionDate}}. En las <a routerLink="/rules">bases del concurso</a> encontrarás
-                los estilos admitidos y las condiciones de participación, y desde la página de
-                <a routerLink="/registration">inscripción</a> puedes apuntarte. El certamen es posible
-                gracias a nuestros <a routerLink="/sponsors">patrocinadores</a>.
-            </p>
+            <article class="judges-card">
+                <p class="judges-flag">Novedad · 10ª edición</p>
+                <h3 class="judges-title">Los jueces a examen</h3>
+                <p class="judges-text">
+                    ¡Este año se cambian las tornas! Como gran novedad de esta 10ª edición,
+                    <strong>los jueces también pasarán por el banquillo</strong>. Cada juez tendrá que
+                    presentar una cerveza elaborada por ellos mismos (o en su defecto, la de algún
+                    colega) para someterse al implacable paladar de 'The Real CordobAle'. Quien
+                    demuestre estar a la altura se alzará con el codiciado y supremo título de
+                    <strong class="juezmaestre">Juezmaestre</strong> del concurso de Córdoba.
+                    <em class="challenge">¡A ver de qué estáis hechos!</em>
+                </p>
+                <i class="fa fa-beer judges-watermark" aria-hidden="true"></i>
+            </article>
         </div>
-    </div>
+    </section>
+
+    <section class="home-section about">
+        <div class="container">
+            <h3 class="section-title">El concurso</h3>
+            <div class="about-card">
+                <p>
+                    El <b>Concurso Homebrewer Córdoba</b> es un concurso de cerveza casera organizado por
+                    <b>The Real CordobALE - CerveCataClub</b>, certamen oficial <b>BJCP</b> (Beer Judge
+                    Certification Program). Cerveceros caseros de toda España presentan sus elaboraciones,
+                    que se evalúan siguiendo las guías de estilo del BJCP. La {{editionNumber}} edición se
+                    celebra en <b>Córdoba</b> el {{day}} de {{month}} de {{year}}.
+                </p>
+                <p>
+                    El plazo de inscripción va del <b>{{startRegistrationDate}}</b> al
+                    <b>{{endRegistrationDate}}</b> y la recepción de botellas, del {{startReceptionDate}}
+                    al {{endReceptionDate}}. En las <a routerLink="/rules">bases del concurso</a> encontrarás
+                    los estilos admitidos y las condiciones de participación, y desde la página de
+                    <a routerLink="/registration">inscripción</a> puedes apuntarte. El certamen es posible
+                    gracias a nuestros <a routerLink="/sponsors">patrocinadores</a>.
+                </p>
+            </div>
+        </div>
+    </section>
 </div>

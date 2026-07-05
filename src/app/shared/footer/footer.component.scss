@@ -1,0 +1,121 @@
+/* Rediseño: fondo oscuro cálido a juego con la home, encabezados ámbar y
+   logos en fichas uniformes con filtro monocromo que recupera el color al
+   pasar el ratón (evita que los logos de colores dispares saturen). */
+.site-footer {
+  position: relative;
+  background: var(--brew-dark);
+  color: rgba(247, 239, 226, 0.75);
+  padding: 56px 0 26px;
+
+  /* Fina línea ámbar superior que separa el footer del contenido */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, var(--brew-amber) 30%, var(--brew-amber-deep) 70%, transparent 100%);
+    opacity: 0.75;
+  }
+}
+
+.footer-groups {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px 56px;
+}
+
+.footer-group {
+  h3 {
+    margin: 0 0 18px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--brew-amber);
+  }
+}
+
+.logo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(240, 168, 50, 0.55);
+
+      img {
+        filter: grayscale(0) opacity(1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brew-gold);
+      outline-offset: 3px;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    filter: grayscale(1) opacity(0.75);
+    transition: filter 0.3s ease;
+  }
+}
+
+.footer-bottom {
+  margin-top: 44px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  text-align: center;
+
+  .copyright {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: rgba(247, 239, 226, 0.55);
+  }
+
+  .heart {
+    color: var(--brew-amber);
+  }
+}
+
+@media (max-width: 767px) {
+  .footer-groups {
+    gap: 30px;
+  }
+
+  .logo-grid a {
+    width: 72px;
+    height: 72px;
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-grid a,
+  .logo-grid img {
+    transition: none;
+  }
+}

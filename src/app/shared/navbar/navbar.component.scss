@@ -1,0 +1,293 @@
+/* ============ Barra fija ============ */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  padding: 0;
+  /* Transparente sobre el hero: un degradado sutil asegura la legibilidad. */
+  background: linear-gradient(180deg, rgba(10, 7, 4, 0.55) 0%, rgba(10, 7, 4, 0) 100%);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+
+  &.scrolled,
+  &.menu-open {
+    background: rgba(18, 14, 10, 0.88);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    border-bottom: 1px solid rgba(240, 168, 50, 0.18);
+  }
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 22px;
+}
+
+/* ============ Marca ============ */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--brew-cream);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--brew-gold);
+  }
+
+  .brand-icon {
+    font-size: 1.25rem;
+    color: var(--brew-amber);
+  }
+}
+
+/* ============ Enlaces (desktop) ============ */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li > a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    color: rgba(247, 239, 226, 0.88);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    /* Subrayado ámbar que crece al pasar el ratón */
+    &::after {
+      content: "";
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 4px;
+      height: 2px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--brew-amber), var(--brew-amber-deep));
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.25s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--brew-gold);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--brew-gold);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+  }
+
+  li.active > a {
+    color: var(--brew-amber);
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .nav-social > a {
+    font-size: 1.05rem;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .social-label {
+    display: none;
+  }
+}
+
+/* ============ Hamburguesa ============ */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+
+  .bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--brew-cream);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brew-gold);
+    outline-offset: 2px;
+  }
+}
+
+/* Hamburguesa → X cuando el menú está abierto */
+.menu-open .nav-toggle {
+  .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+/* ============ Backdrop del drawer ============ */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1020;
+  background: rgba(8, 5, 3, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* ============ Móvil: drawer lateral ============ */
+@media (max-width: 991.98px) {
+  .nav-toggle {
+    display: flex;
+  }
+
+  .brand .brand-text {
+    font-size: 0.9rem;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: -1; /* bajo la barra: la hamburguesa (ya en X) sigue visible para cerrar */
+    width: min(320px, 86vw);
+    height: 100vh;
+    height: 100dvh;
+    padding: 92px 26px 32px;
+    background: var(--brew-glass-strong);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border-left: 1px solid rgba(240, 168, 50, 0.22);
+    box-shadow: -18px 0 48px rgba(0, 0, 0, 0.45);
+    transform: translateX(105%);
+    visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0.25, 1), visibility 0.35s;
+    overflow-y: auto;
+  }
+
+  .menu-open .nav-menu {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+
+    li {
+      opacity: 0;
+      transform: translateX(26px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    li > a {
+      padding: 14px 12px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+
+      &::after {
+        left: 12px;
+        right: auto;
+        width: 26px;
+        bottom: 8px;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background: rgba(240, 168, 50, 0.08);
+      }
+    }
+
+    .nav-social {
+      margin-top: 6px;
+
+      > a {
+        gap: 12px;
+      }
+
+      .social-label {
+        display: inline;
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+      }
+    }
+  }
+
+  /* Entrada escalonada de los enlaces al abrir */
+  .menu-open .nav-links li {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  @for $i from 1 through 7 {
+    .menu-open .nav-links li:nth-child(#{$i}) {
+      transition-delay: #{0.06 + $i * 0.045}s;
+    }
+  }
+}
+
+/* ============ Accesibilidad ============ */
+@media (prefers-reduced-motion: reduce) {
+  .site-nav,
+  .nav-menu,
+  .nav-backdrop,
+  .nav-links li,
+  .nav-toggle .bar,
+  .nav-links li > a::after {
+    transition: none !important;
+  }
+}

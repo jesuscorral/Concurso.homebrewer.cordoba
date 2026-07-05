@@ -1,10 +1,14 @@
+.form-wrap {
+  display: flex;
+  justify-content: center;
+}
+
 .registration-form {
   border: 0;
   width: 100%;
   max-width: 640px;
   height: 1806px;
-}
-
-.wrapper {
-  min-height: 800px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
 }
