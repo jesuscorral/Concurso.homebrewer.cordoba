@@ -1,0 +1,15 @@
+// Tokens del rediseño 2026: paleta "craft beer" compartida por los
+// componentes rediseñados (home, navbar, footer). Los colores juegan con
+// los ámbares/dorados de la foto de tiradores del hero.
+:root {
+  --brew-amber: #f0a832;
+  --brew-amber-deep: #c97b1e;
+  --brew-gold: #ffd485;
+  --brew-cream: #f7efe2;
+  --brew-dark: #16120d;
+  --brew-dark-soft: #201a13;
+  --brew-glass: rgba(24, 18, 12, 0.55);
+  --brew-glass-strong: rgba(20, 15, 10, 0.82);
+  --brew-glass-border: rgba(255, 255, 255, 0.14);
+  --brew-font-display: 'Bebas Neue', 'Lato', 'Montserrat', sans-serif;
+}

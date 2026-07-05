@@ -1,27 +1,319 @@
-.myButton {
-  background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
-  background-color: #c62d1f;
-  border-radius: 18px;
-  border: 1px solid #d02718;
-  display: inline-block;
-  cursor: pointer;
-  color: #ffffff;
-  font-family: Arial;
-  font-size: 17px;
-  padding: 7px 25px;
-  text-decoration: none;
-  text-shadow: 0px 1px 0px #810e05;
-}
-.myButton:hover {
-  background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
-  background-color: #f24437;
-}
-.myButton:active {
+/* ============ Hero ============ */
+/* La foto de tiradores (bg.webp) es obligatoria: el overlay en degradado
+   garantiza el contraste del texto sin ocultarla. */
+.hero {
   position: relative;
-  top: 1px;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #16120d;
+  background-size: cover;
+  background-position: center center;
+  overflow: hidden;
 }
 
-div[class^="col"],
-div.w-50 {
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center 42%, rgba(12, 8, 4, 0.18) 0%, rgba(12, 8, 4, 0.55) 100%),
+    linear-gradient(180deg, rgba(12, 8, 4, 0.68) 0%, rgba(12, 8, 4, 0.28) 38%, rgba(22, 18, 13, 0.94) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
   text-align: center;
+  padding: 96px 16px 72px;
+}
+
+.edition-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  margin: 0 0 26px;
+  padding: 0.55em 1.5em;
+  border: 1px solid rgba(240, 168, 50, 0.55);
+  border-radius: 999px;
+  background: var(--brew-glass);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--brew-gold);
+  font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em; /* compensa el letter-spacing del último carácter */
+  text-transform: uppercase;
+  box-shadow: 0 0 26px rgba(240, 168, 50, 0.22), inset 0 0 14px rgba(240, 168, 50, 0.08);
+}
+
+.badge-star {
+  color: var(--brew-amber);
+  font-size: 0.85em;
+  letter-spacing: 0;
+  text-indent: 0;
+}
+
+.hero-title {
+  margin: 0;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 9vw, 6.75rem);
+  line-height: 0.98;
+  letter-spacing: 0.02em;
+  color: var(--brew-cream);
+  text-wrap: balance;
+  text-shadow: 0 3px 24px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.hero-date {
+  margin: 22px 0 0;
+  font-size: clamp(1.05rem, 2.6vw, 1.55rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(247, 239, 226, 0.92);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+}
+
+.hero-actions {
+  margin-top: 44px;
+}
+
+.btn-cta {
+  display: inline-block;
+  padding: 16px 52px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+  color: #221507;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(201, 123, 30, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.btn-cta:hover,
+.btn-cta:focus-visible {
+  color: #221507;
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+  box-shadow: 0 16px 38px rgba(201, 123, 30, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-cta:focus-visible {
+  outline: 3px solid var(--brew-gold);
+  outline-offset: 3px;
+}
+
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  animation: cue-bounce 2.2s ease-in-out infinite;
+}
+
+.scroll-cue .chevron {
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid rgba(247, 239, 226, 0.85);
+  border-bottom: 2px solid rgba(247, 239, 226, 0.85);
+  transform: rotate(45deg);
+}
+
+@keyframes cue-bounce {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 8px); }
+}
+
+/* ============ Secciones oscuras bajo el hero ============ */
+.home-section {
+  position: relative;
+  scroll-margin-top: 72px; /* evita que la barra fija tape el título al anclar */
+  padding: 84px 0;
+  background: linear-gradient(180deg, var(--brew-dark) 0%, var(--brew-dark-soft) 100%);
+  color: rgba(247, 239, 226, 0.9);
+}
+
+.home-section .container {
+  max-width: 880px;
+}
+
+.section-title {
+  margin: 0 0 34px;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  letter-spacing: 0.06em;
+  color: var(--brew-cream);
+  text-align: center;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 14px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brew-amber), var(--brew-amber-deep));
+}
+
+/* ============ Los jueces a examen ============ */
+.judges {
+  padding-top: 72px;
+}
+
+.judges-card {
+  position: relative;
+  overflow: hidden;
+  padding: 40px 44px 44px;
+  border-radius: 22px;
+  border: 1px solid var(--brew-glass-border);
+  border-top: 3px solid var(--brew-amber);
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.judges-flag {
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 0.4em 1.1em;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+  color: #221507;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.judges-title {
+  margin: 0 0 18px;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--brew-gold);
+}
+
+.judges-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: 62ch;
+  font-size: 1.06rem;
+  line-height: 1.85;
+}
+
+.judges-text strong {
+  color: var(--brew-cream);
+}
+
+.judges-text .juezmaestre {
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: 1.35em;
+  letter-spacing: 0.06em;
+  color: var(--brew-amber);
+  text-shadow: 0 0 18px rgba(240, 168, 50, 0.45);
+  white-space: nowrap;
+}
+
+.judges-text .challenge {
+  display: inline-block;
+  margin-top: 4px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--brew-gold);
+}
+
+.judges-watermark {
+  position: absolute;
+  right: -18px;
+  bottom: -26px;
+  font-size: 11rem;
+  color: rgba(240, 168, 50, 0.07);
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+/* ============ El concurso ============ */
+.about {
+  padding-top: 10px;
+}
+
+.about-card {
+  padding: 38px 44px;
+  border-radius: 22px;
+  border: 1px solid var(--brew-glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.about-card p {
+  margin: 0 0 1.2em;
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+.about-card p:last-child {
+  margin-bottom: 0;
+}
+
+.about-card b {
+  color: var(--brew-cream);
+  font-weight: 600;
+}
+
+.about-card a {
+  color: var(--brew-amber);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(240, 168, 50, 0.45);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.about-card a:hover,
+.about-card a:focus-visible {
+  color: var(--brew-gold);
+  border-bottom-color: var(--brew-gold);
+}
+
+/* ============ Responsive y accesibilidad ============ */
+@media (max-width: 575px) {
+  .judges-card,
+  .about-card {
+    padding: 28px 22px 32px;
+  }
+
+  .judges-watermark {
+    font-size: 7.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
+
+  .btn-cta {
+    transition: none;
+  }
 }

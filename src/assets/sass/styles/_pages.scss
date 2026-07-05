@@ -1,0 +1,234 @@
+// Cáscara compartida de las páginas interiores (rediseño 2026): cabecera
+// compacta con la imagen de cabecera de siempre + cuerpo oscuro cálido con
+// tarjetas glass, a juego con la home.
+
+.page-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  padding: 130px 16px 60px;
+  background-color: var(--brew-dark);
+  background-size: cover;
+  background-position: center center;
+  text-align: center;
+}
+
+.page-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 8, 4, 0.72) 0%, rgba(12, 8, 4, 0.45) 55%, var(--brew-dark) 100%);
+}
+
+.page-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.page-title {
+  margin: 0;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  letter-spacing: 0.04em;
+  color: var(--brew-cream);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+
+  &::after {
+    content: "";
+    display: block;
+    width: 64px;
+    height: 3px;
+    margin: 16px auto 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--brew-amber), var(--brew-amber-deep));
+  }
+}
+
+.page-subtitle {
+  margin: 18px 0 0;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(247, 239, 226, 0.85);
+}
+
+.page-body {
+  position: relative;
+  padding: 56px 0 90px;
+  background: linear-gradient(180deg, var(--brew-dark) 0%, var(--brew-dark-soft) 100%);
+  color: rgba(247, 239, 226, 0.9);
+
+  .container.narrow {
+    max-width: 880px;
+  }
+}
+
+/* ============ Tarjeta glass compartida ============ */
+.glass-card {
+  padding: 38px 44px;
+  border-radius: 22px;
+  border: 1px solid var(--brew-glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+
+  p {
+    margin: 0 0 1.2em;
+    font-size: 1.02rem;
+    line-height: 1.85;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  b {
+    color: var(--brew-cream);
+    font-weight: 600;
+  }
+
+  a:not(.pill-link) {
+    color: var(--brew-amber);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(240, 168, 50, 0.45);
+    transition: color 0.2s ease, border-color 0.2s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--brew-gold);
+      border-bottom-color: var(--brew-gold);
+    }
+  }
+
+  @media (max-width: 575px) {
+    padding: 28px 22px 32px;
+  }
+}
+
+/* Enlace destacado en píldora (redes, email…) */
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(240, 168, 50, 0.55);
+  background: rgba(240, 168, 50, 0.08);
+  color: var(--brew-gold);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+  .fa {
+    font-size: 1.15em;
+    color: var(--brew-amber);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--brew-gold);
+    background: rgba(240, 168, 50, 0.16);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brew-gold);
+    outline-offset: 3px;
+  }
+}
+
+/* Firma desenfadada ("¡Salud y cerveza!") */
+.signature {
+  margin-top: 1.6em;
+  font-family: var(--brew-font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.06em;
+  color: var(--brew-amber);
+}
+
+/* ============ Acordeón Material (bases) en oscuro ============ */
+/* Global a propósito: el contenido llega por innerHTML y los estilos
+   encapsulados del componente no alcanzan los internos de Material. */
+.page-body mat-accordion {
+  display: block;
+
+  --mat-expansion-container-background-color: rgba(255, 255, 255, 0.04);
+  --mat-expansion-container-text-color: rgba(247, 239, 226, 0.9);
+  --mat-expansion-header-text-color: var(--brew-cream);
+  --mat-expansion-header-description-color: var(--brew-cream);
+  --mat-expansion-header-indicator-color: var(--brew-amber);
+  --mat-expansion-header-hover-state-layer-color: rgba(240, 168, 50, 0.06);
+  --mat-expansion-header-focus-state-layer-color: rgba(240, 168, 50, 0.1);
+
+  .mat-expansion-panel {
+    margin: 0 0 12px;
+    border: 1px solid var(--brew-glass-border);
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(247, 239, 226, 0.9);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.25s ease;
+
+    &:hover {
+      border-color: rgba(240, 168, 50, 0.4);
+    }
+  }
+
+  .mat-expansion-panel-spacing {
+    margin: 0 0 12px;
+  }
+
+  .mat-expansion-panel-header {
+    padding: 8px 24px;
+
+    .material-icons {
+      color: var(--brew-amber);
+    }
+  }
+
+  .mat-expansion-panel-header-description {
+    color: var(--brew-cream);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .mat-expansion-indicator::after {
+    color: var(--brew-amber);
+  }
+
+  .mat-expansion-indicator svg {
+    fill: var(--brew-amber);
+  }
+
+  .mat-expansion-panel-body {
+    color: rgba(247, 239, 226, 0.88);
+    line-height: 1.8;
+
+    b {
+      color: var(--brew-cream);
+    }
+
+    a {
+      color: var(--brew-amber);
+      font-weight: 600;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--brew-gold);
+      }
+    }
+
+    ul,
+    ol {
+      padding-left: 1.4em;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+  }
+}

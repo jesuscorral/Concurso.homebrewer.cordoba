@@ -7,11 +7,19 @@
 }
 .info-card {
     width: 100%;
-    border: 1px solid rgb(215, 215, 215);
+    border: 1px solid var(--brew-glass-border);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.3);
     position: relative;
     font-family: 'Lato', sans-serif;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(240, 168, 50, 0.4);
 }
 .info-card > img {
     width: 100%;
@@ -71,7 +79,7 @@
     padding: 0 !important;
 }
 .info-card .info-card-details .info-card-header h3 {
-    color: rgb(142, 182, 52);
+    color: var(--brew-amber-deep);
     font-size: 15px;
     font-weight: 400;
     margin-top: 5px;

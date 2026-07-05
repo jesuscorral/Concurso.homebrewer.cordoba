@@ -1,0 +1,17 @@
+.contact-card {
+  text-align: center;
+}
+
+.contact-icon {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 2.8rem;
+  color: var(--brew-amber);
+  text-shadow: 0 0 24px rgba(240, 168, 50, 0.35);
+}
+
+.contact-card p {
+  max-width: 58ch;
+  margin-left: auto;
+  margin-right: auto;
+}
