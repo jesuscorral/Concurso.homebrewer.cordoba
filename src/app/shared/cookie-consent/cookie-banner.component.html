@@ -1,0 +1,12 @@
+@if (visible) {
+    <div class="cookie-banner" role="region" aria-label="Aviso de cookies">
+        <p>
+            Utilizamos cookies de análisis (Google Analytics) para conocer cómo se usa la web y mejorarla.
+            Solo se instalarán si las aceptas; la web funciona igualmente sin ellas.
+        </p>
+        <div class="cookie-banner-actions">
+            <button type="button" class="btn btn-light btn-sm" (click)="accept()">Aceptar</button>
+            <button type="button" class="btn btn-outline-light btn-sm" (click)="reject()">Rechazar</button>
+        </div>
+    </div>
+}

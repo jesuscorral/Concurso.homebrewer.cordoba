@@ -1,55 +1,37 @@
-
-# GitHub Actions docs
-# https://help.github.com/en/articles/about-github-actions
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
 name: CI-CD_Firebase
 
-on: 
+on:
   push:
     branches:
       - master
 
 jobs:
-  build:
-    name: Build
+  build_and_deploy:
+    name: Build and deploy to Firebase Hosting
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
-        
-      - name: Install Dependencies
-        run: npm install --save --legacy-peer-deps
-        
-      - name: Build
-        run: npm run build --prod
-        
-      - name: Archive Production Artifact
-        uses: actions/upload-artifact@master
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          name: dist
-          path: dist
-          
-  deploy:
-    name: Deploy_to_firebase_hosting
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@master
-        
-      - name: Download Artifact
-        uses: actions/download-artifact@master
-        with:
-          name: dist
-          path: dist
-          
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (production)
+        run: npm run build
+
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: >-
-            ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540
-            }}
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
           projectId: concursohomebrewercordob-6d540
-          channelId:  ${{ secrets.CHANNEL_ID }}
+          channelId: ${{ secrets.CHANNEL_ID }}

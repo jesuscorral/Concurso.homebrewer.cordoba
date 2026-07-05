@@ -9,9 +9,7 @@
                      {{row.title}}
                     </mat-panel-description>
             </mat-expansion-panel-header>
-            <p class="mat-expansion-panel-body">
-                <span [innerHTML]="row.content"></span>
-            </p>
+            <div class="mat-expansion-panel-body" [innerHTML]="row.content"></div>
         </mat-expansion-panel>
     }
 </mat-accordion>

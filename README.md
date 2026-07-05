@@ -6,6 +6,7 @@ Website for homebrewer cordoba competition.
 
 - Public site with contest rules, sponsors, organization and registration info.
 - Registration form.
+- GDPR cookie-consent banner: Google Tag Manager/Analytics only loads after the visitor accepts.
 
 ## Tech
 
@@ -52,8 +53,8 @@ Website for homebrewer cordoba competition.
 
 ```sh
 npm run lint                          # ESLint (TS + templates)
-npm run build                         # dev build, output in dist/
-ng build --configuration production   # production build, output in dist/
+npm run build                         # production build (default), output in dist/
+npm run build:dev                     # development build (sourcemaps, no optimization)
 ```
 
 ## Deployment
@@ -61,6 +62,6 @@ ng build --configuration production   # production build, output in dist/
 Deployment to Firebase Hosting is automated: every push to `master` triggers [`.github/workflows/CI-CD.yml`](.github/workflows/CI-CD.yml), which builds the app and deploys `dist/` via `firebase-hosting-deploy`. Manual deploy (requires the [Firebase CLI](https://firebase.google.com/docs/cli) and access to the `concursohomebrewercordob-6d540` project):
 
 ```sh
-ng build --configuration production
+npm run build
 firebase deploy
 ```
