@@ -3,6 +3,9 @@ name: PR checks
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   lint_and_build:
     name: Lint and build
