@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Rule } from 'app/rules/rule.model';
 
 @Component({
-  selector: 'app-accordion',
-  templateUrl: './accordion.component.html',
-  styleUrls: ['./accordion.component.scss']
+    selector: 'app-accordion',
+    templateUrl: './accordion.component.html',
+    styleUrls: ['./accordion.component.scss'],
+    standalone: false
 })
 export class AccordionComponent implements OnInit {
 

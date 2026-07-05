@@ -4,9 +4,10 @@ import { Rule } from './rule.model';
 import { RulesService } from './rules.service';
 
 @Component({
-  selector: 'app-rules',
-  templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.css']
+    selector: 'app-rules',
+    templateUrl: './rules.component.html',
+    styleUrls: ['./rules.component.css'],
+    standalone: false
 })
 export class RulesComponent implements OnInit {
   rules: Rule[] = [];
