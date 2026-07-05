@@ -1,10 +1,10 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Rule } from './rule.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RulesService  implements OnInit{
+export class RulesService {
    rules: Rule[] = [];
 
   constructor() { 
@@ -641,10 +641,6 @@ export class RulesService  implements OnInit{
       }),
     ];
 
-  }
-
-  ngOnInit(): void {
- 
   }
 
   get(): Rule[]

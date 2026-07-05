@@ -2,12 +2,13 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
+    "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "strict": false,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2022",
     "typeRoots": [
       "node_modules/@types"
     ],
