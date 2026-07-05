@@ -25,6 +25,7 @@
               "src/assets/sass/styles.scss"
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
             "aot": false,
             "vendorChunk": true,

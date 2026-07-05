@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Rule } from 'app/rules/rule.model';
+import { Rule } from '../../rules/rule.model';
 
 @Component({
     selector: 'app-accordion',

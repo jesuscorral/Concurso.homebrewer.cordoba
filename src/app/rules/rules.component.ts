@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GlobalConstants } from 'app/shared/global-constants';
+import { GlobalConstants } from '../shared/global-constants';
 import { Rule } from './rule.model';
 import { RulesService } from './rules.service';
 
