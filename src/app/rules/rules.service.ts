@@ -12,7 +12,7 @@ export class RulesService {
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b>IX Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
+              content: `El "<b>X Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
                         <br/><br/>
                         Este concurso se enmarca dentro de las actividades para el fomento de la cultura cerveza que fomenta la asociación <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a>.
@@ -21,7 +21,7 @@ export class RulesService {
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `22 de Noviembre de 2025 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `21 de Noviembre de 2026 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -29,7 +29,13 @@ export class RulesService {
               <li>
                   Podrán participar en el concurso todas aquellas personas mayores de 18 años que elaboren
                   cerveza casera. Estas cervezas deberán ser elaboradas en equipos no comerciales en lotes
-                  menores de 100 litros. No podrán inscribirse dirección ni miembros del jurado.
+                  menores de 100 litros. Los miembros de la organización y los jueces del certamen podrán 
+                  presentar cervezas a concurso. No obstante, a fin de preservar la objetividad del certamen, 
+                  un juez no podrá competir en la misma categoría que esté evaluando 
+                  (ej. un juez de cervezas "Históricas" solo podrá presentar muestras en "Clásicas", y viceversa). 
+                  Si un juez inscribiera una cerveza en su propia categoría de cata, dicha muestra participará en 
+                  calidad de "fuera de concurso"; es decir, quedará excluida de la competición oficial y no optará a
+                  galardón, pero sí recibirá la evaluación y su correspondiente hoja de cata.
               </li>
               <br/>
               <li>
@@ -257,13 +263,13 @@ export class RulesService {
         </li>
       </ul>`
       }),
-      new Rule({
-        icon:"grade",
-        title:"Mención especial The Real CordobALE - CerveCataClub",
-        content:` En esta edición no se contará con la mención especial The Real CordobALE como se venía realizando en las ediciones pasadas.
-        Esperamos poder recuperarla para la próxima edición.
-        <br/><br/>`
-      }),
+      // new Rule({
+      //   icon:"grade",
+      //   title:"Mención especial The Real CordobALE - CerveCataClub",
+      //   content:` En esta edición no se contará con la mención especial The Real CordobALE como se venía realizando en las ediciones pasadas.
+      //   Esperamos poder recuperarla para la próxima edición.
+      //   <br/><br/>`
+      // }),
         // El ganador recibirá un vale de 40€ de La Tienda del Cervecero a cambio de unos litros del
         // lote ganador o el compromiso de repetir un lote de su cerveza y hacer llegar parte de esta
         // al The Real CordobALE - CerveCataClub (que asumiría los gastos de envío de generarse), incluso se le ofrecería
@@ -271,7 +277,7 @@ export class RulesService {
       new Rule({
         icon:"military_tech",
         title:"Rally ACCE",
-        content:` El "IX Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
+        content:` El "X Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
       }),
       new Rule({
         icon:"toc",
