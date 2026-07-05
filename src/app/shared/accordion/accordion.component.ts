@@ -1,19 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Rule } from '../../rules/rule.model';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-accordion',
     templateUrl: './accordion.component.html',
     styleUrls: ['./accordion.component.scss'],
-    standalone: false
+    imports: [MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatIcon, MatExpansionPanelDescription]
 })
-export class AccordionComponent implements OnInit {
-
-  @Input() rows: Rule[];
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class AccordionComponent {
+  @Input() rows: Rule[] = [];
 }

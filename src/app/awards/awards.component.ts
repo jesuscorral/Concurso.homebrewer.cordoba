@@ -1,16 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-awards',
     templateUrl: './awards.component.html',
-    styleUrls: ['./awards.component.css'],
-    standalone: false
+    styleUrls: ['./awards.component.css']
 })
-export class AwardsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class AwardsComponent { }
