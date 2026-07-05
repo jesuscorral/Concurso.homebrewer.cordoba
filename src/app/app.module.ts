@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { AwardsComponent } from './awards/awards.component';
@@ -37,7 +36,6 @@ import { SponsorsComponent } from './sponsors/sponsors.component';
     ],
   imports: [
     BrowserModule,
-    NgbModule,
     FormsModule,
     RouterModule,
     AppRoutingModule,
