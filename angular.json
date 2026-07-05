@@ -17,6 +17,8 @@
             },
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "server": "src/main.server.ts",
+            "outputMode": "static",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": [
               "zone.js"
