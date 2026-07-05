@@ -1,5 +1,4 @@
-import { Injectable, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
 
 export type ConsentStatus = 'accepted' | 'rejected' | null;
 
@@ -12,18 +11,13 @@ export class CookieConsentService {
   private static readonly storageKey = 'cookie-consent';
   private static readonly gtmId = 'GTM-PCDV79NT';
 
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-
   get status(): ConsentStatus {
-    if (!this.isBrowser) {
-      return null;
-    }
     const value = localStorage.getItem(CookieConsentService.storageKey);
     return value === 'accepted' || value === 'rejected' ? value : null;
   }
 
   init(): void {
-    if (this.isBrowser && this.status === 'accepted') {
+    if (this.status === 'accepted') {
       this.loadGtm();
     }
   }

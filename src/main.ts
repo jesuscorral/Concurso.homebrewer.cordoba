@@ -1,5 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
@@ -9,4 +11,9 @@ if (environment.production) {
   enableProdMode();
 }
 
-bootstrapApplication(AppComponent, appConfig).catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top', anchorScrolling: 'enabled' })),
+    provideAnimations(),
+  ],
+}).catch((err) => console.error(err));

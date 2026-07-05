@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GlobalConstants } from '../shared/global-constants';
 import { SeoService } from '../shared/seo/seo.service';
@@ -14,13 +14,4 @@ export class HomeComponent {
   day = GlobalConstants.day;
   month = GlobalConstants.month;
   editionNumber = GlobalConstants.editionNumber;
-  startRegistrationDate = GlobalConstants.startRegistrationDate;
-  endRegistrationDate = GlobalConstants.endRegistrationDate;
-  startReceptionDate = GlobalConstants.startReceptionDate;
-  endReceptionDate = GlobalConstants.endReceptionDate;
-
-  constructor() {
-    // La imagen hero es el LCP de la portada; precargarla adelanta su pintado.
-    inject(SeoService).preloadImage('assets/img/homepage/bg.webp');
-  }
 }
