@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { GlobalConstants } from '../shared/global-constants';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.css'],
+    imports: [RouterLink]
 })
 export class HomeComponent {
   year = GlobalConstants.year;

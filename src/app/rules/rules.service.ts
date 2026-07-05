@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Rule } from './rule.model';
+import { GlobalConstants } from '../shared/global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class RulesService {
       new Rule({
               icon: "pages",
               title: "Objeto del concurso", 
-              content: `El "<b>X Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro. 
+              content: `El "<b>${GlobalConstants.editionNumber} Concurso Homebrewer de Córdoba</b>" con un objetivo claramente lúdico y cultural, sin ánimo de lucro.
                         <br/><br/>
                         Este concurso se enmarca dentro de las actividades para el fomento de la cultura cerveza que fomenta la asociación <a href="https://www.facebook.com/TheRealCordobALE">
                         The Real CordobALE - CerveCataClub</a>.
@@ -21,7 +22,7 @@ export class RulesService {
       new Rule({
               icon:"date_range",
               title: "Fecha y lugar de celebración",
-              content: `21 de Noviembre de 2026 en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
+              content: `${GlobalConstants.day} de ${GlobalConstants.month} de ${GlobalConstants.year} en las instalaciones de la <a href="https://cervezaperroflaco.com/" target="_blank">Perro Flaco &Co.</a> beer factory`}),
       new Rule({
               icon:"drive_file_rename_outline",
               title:"Participación e inscripción",
@@ -102,7 +103,7 @@ export class RulesService {
               </li>
               <br/>
               <li>
-                  Los interesados en participar deberán rellenar un <a href="https://www.concursohomebrewercordoba.es/#/registration"> formulario de inscripción</a>
+                  Los interesados en participar deberán rellenar un <a href="/registration"> formulario de inscripción</a>
                   por cada entrada que presenten (máximo 3). Al enviar el formulario recibirá en el correo electrónico con el que se ha inscrito un email con la etiqueta
                   que deberá llevar adherida las botellas inscritas. Posteriormente deberá enviar el justificante de pago de la inscripción a la siguiente dirección de correo
                   electrónico <a href="mailto:homebrewercordoba@gmail.com" target="_blank">homebrewercordoba@gmail.com</a>, la inscripción no se considerará completada hasta 
@@ -134,7 +135,7 @@ export class RulesService {
       
                       Los gastos de envío correrán a cargo del concursante. <br/><br/>
 
-                      Fechas de recepción: del 10 al 17 de noviembre  <br/><br/>
+                      Fechas de recepción: del ${GlobalConstants.startReceptionDate} al ${GlobalConstants.endReceptionDate}  <br/><br/>
                     </li>
                   </ol>
              </li>
@@ -187,11 +188,11 @@ export class RulesService {
         title:"Plazos",
         content:`<ul>
           <li>
-              Plazo de inscripción del 1 de Septiembre al 20 de Octubre.
+              Plazo de inscripción del ${GlobalConstants.startRegistrationDate} al ${GlobalConstants.endRegistrationDate}.
           </li>
           <br/>
           <li>
-              Plazo de envío del 10 al 17 de Noviembre.
+              Plazo de envío del ${GlobalConstants.startReceptionDate} al ${GlobalConstants.endReceptionDate}.
           </li>
         </ul>`
         }),
@@ -263,21 +264,10 @@ export class RulesService {
         </li>
       </ul>`
       }),
-      // new Rule({
-      //   icon:"grade",
-      //   title:"Mención especial The Real CordobALE - CerveCataClub",
-      //   content:` En esta edición no se contará con la mención especial The Real CordobALE como se venía realizando en las ediciones pasadas.
-      //   Esperamos poder recuperarla para la próxima edición.
-      //   <br/><br/>`
-      // }),
-        // El ganador recibirá un vale de 40€ de La Tienda del Cervecero a cambio de unos litros del
-        // lote ganador o el compromiso de repetir un lote de su cerveza y hacer llegar parte de esta
-        // al The Real CordobALE - CerveCataClub (que asumiría los gastos de envío de generarse), incluso se le ofrecería
-        // la posibilidad de dirigir una sesión del The Real CordobALE - CerveCataClub.
       new Rule({
         icon:"military_tech",
         title:"Rally ACCE",
-        content:` El "X Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
+        content:` El "${GlobalConstants.editionNumber} Concurso Homebrewer de Córdoba" es prueba puntuable del Rally ACCE`
       }),
       new Rule({
         icon:"toc",

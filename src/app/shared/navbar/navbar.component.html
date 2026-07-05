@@ -1,51 +1,40 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-transparent" color-on-scroll="500">
+<nav class="navbar navbar-expand-lg fixed-top" [class.navbar-transparent]="!scrolled">
     <a class="navbar-brand" routerLink="/home">Concurso homebrewer Córdoba</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Abrir menú de navegación">
         <span class="navbar-toggler-bar"></span>
-                <span class="navbar-toggler-bar"></span>
-                <span class="navbar-toggler-bar"></span>
-            </button>
-       
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto">
+        <span class="navbar-toggler-bar"></span>
+        <span class="navbar-toggler-bar"></span>
+    </button>
 
-               <li class="nav-item active">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item" routerLinkActive="active">
                 <a class="nav-link" routerLink="/rules" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">BASES</a>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" routerLink="/awards" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">PREMIOS</a>
-                </li>  -->
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/sponsors" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">PATROCINADORES</a>
-                </li>  
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/registration" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">INSCRIPCIÓN</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/organization" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">ORGANIZACIÓN</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/contact" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">CONTACTO</a>
-                </li> 
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link" rel="tooltip" title="Siguenos en Facebook" data-bs-placement="bottom"  href="https://www.facebook.com/ConcursoHomebrewerCordoba" target="_blank">
-                        <i class="fa fa-facebook-square"></i>
-                        <p class="d-lg-none">Facebook</p>
-                    </a>
-                </li> -->
-                 <li class="nav-item">
-                     <a class="nav-link" rel="tooltip" title="Siguenos Instagram" href="https://www.instagram.com/the_real_cordobale/?hl=es" target="_blank">
-                        <i class="fa fa-instagram"></i>
-                        <p class="d-lg-none">Instagram</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" rel="tooltip" title="Envíanos un email" data-bs-placement="bottom" href="mailto:homebrewercordoba@gmail.com" target="_blank">
-                        <i class="fa fa-envelope"></i>
-                        <p class="d-lg-none">Email</p>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/sponsors" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">PATROCINADORES</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/registration" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">INSCRIPCIÓN</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/organization" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">ORGANIZACIÓN</a>
+            </li>
+            <li class="nav-item" routerLinkActive="active">
+                <a class="nav-link" routerLink="/contact" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">CONTACTO</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Síguenos en Instagram" href="https://www.instagram.com/the_real_cordobale/?hl=es" target="_blank" rel="noopener">
+                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                    <p class="d-lg-none">Instagram</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Envíanos un email" href="mailto:homebrewercordoba@gmail.com">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    <p class="d-lg-none">Email</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 </nav>
