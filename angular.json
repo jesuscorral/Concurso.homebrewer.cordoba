@@ -39,6 +39,18 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "1.25mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kb",
+                  "maximumError": "16kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -70,6 +82,13 @@
             "production": {
               "buildTarget": "concurso-homebrewer-cordoba:build:production"
             }
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "src/tsconfig.spec.json",
+            "runner": "vitest"
           }
         },
         "lint": {

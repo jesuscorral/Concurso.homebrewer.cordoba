@@ -6,16 +6,22 @@ on:
 permissions:
   contents: read
 
+# Un push nuevo al PR cancela las ejecuciones anteriores todavía en curso.
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
-  lint_and_build:
-    name: Lint and build
+  quality:
+    name: Lint, test and build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -23,8 +29,119 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Lint
         run: npm run lint
 
+      - name: Unit tests
+        run: npm test
+
       - name: Build (production)
         run: npm run build
+
+      - name: Upload build
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 3
+
+  e2e:
+    name: E2E (Chromium, Firefox, WebKit)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run e2e tests
+        run: npm run e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse audit
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download build
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Run Lighthouse CI
+        run: npx --yes @lhci/cli@0.15.1 autorun
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports
+          retention-days: 7
+
+  preview:
+    name: Preview deploy
+    needs: [quality, e2e]
+    # Los secretos no están disponibles en PRs desde forks.
+    if: github.event.pull_request.head.repo.fork == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Download build
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy preview channel
+        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
+          projectId: concursohomebrewercordob-6d540
+          expires: 7d
