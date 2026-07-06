@@ -6,6 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "build:dev": "ng build --configuration development",
+    "test": "ng test",
+    "test:coverage": "ng test --coverage",
+    "e2e": "playwright test",
+    "serve:dist": "http-server dist -p 4173 -c-1 --silent",
     "lint": "ng lint",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
   },
@@ -30,9 +34,13 @@
     "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.5",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.61.1",
     "angular-eslint": "22.0.0",
     "eslint": "^10.3.0",
+    "http-server": "^14.1.1",
+    "jsdom": "^29.1.1",
     "typescript": "~6.0.3",
-    "typescript-eslint": "8.60.1"
+    "typescript-eslint": "8.60.1",
+    "vitest": "^4.1.9"
   }
 }

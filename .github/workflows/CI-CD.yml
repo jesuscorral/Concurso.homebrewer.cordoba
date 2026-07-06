@@ -8,16 +8,22 @@ on:
 permissions:
   contents: read
 
+# Nunca dos despliegues a producción en paralelo; el último espera al anterior.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
   build_and_deploy:
     name: Build and deploy to Firebase Hosting
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -25,16 +31,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Lint
         run: npm run lint
+
+      - name: Unit tests
+        run: npm test
 
       - name: Build (production)
         run: npm run build
 
       - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
           projectId: concursohomebrewercordob-6d540
-          channelId: ${{ secrets.CHANNEL_ID }}
+          channelId: live
+
+      - name: Smoke check production
+        run: |
+          curl --fail --silent --show-error --location \
+            --retry 5 --retry-delay 10 --retry-all-errors \
+            https://www.concursohomebrewercordoba.es/ | grep -qi "Concurso Homebrewer"

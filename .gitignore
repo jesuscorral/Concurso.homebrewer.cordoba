@@ -40,6 +40,11 @@ testem.log
 # e2e
 /e2e/*.js
 /e2e/*.map
+/test-results
+/playwright-report
+
+# Lighthouse CI
+/.lighthouseci
 
 # System Files
 .DS_Store
