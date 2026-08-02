@@ -126,7 +126,7 @@ Workflow definitions: [`CI-CD.yml`](.github/workflows/CI-CD.yml) · [`PR.yml`](.
 
 ```sh
 npm run lint                          # ESLint (TS + templates)
-npm test                              # Vitest unit tests
+npx vitest run --coverage                             # Vitest unit tests
 npm run test:coverage                 # Vitest with coverage report
 npm run e2e                           # Playwright end-to-end tests
 npm run build                         # production build (default), output in dist/
