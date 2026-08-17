@@ -31,19 +31,19 @@
     "zone.js": "~0.16.2"
   },
   "devDependencies": {
-    "@angular/build": "^22.1.0",
-    "@angular/cli": "^22.1.0",
-    "@angular/compiler-cli": "^22.1.0",
-    "@angular/localize": "^22.1.0",
+    "@angular/build": "^22.1.4",
+    "@angular/cli": "^22.1.4",
+    "@angular/compiler-cli": "^22.1.2",
+    "@angular/localize": "^22.1.2",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
     "@vitest/coverage-v8": "^4.1.10",
     "angular-eslint": "22.1.0",
-    "eslint": "^10.3.0",
+    "eslint": "^10.8.1",
     "http-server": "^14.1.1",
-    "jsdom": "^29.1.1",
-    "typescript": "~6.0.3",
-    "typescript-eslint": "8.60.1",
+    "jsdom": "^30.0.1",
+    "typescript": "~7.0.2",
+    "typescript-eslint": "8.67.0",
     "vitest": "^4.1.9"
   }
 }
