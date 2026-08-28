@@ -8,6 +8,8 @@ Official website of Córdoba's homebrewing competition — a BJCP-sanctioned con
 
 [![CI/CD](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/CI-CD.yml)
 [![PR checks](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/PR.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/PR.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jesuscorral_Concurso.homebrewer.cordoba&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jesuscorral_Concurso.homebrewer.cordoba)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jesuscorral_Concurso.homebrewer.cordoba&metric=coverage)](https://sonarcloud.io/summary/new_code?id=jesuscorral_Concurso.homebrewer.cordoba)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![Live site](https://img.shields.io/badge/live-concursohomebrewercordoba.es-orange)](https://www.concursohomebrewercordoba.es/)
 
@@ -34,6 +36,7 @@ Public marketing & registration site for the contest: rules, sponsors, organizat
 ![Playwright](https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)
 ![Lighthouse CI](https://img.shields.io/badge/Lighthouse_CI-F44B21?style=for-the-badge&logo=lighthouse&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![SonarCloud](https://img.shields.io/badge/SonarCloud-F3702A?style=for-the-badge&logo=sonarcloud&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 </div>
@@ -62,11 +65,12 @@ flowchart LR
         Q --> L["Lighthouse CI<br/>performance budget"]
         E --> P["Firebase preview<br/>channel (7d)"]
         L --> P
+        Q --> SC["SonarCloud<br/>quality gate"]
     end
     PR -->|merge to master| CD["CI-CD.yml"]
     subgraph CD_STEPS["Build & Deploy"]
         direction LR
-        A["npm audit<br/>Lint · Unit tests"] --> B["Production build"] --> D["Deploy to<br/>Firebase Hosting"] --> S["Smoke test<br/>production URL"]
+        A["npm audit<br/>Lint · Unit tests"] --> SC2["SonarCloud<br/>analysis"] --> B["Production build"] --> D["Deploy to<br/>Firebase Hosting"] --> S["Smoke test<br/>production URL"]
     end
     CD --> CD_STEPS
 ```
@@ -76,6 +80,7 @@ flowchart LR
 | Dependency audit | `npm audit --omit=dev` | blocks high-severity vulnerabilities in production deps |
 | Lint | ESLint (TS + Angular templates) | static code quality |
 | Unit tests | Vitest | component/service logic |
+| Static analysis | SonarCloud | code quality & coverage gate, PR decoration |
 | E2E tests | Playwright | real-browser regression across 3 engines |
 | Performance | Lighthouse CI | enforces the 1&nbsp;MB bundle budget |
 | Preview deploys | Firebase Hosting channels | reviewable, shareable preview per PR (auto-expires in 7 days) |

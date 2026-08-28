@@ -88,7 +88,9 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "src/tsconfig.spec.json",
-            "runner": "vitest"
+            "runner": "vitest",
+            "runnerConfig": "vitest.config.ts",
+            "coverageReporters": ["lcov", "text-summary"]
           }
         },
         "lint": {
