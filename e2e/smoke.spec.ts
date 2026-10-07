@@ -4,6 +4,7 @@ const pages = [
   { path: '/', title: /Concurso Homebrewer/i },
   { path: '/rules', title: /Bases/ },
   { path: '/sponsors', title: /Patrocinadores/ },
+  { path: '/awards', title: /Premios/ },
   { path: '/registration', title: /Inscripción/ },
   { path: '/organization', title: /Organización/ },
   { path: '/contact', title: /Contacto/ },

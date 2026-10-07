@@ -1,0 +1,53 @@
+.section-title {
+    margin: 0 0 24px;
+    font-family: var(--brew-font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--brew-amber);
+}
+.pending-card {
+    text-align: center;
+}
+.pending-icon {
+    display: block;
+    margin-bottom: 18px;
+    font-size: 2.6rem;
+    color: var(--brew-amber);
+}
+
+.category-card {
+    margin-bottom: 24px;
+
+    h3 {
+        margin: 0 0 18px;
+        color: var(--brew-cream);
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+}
+.place-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--brew-glass-border);
+
+    img {
+        flex-shrink: 0;
+        object-fit: contain;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.7;
+    }
+
+    .sponsor {
+        color: var(--brew-amber);
+        font-weight: 600;
+    }
+}

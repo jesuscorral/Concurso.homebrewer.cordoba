@@ -6,6 +6,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { OrganizationComponent } from './organization/organization.component';
 import { ContactComponent } from './contact/contact.component';
 import { SponsorsComponent } from './sponsors/sponsors.component';
+import { AwardsComponent } from './awards/awards.component';
 import { GlobalConstants as C } from './shared/global-constants';
 
 const siteName = 'Concurso Homebrewer Córdoba';
@@ -30,6 +31,12 @@ export const routes: Routes = [
         component: SponsorsComponent,
         title: `Patrocinadores | ${siteName}`,
         data: { description: 'Tiendas, marcas y locales cerveceros que patrocinan el Concurso Homebrewer Córdoba y aportan los premios del certamen.' }
+    },
+    {
+        path: 'awards',
+        component: AwardsComponent,
+        title: `Premios | ${siteName}`,
+        data: { description: `Premios del ${C.editionNumber} Concurso Homebrewer Córdoba ${C.year}: premios aportados por los patrocinadores del certamen.` }
     },
     {
         path: 'registration',

@@ -22,7 +22,11 @@
     box-shadow: 0 20px 44px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(240, 168, 50, 0.4);
 }
 .info-card > img {
+    display: block;
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    padding: 24px 28px 8px;
     margin-bottom: 60px;
 }
 .info-card .info-card-details,
@@ -58,16 +62,34 @@
     bottom: 100%;
     padding: 10px 5px;
 }
+.info-card .info-card-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .info-card:hover .info-card-details {
     bottom: 0px;
-    overflow: auto;
-    padding-bottom: 25px;
+    overflow: hidden;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 .info-card:hover .info-card-details .info-card-header {
     position: relative;
     bottom: 0px;
-    padding-top: 45px;
-    padding-bottom: 25px;
+    padding: 0 0 10px;
+}
+.info-card:hover .info-card-details .info-card-header h2 {
+    font-size: 18px;
+}
+.info-card .info-card-details .info-card-detail p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 .info-card .info-card-details .info-card-header h2,
 .info-card .info-card-details .info-card-header h3 {
@@ -87,15 +109,15 @@
 .info-card .info-card-details .info-card-detail .social {
     list-style: none;
     padding: 0px;
-    margin-top: 25px;
+    margin-top: 12px;
     text-align: center;
 }
 .info-card .info-card-details .info-card-detail .social a {
     position: relative;
     display: inline-block;
-    min-width: 40px;
-    padding: 10px 0px;
-    margin: 0px 5px;
+    min-width: 34px;
+    padding: 7px 0px;
+    margin: 0px 3px;
     overflow: hidden;
     text-align: center;
     background-color: rgb(215, 215, 215);
@@ -128,11 +150,17 @@ a.phone {
 a.phone:hover {
     background-color: rgb(59, 90, 154) !important;
 }
-a.twitter {
-    color: rgb(45, 168, 225) !important;
+a.x-social {
+    color: rgb(0, 0, 0) !important;
 }
-a.twitter:hover {
-    background-color: rgb(45, 168, 225) !important;
+a.x-social:hover {
+    background-color: rgb(0, 0, 0) !important;
+}
+.x-icon {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    vertical-align: -2px;
 }
 a.instagram {
   color: rgb(45, 168, 225) !important;
