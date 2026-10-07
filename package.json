@@ -36,14 +36,14 @@
     "@angular/compiler-cli": "^22.2.1",
     "@angular/localize": "^22.2.1",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.63.0",
     "@vitest/coverage-v8": "^4.1.11",
-    "angular-eslint": "22.1.0",
-    "eslint": "^10.9.0",
+    "angular-eslint": "22.5.0",
+    "eslint": "^10.12.0",
     "http-server": "^14.1.1",
-    "jsdom": "^30.0.1",
+    "jsdom": "^30.1.2",
     "typescript": "~6.0.3",
-    "typescript-eslint": "8.67.0",
+    "typescript-eslint": "8.71.0",
     "vitest": "^4.1.9"
   }
 }
