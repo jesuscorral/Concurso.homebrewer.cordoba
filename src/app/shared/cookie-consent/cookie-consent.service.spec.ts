@@ -1,22 +1,28 @@
 import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CookieConsentService } from './cookie-consent.service';
 
+type WindowWithGtag = Window & { gtag?: (...args: unknown[]) => void };
+
 describe('CookieConsentService (navegador)', () => {
   let service: CookieConsentService;
+  let gtag: ReturnType<typeof vi.fn<(...args: unknown[]) => void>>;
 
   beforeEach(() => {
     localStorage.clear();
-    document.getElementById('gtm-script')?.remove();
+    gtag = vi.fn<(...args: unknown[]) => void>();
+    (window as WindowWithGtag).gtag = gtag;
     service = TestBed.inject(CookieConsentService);
   });
 
-  it('sin decisión previa el estado es null y no se carga GTM', () => {
+  afterEach(() => {
+    delete (window as WindowWithGtag).gtag;
+  });
+
+  it('sin decisión previa el estado es null', () => {
     expect(service.status).toBeNull();
-    service.init();
-    expect(document.getElementById('gtm-script')).toBeNull();
   });
 
   it('un valor corrupto en localStorage se trata como null', () => {
@@ -24,28 +30,27 @@ describe('CookieConsentService (navegador)', () => {
     expect(service.status).toBeNull();
   });
 
-  it('accept() recuerda la decisión y carga GTM', () => {
+  it('accept() recuerda la decisión y concede el consentimiento de análisis', () => {
     service.accept();
     expect(service.status).toBe('accepted');
-    expect(document.getElementById('gtm-script')).not.toBeNull();
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', { analytics_storage: 'granted' });
   });
 
-  it('reject() recuerda la decisión y no carga GTM', () => {
+  it('reject() recuerda la decisión y deniega el consentimiento de análisis', () => {
     service.reject();
     expect(service.status).toBe('rejected');
-    expect(document.getElementById('gtm-script')).toBeNull();
+    expect(gtag).toHaveBeenCalledWith('consent', 'update', { analytics_storage: 'denied' });
   });
 
-  it('init() carga GTM si la visita anterior aceptó', () => {
-    localStorage.setItem('cookie-consent', 'accepted');
-    service.init();
-    expect(document.getElementById('gtm-script')).not.toBeNull();
+  it('no falla si gtag.js no está disponible (p. ej. bloqueado por el navegador)', () => {
+    delete (window as WindowWithGtag).gtag;
+    expect(() => service.accept()).not.toThrow();
+    expect(service.status).toBe('accepted');
   });
 });
 
 describe('CookieConsentService (servidor / prerender)', () => {
-  it('no toca localStorage ni el DOM fuera del navegador', () => {
-    document.getElementById('gtm-script')?.remove();
+  it('no toca localStorage fuera del navegador', () => {
     TestBed.configureTestingModule({
       providers: [{ provide: PLATFORM_ID, useValue: 'server' }],
     });
@@ -53,8 +58,6 @@ describe('CookieConsentService (servidor / prerender)', () => {
 
     localStorage.setItem('cookie-consent', 'accepted');
     expect(service.status).toBeNull();
-    service.init();
-    expect(document.getElementById('gtm-script')).toBeNull();
     localStorage.clear();
   });
 });

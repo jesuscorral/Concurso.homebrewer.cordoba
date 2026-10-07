@@ -1,6 +1,28 @@
 <!doctype html>
 <html lang="es">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1LN03LFZRP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      // Consent Mode v2 (RGPD): sin cookies hasta que el visitante acepte el banner.
+      // CookieConsentService actualiza el consentimiento al aceptar o rechazar.
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied'
+      });
+      try {
+        if (localStorage.getItem('cookie-consent') === 'accepted') {
+          gtag('consent', 'update', { analytics_storage: 'granted' });
+        }
+      } catch (e) {}
+      gtag('js', new Date());
+
+      gtag('config', 'G-1LN03LFZRP');
+    </script>
     <meta charset="utf-8">
     <title>Concurso Homebrewer Córdoba</title>
     <base href="/">
@@ -8,7 +30,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Concurso de cerveza casera de Córdoba organizado por The Real CordobALE - CerveCataClub. Certamen oficial BJCP: bases, inscripción, patrocinadores y premios.">
 
-    <!-- Open Graph / Twitter -->
+    <!-- Open Graph / X (X still reads the legacy "twitter:" meta names) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Concurso Homebrewer Córdoba">
     <meta property="og:description" content="Concurso de cerveza casera de Córdoba. Certamen oficial BJCP: bases, inscripción, patrocinadores y premios.">

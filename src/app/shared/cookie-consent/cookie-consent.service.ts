@@ -3,14 +3,16 @@ import { isPlatformBrowser } from '@angular/common';
 
 export type ConsentStatus = 'accepted' | 'rejected' | null;
 
+type Gtag = (command: 'consent', action: 'update', params: Record<string, 'granted' | 'denied'>) => void;
+
 /**
- * Gestiona el consentimiento de cookies (RGPD): Google Tag Manager solo se
- * carga si el visitante acepta, y la decisión se recuerda en localStorage.
+ * Gestiona el consentimiento de cookies (RGPD). La etiqueta de Google Analytics
+ * (gtag.js) se carga en index.html con Consent Mode v2 en "denied"; este servicio
+ * recuerda la decisión en localStorage y concede o retira el permiso de análisis.
  */
 @Injectable({ providedIn: 'root' })
 export class CookieConsentService {
   private static readonly storageKey = 'cookie-consent';
-  private static readonly gtmId = 'GTM-PCDV79NT';
 
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -22,32 +24,18 @@ export class CookieConsentService {
     return value === 'accepted' || value === 'rejected' ? value : null;
   }
 
-  init(): void {
-    if (this.isBrowser && this.status === 'accepted') {
-      this.loadGtm();
-    }
-  }
-
   accept(): void {
     localStorage.setItem(CookieConsentService.storageKey, 'accepted');
-    this.loadGtm();
+    this.updateConsent('granted');
   }
 
   reject(): void {
     localStorage.setItem(CookieConsentService.storageKey, 'rejected');
+    this.updateConsent('denied');
   }
 
-  private loadGtm(): void {
-    if (document.getElementById('gtm-script')) {
-      return;
-    }
-    const w = window as unknown as { dataLayer: unknown[] };
-    w.dataLayer = w.dataLayer || [];
-    w.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    const script = document.createElement('script');
-    script.id = 'gtm-script';
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${CookieConsentService.gtmId}`;
-    document.head.appendChild(script);
+  private updateConsent(analyticsStorage: 'granted' | 'denied'): void {
+    const gtag = (window as unknown as { gtag?: Gtag }).gtag;
+    gtag?.('consent', 'update', { analytics_storage: analyticsStorage });
   }
 }

@@ -93,6 +93,8 @@ Workflow definitions: [`CI-CD.yml`](.github/workflows/CI-CD.yml) · [`PR.yml`](.
 <details>
 <summary><strong>Getting started (click to expand)</strong></summary>
 
+> Full guide (tests, debugging, troubleshooting): [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md)
+
 ### Requirements
 
 - **Node.js 24.18.0** (or another version satisfying `^22.22.3 || ^24.15.0 || >=26.0.0`, per Angular 22's engine requirement). If you use [nvm](https://github.com/coreybutler/nvm-windows), this repo has an `.nvmrc`:
