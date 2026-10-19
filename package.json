@@ -37,7 +37,7 @@
     "@angular/localize": "^22.2.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.61.1",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.5",
     "angular-eslint": "22.1.0",
     "eslint": "^10.9.0",
     "http-server": "^14.1.1",
