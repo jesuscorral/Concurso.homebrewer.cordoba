@@ -55,7 +55,7 @@ Not triggered directly: both pipelines below call it as their first stage, so PR
 5. Production build (`npm run build`, enforces the bundle budgets in `angular.json`)
 6. Uploads the `dist` and `coverage` artifacts for the next stages
 
-It accepts an optional `ref` input so the production pipeline can build an older commit for a rollback.
+It accepts an optional `ref` input so the production pipeline can build an older commit for a rollback. For safety, such a run only accepts commits that are already part of `master`, and it skips the shared npm cache so an old commit can never poison it.
 
 ### `pull-request.yml` — PR · Validate & preview
 
@@ -75,7 +75,7 @@ The preview is a real copy of the site at a temporary URL (shown on the PR and u
 
 **Triggers:**
 - every push to `master` (that is, every merged PR);
-- manually from *Actions → Production · Deploy to Firebase Hosting → Run workflow*, with an optional `ref` (commit SHA, tag or branch) to redeploy or roll back.
+- manually from *Actions → Production · Deploy to Firebase Hosting → Run workflow*, with an optional `ref` (commit SHA or tag already on `master`) to redeploy or roll back.
 
 | Job | What it does |
 |---|---|
