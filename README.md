@@ -6,8 +6,8 @@
 
 Official website of Córdoba's homebrewing competition — a BJCP-sanctioned contest run by **The Real CordobALE**.
 
-[![CI/CD](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/CI-CD.yml)
-[![PR checks](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/PR.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/PR.yml)
+[![Production deploy](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/deploy-production.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/deploy-production.yml)
+[![PR checks](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/pull-request.yml/badge.svg)](https://github.com/jesuscorral/Concurso.homebrewer.cordoba/actions/workflows/pull-request.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jesuscorral_Concurso.homebrewer.cordoba&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jesuscorral_Concurso.homebrewer.cordoba)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=jesuscorral_Concurso.homebrewer.cordoba&metric=coverage)](https://sonarcloud.io/summary/new_code?id=jesuscorral_Concurso.homebrewer.cordoba)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
@@ -55,24 +55,23 @@ Public marketing & registration site for the contest: rules, sponsors, organizat
 
 ## CI/CD pipeline
 
-Every pull request runs a full quality gate before anything reaches `master`; every merge to `master` deploys automatically.
+Trunk-based delivery: every pull request runs a full quality gate and gets its own preview site; every merge to `master` is released to production automatically, verified with a smoke test, and can be rolled back in one click. Full strategy: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ```mermaid
 flowchart LR
-    subgraph PR["Pull Request — PR.yml"]
+    subgraph PR["PR · Validate & preview"]
         direction LR
-        Q["Lint · Unit tests<br/>Production build"] --> E["E2E<br/>Chromium / Firefox / WebKit"]
-        Q --> L["Lighthouse CI<br/>performance budget"]
-        E --> P["Firebase preview<br/>channel (7d)"]
-        L --> P
-        Q --> SC["SonarCloud<br/>quality gate"]
+        Q["1 · Quality gate<br/>audit · lint · tests · build"] --> E["2 · E2E<br/>Chromium / Firefox / WebKit"]
+        Q --> L["2 · Lighthouse CI"]
+        Q --> SC["2 · SonarCloud"]
+        E --> P["3 · Firebase preview<br/>channel (7d)"]
     end
-    PR -->|merge to master| CD["CI-CD.yml"]
-    subgraph CD_STEPS["Build & Deploy"]
+    PR -->|review + merge to master| CD
+    subgraph CD["Production · Deploy to Firebase Hosting"]
         direction LR
-        A["npm audit<br/>Lint · Unit tests"] --> SC2["SonarCloud<br/>analysis"] --> B["Production build"] --> D["Deploy to<br/>Firebase Hosting"] --> S["Smoke test<br/>production URL"]
+        Q2["1 · Quality gate"] --> SC2["2 · SonarCloud"]
+        Q2 --> D["3 · Deploy<br/>live channel"] --> S["4 · Smoke test<br/>production URL"]
     end
-    CD --> CD_STEPS
 ```
 
 | Stage | Tooling | Purpose |
@@ -82,11 +81,13 @@ flowchart LR
 | Unit tests | Vitest | component/service logic |
 | Static analysis | SonarCloud | code quality & coverage gate, PR decoration |
 | E2E tests | Playwright | real-browser regression across 3 engines |
-| Performance | Lighthouse CI | enforces the 1&nbsp;MB bundle budget |
+| Performance | Lighthouse CI | accessibility/SEO gate and performance budget |
 | Preview deploys | Firebase Hosting channels | reviewable, shareable preview per PR (auto-expires in 7 days) |
-| Production deploy | Firebase Hosting + smoke check | automatic on every push to `master` |
+| Production deploy | Firebase Hosting + smoke check | automatic on every merge to `master`; manual re-run on any commit for rollbacks |
 
-Workflow definitions: [`CI-CD.yml`](.github/workflows/CI-CD.yml) · [`PR.yml`](.github/workflows/PR.yml) · [`dependabot.yml`](.github/dependabot.yml)
+Both pipelines share one reusable gate and **build once**: the artifact that passed the tests is the one deployed.
+
+Workflow definitions: [`quality-gate.yml`](.github/workflows/quality-gate.yml) · [`pull-request.yml`](.github/workflows/pull-request.yml) · [`deploy-production.yml`](.github/workflows/deploy-production.yml) · [`dependabot.yml`](.github/dependabot.yml)
 
 ---
 
@@ -142,12 +143,7 @@ npm run build:dev                     # development build (sourcemaps, no optimi
 
 ### Deployment
 
-Deployment to Firebase Hosting is automated: every push to `master` triggers [`.github/workflows/CI-CD.yml`](.github/workflows/CI-CD.yml), which builds the app and deploys `dist/` via `firebase-hosting-deploy`. Manual deploy (requires the [Firebase CLI](https://firebase.google.com/docs/cli) and access to the `concursohomebrewercordob-6d540` project):
-
-```sh
-npm run build
-firebase deploy
-```
+Deployment to Firebase Hosting is automated: every merge to `master` triggers [`deploy-production.yml`](.github/workflows/deploy-production.yml). Releases, previews, rollbacks and the emergency manual deploy are described in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 </details>
 

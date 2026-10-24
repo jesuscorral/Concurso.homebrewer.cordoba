@@ -1,23 +1,43 @@
-name: CI-CD_Firebase
+# Stage 2 of the deployment strategy: every merge to master is released to
+# production automatically. It can also be run by hand (Actions → Run workflow)
+# to redeploy any commit or tag, which is how a rollback is done.
+# See docs/DEPLOYMENT.md.
+name: Production · Deploy to Firebase Hosting
 
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit SHA, tag or branch to deploy (leave empty for the latest master). Use an older commit to roll back.
+        type: string
+        required: false
+        default: ''
 
 permissions:
   contents: read
 
-# Nunca dos despliegues a producción en paralelo; el último espera al anterior.
+# Never two production deploys in parallel; a newer run waits for the current one.
 concurrency:
   group: production-deploy
   cancel-in-progress: false
 
 jobs:
-  build_and_deploy:
-    name: Build and deploy to Firebase Hosting
+  quality:
+    name: 1 · Quality gate
+    uses: ./.github/workflows/quality-gate.yml
+    with:
+      ref: ${{ inputs.ref || github.sha }}
+
+  sonarcloud:
+    name: 2 · SonarCloud analysis (master)
+    needs: quality
+    # Only for regular merges: analysing a rollback commit would rewrite master's history in SonarCloud.
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
@@ -26,23 +46,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - name: Download coverage report
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Unit tests
-        run: npm test -- --coverage
+          name: coverage
+          path: coverage
 
       - name: SonarCloud scan
         if: ${{ env.SONAR_TOKEN != '' }}
@@ -51,10 +59,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
 
-      - name: Build (production)
-        run: npm run build
+  deploy:
+    name: 3 · Deploy to production (live channel)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: production
+      url: https://www.concursohomebrewercordoba.es/
+    steps:
+      # firebase.json (headers, rewrites) must match the commit being deployed.
+      - name: Checkout repo
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
 
-      - name: Deploy to Firebase
+      - name: Download build
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy to Firebase Hosting (live)
         uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -62,8 +88,25 @@ jobs:
           projectId: concursohomebrewercordob-6d540
           channelId: live
 
-      - name: Smoke check production
+  smoke:
+    name: 4 · Smoke test production
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check key pages respond
         run: |
-          curl --fail --silent --show-error --location \
-            --retry 5 --retry-delay 10 --retry-all-errors \
-            https://www.concursohomebrewercordoba.es/ | grep -qi "Concurso Homebrewer"
+          set -euo pipefail
+          base=https://www.concursohomebrewercordoba.es
+          for path in / /rules /awards /registration; do
+            echo "Checking ${base}${path}"
+            curl --fail --silent --show-error --location \
+              --retry 5 --retry-delay 10 --retry-all-errors \
+              "${base}${path}" | grep -qi "Concurso Homebrewer"
+          done
+
+      - name: Rollback hint
+        if: failure()
+        run: |
+          echo "::error::Production smoke test failed. Roll back from the Firebase console (Hosting → Release history → Roll back)"
+          echo "::error::or re-run this workflow with 'Run workflow' and the last good commit SHA as 'ref'."

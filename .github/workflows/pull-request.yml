@@ -1,62 +1,28 @@
-name: PR checks
+# Stage 1 of the deployment strategy: validate every pull request and publish
+# a temporary preview of the site. Nothing here touches production.
+# See docs/DEPLOYMENT.md.
+name: PR · Validate & preview
 
 on:
   pull_request:
+    branches:
+      - master
 
 permissions:
   contents: read
 
-# Un push nuevo al PR cancela las ejecuciones anteriores todavía en curso.
+# A new push to the PR cancels the runs still in progress for that PR.
 concurrency:
-  group: pr-checks-${{ github.event.pull_request.number }}
+  group: pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   quality:
-    name: Lint, test and build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Unit tests
-        run: npm test -- --coverage
-
-      - name: Build (production)
-        run: npm run build
-
-      - name: Upload build
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: dist
-          path: dist
-          retention-days: 3
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: coverage
-          path: coverage
-          retention-days: 3
+    name: 1 · Quality gate
+    uses: ./.github/workflows/quality-gate.yml
 
   e2e:
-    name: E2E (Chromium, Firefox, WebKit)
+    name: 2 · E2E tests (Chromium, Firefox, WebKit)
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -94,7 +60,7 @@ jobs:
           retention-days: 7
 
   lighthouse:
-    name: Lighthouse audit
+    name: 2 · Lighthouse audit
     needs: quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -125,9 +91,9 @@ jobs:
           retention-days: 7
 
   sonarcloud:
-    name: SonarCloud analysis
+    name: 2 · SonarCloud analysis
     needs: quality
-    # Los secretos no están disponibles en PRs desde forks.
+    # Secrets are not available to PRs from forks.
     if: github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -158,12 +124,15 @@ jobs:
             -Dsonar.pullrequest.base=${{ github.base_ref }}
 
   preview:
-    name: Preview deploy
+    name: 3 · Deploy preview (Firebase channel, 7 days)
     needs: [quality, e2e]
-    # Los secretos no están disponibles en PRs desde forks.
+    # Secrets are not available to PRs from forks.
     if: github.event.pull_request.head.repo.fork == false
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.details_url }}
     permissions:
       contents: read
       checks: write
@@ -178,7 +147,10 @@ jobs:
           name: dist
           path: dist
 
+      # Without channelId the action creates/updates a channel per PR
+      # and comments its URL on the PR.
       - name: Deploy preview channel
+        id: deploy
         uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
