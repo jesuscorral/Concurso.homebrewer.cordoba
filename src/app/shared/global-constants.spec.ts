@@ -1,20 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import { GlobalConstants } from './global-constants';
+import { parseSpanishDate } from './registration-window';
 
 const MONTHS = [
   'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
 ];
-
-/** Convierte "9 de Noviembre" en una fecha del año de la edición. */
-function parseSpanishDate(value: string): Date {
-  const match = /^(\d{1,2}) de ([a-záéíóúñ]+)$/i.exec(value.trim());
-  expect(match, `"${value}" no tiene el formato "<día> de <Mes>"`).not.toBeNull();
-  const monthIndex = MONTHS.indexOf(match![2].toLowerCase());
-  expect(monthIndex, `"${match![2]}" no es un mes válido`).toBeGreaterThanOrEqual(0);
-  return new Date(Number(GlobalConstants.year), monthIndex, Number(match![1]));
-}
 
 // Estas comprobaciones protegen la actualización anual de la edición:
 // si al cambiar las fechas queda una incoherencia (rango invertido, mes con
@@ -33,16 +25,23 @@ describe('GlobalConstants (fechas de la edición)', () => {
     expect(start.getTime()).toBeLessThan(end.getTime());
   });
 
+  it('si hay ampliación, el nuevo fin de inscripción es posterior al original', () => {
+    if (!GlobalConstants.previousEndRegistrationDate) return;
+    const previous = parseSpanishDate(GlobalConstants.previousEndRegistrationDate);
+    const end = parseSpanishDate(GlobalConstants.endRegistrationDate);
+    expect(previous.getTime()).toBeLessThan(end.getTime());
+  });
+
   it('el plazo de recepción de botellas está bien ordenado', () => {
     const start = parseSpanishDate(GlobalConstants.startReceptionDate);
     const end = parseSpanishDate(GlobalConstants.endReceptionDate);
     expect(start.getTime()).toBeLessThan(end.getTime());
   });
 
-  it('la inscripción termina antes de que empiece la recepción', () => {
+  it('la inscripción termina como tarde el día que empieza la recepción', () => {
     const endRegistration = parseSpanishDate(GlobalConstants.endRegistrationDate);
     const startReception = parseSpanishDate(GlobalConstants.startReceptionDate);
-    expect(endRegistration.getTime()).toBeLessThan(startReception.getTime());
+    expect(endRegistration.getTime()).toBeLessThanOrEqual(startReception.getTime());
   });
 
   it('la recepción termina antes del día del concurso', () => {

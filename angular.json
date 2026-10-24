@@ -90,7 +90,21 @@
             "tsConfig": "src/tsconfig.spec.json",
             "runner": "vitest",
             "runnerConfig": "vitest.config.ts",
-            "coverageReporters": ["lcov", "text-summary"]
+            "coverageReporters": ["lcov", "text-summary"],
+            "coverageExclude": [
+              "src/main.ts",
+              "src/main.server.ts",
+              "src/environments/**",
+              "src/app/app.config.ts",
+              "src/app/app.config.server.ts",
+              "src/app/app.routes.server.ts"
+            ],
+            "coverageThresholds": {
+              "statements": 80,
+              "branches": 80,
+              "functions": 80,
+              "lines": 80
+            }
           }
         },
         "lint": {

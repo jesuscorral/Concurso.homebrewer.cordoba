@@ -42,4 +42,16 @@ describe('RulesService', () => {
       `${GlobalConstants.editionNumber} Concurso Homebrewer de Córdoba`,
     );
   });
+
+  it('permite inscribir las 3 cervezas en la misma categoría', () => {
+    const rule = rules.find((r) => r.title === 'Participación e inscripción');
+    expect(rule!.content).toContain('pudiendo inscribir las 3 en la misma categoría');
+    expect(rule!.content).not.toContain('no pertenezcan a la misma categoría');
+  });
+
+  it('los premios incluyen los premios especiales de esta edición', () => {
+    const rule = rules.find((r) => r.title === 'Premios');
+    expect(rule!.content).toContain('Rookie del Año');
+    expect(rule!.content).toContain('Libros de Guarda');
+  });
 });

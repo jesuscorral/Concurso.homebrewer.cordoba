@@ -36,7 +36,7 @@ export const routes: Routes = [
         path: 'awards',
         component: AwardsComponent,
         title: `Premios | ${siteName}`,
-        data: { description: `Premios del ${C.editionNumber} Concurso Homebrewer Córdoba ${C.year}: premios aportados por los patrocinadores del certamen.` }
+        data: { description: `Premios del ${C.editionNumber} Concurso Homebrewer Córdoba ${C.year}: premio especial Rookie del Año, regalo para todos los participantes y premios de los patrocinadores.` }
     },
     {
         path: 'registration',

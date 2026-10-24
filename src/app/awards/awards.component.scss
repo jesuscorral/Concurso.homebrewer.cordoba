@@ -51,3 +51,77 @@
         font-weight: 600;
     }
 }
+
+.new-tag {
+    display: inline-block;
+    margin-left: 0.4em;
+    padding: 0.2em 0.8em;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+    color: #221507;
+    font-family: inherit;
+    font-size: 0.5em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.special-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.special-card {
+    border-top: 3px solid var(--brew-amber);
+    text-align: center;
+
+    h3 {
+        margin: 0 0 12px;
+        color: var(--brew-gold);
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    p {
+        margin: 0 0 10px;
+        line-height: 1.7;
+    }
+
+    a {
+        color: var(--brew-amber);
+        font-weight: 600;
+    }
+}
+
+.special-icon {
+    display: block;
+    margin-bottom: 14px;
+    font-size: 2.4rem;
+    color: var(--brew-amber);
+}
+
+.special-sponsor {
+    font-weight: 600;
+}
+
+.special-detail {
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.more-coming {
+    margin: 8px 0 0;
+    text-align: center;
+    font-style: italic;
+    color: var(--brew-gold);
+
+    .fa {
+        margin-right: 6px;
+        color: var(--brew-amber);
+    }
+}

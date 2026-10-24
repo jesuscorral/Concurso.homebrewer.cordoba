@@ -7,10 +7,37 @@
   </header>
 
   <section class="page-body">
-    <div class="container narrow form-wrap">
-      <iframe class="registration-form"
-              src="https://docs.google.com/forms/d/e/1FAIpQLSdNzeNVAXbB2qGxqprfUwxdZ9Qx51Fx5YOZXq8ZkW2Flqeg6A/viewform?embedded=true"
-              title="Formulario de inscripción">Cargando…</iframe>
+    <div class="container narrow form-wrap" aria-live="polite">
+      @switch (status()) {
+        @case ('open') {
+          <iframe class="registration-form"
+                  src="https://docs.google.com/forms/d/e/1FAIpQLSdNzeNVAXbB2qGxqprfUwxdZ9Qx51Fx5YOZXq8ZkW2Flqeg6A/viewform?embedded=true"
+                  title="Formulario de inscripción">Cargando…</iframe>
+        }
+        @case ('not-open') {
+          <div class="glass-card status-card">
+            <i class="fa fa-calendar status-icon" aria-hidden="true"></i>
+            <h2>La inscripción aún no está abierta</h2>
+            <p>
+              El plazo de inscripción comienza el <b>{{ startRegistrationDate }} de {{ year }}</b>.
+              Mientras tanto, puedes consultar las <a routerLink="/rules">bases del concurso</a>.
+            </p>
+          </div>
+        }
+        @case ('closed') {
+          <div class="glass-card status-card">
+            <i class="fa fa-lock status-icon" aria-hidden="true"></i>
+            <h2>El plazo de inscripción ha finalizado</h2>
+            <p>
+              La inscripción cerró el <b>{{ endRegistrationDate }} de {{ year }}</b>. ¡Gracias a todos los
+              participantes! Si tienes cualquier duda, <a routerLink="/contact">contacta con la organización</a>.
+            </p>
+          </div>
+        }
+        @default {
+          <p class="status-checking">Comprobando el plazo de inscripción…</p>
+        }
+      }
     </div>
   </section>
 </div>

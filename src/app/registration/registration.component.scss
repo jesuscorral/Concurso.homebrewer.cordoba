@@ -12,3 +12,39 @@
   background: #ffffff;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
 }
+
+.status-card {
+  max-width: 640px;
+  text-align: center;
+
+  h2 {
+    margin: 0 0 14px;
+    font-family: var(--brew-font-display);
+    font-weight: 400;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    color: var(--brew-gold);
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.8;
+  }
+
+  a {
+    color: var(--brew-amber);
+    font-weight: 600;
+  }
+}
+
+.status-icon {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 2.6rem;
+  color: var(--brew-amber);
+}
+
+.status-checking {
+  padding: 48px 0;
+  opacity: 0.7;
+}

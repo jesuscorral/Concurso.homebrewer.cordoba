@@ -128,7 +128,7 @@ Each year's edition dates live in `global-constants.ts`. Change them there, neve
 
 ## 8. Deployment
 
-You don't deploy by hand. A push to `master` triggers `.github/workflows/CI-CD.yml`, which lints, tests, builds and deploys `dist/` to Firebase Hosting. Pull requests get a preview channel.
+You don't deploy by hand. A merge to `master` triggers `.github/workflows/deploy-production.yml`, which runs the quality gate and deploys `dist/` to Firebase Hosting. Pull requests get a preview channel. See [DEPLOYMENT.md](DEPLOYMENT.md) for releases and rollbacks.
 
 Manual deploy, only if you have access to the `concursohomebrewercordob-6d540` Firebase project:
 

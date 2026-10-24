@@ -49,6 +49,95 @@
   box-shadow: 0 0 26px rgba(240, 168, 50, 0.22), inset 0 0 14px rgba(240, 168, 50, 0.08);
 }
 
+/* Aviso destacado (p. ej. ampliación del plazo) */
+.hero-alerts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 28px;
+}
+
+.hero-alerts:empty {
+  display: none;
+}
+
+.hero-alert {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em 0.9em;
+  max-width: 100%;
+  padding: 0.55em 1.3em 0.55em 0.6em;
+  border-radius: 999px;
+  background: rgba(22, 18, 13, 0.72);
+  border: 2px solid var(--brew-amber);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--brew-cream);
+  font-size: clamp(0.9rem, 2vw, 1.08rem);
+  text-decoration: none;
+  animation: alert-glow 2.4s ease-in-out infinite;
+  transition: transform 0.25s ease;
+}
+
+.hero-alert:hover,
+.hero-alert:focus-visible {
+  color: var(--brew-cream);
+  transform: translateY(-2px);
+}
+
+.hero-alert:focus-visible {
+  outline: 3px solid var(--brew-gold);
+  outline-offset: 3px;
+}
+
+.hero-alert-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  padding: 0.35em 1em;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+  color: #221507;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero-alert--awards {
+  border-color: var(--brew-gold);
+  animation-delay: 1.2s;
+}
+
+.hero-alert-text b {
+  color: var(--brew-gold);
+}
+
+.hero-alert-arrow {
+  color: var(--brew-amber);
+  font-weight: 700;
+}
+
+.pulse-dot {
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #221507;
+  animation: dot-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes alert-glow {
+  0%, 100% { box-shadow: 0 0 14px rgba(240, 168, 50, 0.35); }
+  50% { box-shadow: 0 0 34px rgba(240, 168, 50, 0.75); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
 .badge-star {
   color: var(--brew-amber);
   font-size: 0.85em;
@@ -169,6 +258,14 @@
   margin: 14px auto 0;
   border-radius: 2px;
   background: linear-gradient(90deg, var(--brew-amber), var(--brew-amber-deep));
+}
+
+.news {
+  padding-bottom: 0;
+}
+
+.news + .judges {
+  padding-top: 56px;
 }
 
 /* ============ Los jueces a examen ============ */
@@ -309,7 +406,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
+  .scroll-cue,
+  .hero-alert,
+  .pulse-dot {
     animation: none;
   }
 
