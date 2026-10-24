@@ -1,6 +1,9 @@
 # Stage 2 of the deployment strategy: every merge to master is released to
 # production automatically. It can also be run by hand (Actions → Run workflow)
 # to redeploy the current master. Rollbacks: see docs/DEPLOYMENT.md.
+#
+# Every job calls a shared workflow from jesuscorral/reusable-workflows,
+# pinned to a release commit (Dependabot proposes upgrades).
 # See docs/DEPLOYMENT.md.
 name: Production · Deploy to Firebase Hosting
 
@@ -21,86 +24,35 @@ concurrency:
 jobs:
   quality:
     name: 1 · Quality gate
-    uses: ./.github/workflows/quality-gate.yml
+    uses: jesuscorral/reusable-workflows/.github/workflows/node-quality-gate.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
 
   # SonarCloud only analyses master (PR analysis is disabled, see docs/DEPLOYMENT.md).
   sonarcloud:
     name: 2 · SonarCloud analysis (master)
     needs: quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
+    uses: jesuscorral/reusable-workflows/.github/workflows/sonarcloud-analysis.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-        with:
-          fetch-depth: 0
-
-      - name: Download coverage report
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: coverage
-          path: coverage
-
-      - name: SonarCloud scan
-        if: ${{ env.SONAR_TOKEN != '' }}
-        uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
 
   deploy:
     name: 3 · Deploy to production (live channel)
     needs: quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    environment:
-      name: production
-      url: https://www.concursohomebrewercordoba.es/
-    steps:
-      # firebase.json (headers, rewrites) must match the commit being deployed.
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-        with:
-          persist-credentials: false
-
-      - name: Download build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: dist
-
-      - name: Deploy to Firebase Hosting (live)
-        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
-          projectId: concursohomebrewercordob-6d540
-          channelId: live
-          # Pinned: firebase-tools >=15.34 needs extra GCP permissions (serviceusage)
-          # that the deploy service account does not have. Bump deliberately.
-          firebaseToolsVersion: 15.33.0
+    uses: jesuscorral/reusable-workflows/.github/workflows/firebase-hosting-deploy-live.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    with:
+      firebase-project-id: concursohomebrewercordob-6d540
+      site-url: https://www.concursohomebrewercordoba.es/
+    secrets:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}
 
   smoke:
     name: 4 · Smoke test production
     needs: deploy
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - name: Check key pages respond
-        run: |
-          set -euo pipefail
-          base=https://www.concursohomebrewercordoba.es
-          for path in / /rules /awards /registration; do
-            echo "Checking ${base}${path}"
-            curl --fail --silent --show-error --location \
-              --retry 5 --retry-delay 10 --retry-all-errors \
-              "${base}${path}" | grep -qi "Concurso Homebrewer"
-          done
-
-      - name: Rollback hint
-        if: failure()
-        run: |
-          echo "::error::Production smoke test failed. Roll back now from the Firebase console (Hosting → Release history → Roll back),"
-          echo "::error::then open a PR with 'git revert' of the faulty commit (see docs/DEPLOYMENT.md, Rollback)."
+    uses: jesuscorral/reusable-workflows/.github/workflows/http-smoke-test.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    with:
+      base-url: https://www.concursohomebrewercordoba.es
+      paths: / /rules /awards /registration
+      expected-text: Concurso Homebrewer
+      failure-hint: >-
+        Production smoke test failed. Roll back now from the Firebase console
+        (Hosting → Release history → Roll back), then open a PR with 'git revert'
+        of the faulty commit (see docs/DEPLOYMENT.md, Rollback).

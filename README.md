@@ -85,9 +85,9 @@ flowchart LR
 | Preview deploys | Firebase Hosting channels | reviewable, shareable preview per PR (auto-expires in 7 days) |
 | Production deploy | Firebase Hosting + smoke check | automatic on every merge to `master`; one-click rollback from Firebase release history |
 
-Both pipelines share one reusable gate and **build once**: the artifact that passed the tests is the one deployed.
+Both pipelines share one quality gate and **build once**: the artifact that passed the tests is the one deployed. Every stage is a versioned, parameterised workflow from the shared [**reusable-workflows**](https://github.com/jesuscorral/reusable-workflows) repo, so other projects get the same pipeline by calling it.
 
-Workflow definitions: [`quality-gate.yml`](.github/workflows/quality-gate.yml) · [`pull-request.yml`](.github/workflows/pull-request.yml) · [`deploy-production.yml`](.github/workflows/deploy-production.yml) · [`dependabot.yml`](.github/dependabot.yml)
+Workflow definitions: [`pull-request.yml`](.github/workflows/pull-request.yml) · [`deploy-production.yml`](.github/workflows/deploy-production.yml) · [`dependabot.yml`](.github/dependabot.yml)
 
 ---
 

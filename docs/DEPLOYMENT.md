@@ -41,11 +41,29 @@ flowchart LR
 
 ## 2. Workflows
 
-All workflows live in [`.github/workflows/`](../.github/workflows). Job names are numbered by stage, so the order is clear in the GitHub Actions UI.
+This repo has two pipelines in [`.github/workflows/`](../.github/workflows). Job names are numbered by stage, so the order is clear in the GitHub Actions UI.
 
-### `quality-gate.yml` — Quality gate (reusable)
+### Shared workflows
 
-Not triggered directly: both pipelines below call it as their first stage, so PRs and production apply exactly the same checks.
+The pipelines contain no build or deploy logic of their own: each job calls a reusable workflow from **[jesuscorral/reusable-workflows](https://github.com/jesuscorral/reusable-workflows)** and only passes this project's values (Firebase project, site URL, secrets).
+
+| Job in this repo | Shared workflow | Values passed |
+|---|---|---|
+| Quality gate | `node-quality-gate.yml` | defaults (`.nvmrc`, `npm` scripts, `dist`, `coverage`) |
+| E2E tests | `node-playwright-e2e.yml` | defaults (all browsers, `npm run e2e`) |
+| Lighthouse audit | `web-lighthouse-audit.yml` | defaults (thresholds come from `lighthouserc.json`) |
+| Deploy preview | `firebase-hosting-deploy-preview.yml` | project ID, `expires: 7d`, `FIREBASE_SERVICE_ACCOUNT` |
+| SonarCloud analysis | `sonarcloud-analysis.yml` | `SONAR_TOKEN` (settings in `sonar-project.properties`) |
+| Deploy to production | `firebase-hosting-deploy-live.yml` | project ID, site URL, `FIREBASE_SERVICE_ACCOUNT` |
+| Smoke test | `http-smoke-test.yml` | base URL, paths, expected text, rollback hint |
+
+Every call is pinned to a commit SHA, with its version in a comment (`@<sha> # v1.1.0`). Dependabot opens a PR when the shared repo publishes a new version, and that PR runs this pipeline like any other change, so an upgrade is tested before it reaches production. The catalog, every input and the versioning rules are in the [shared repo README](https://github.com/jesuscorral/reusable-workflows#readme).
+
+To change how a stage works: change it in `reusable-workflows`, release a new version there, then merge the Dependabot (or manual) PR here. Project-specific settings stay in this repo: `angular.json` (coverage thresholds, budgets), `playwright.config.ts`, `lighthouserc.json`, `sonar-project.properties`, `firebase.json`.
+
+### Quality gate (`node-quality-gate.yml`)
+
+The first stage of both pipelines, so PRs and production apply exactly the same checks.
 
 1. `npm ci`
 2. `npm audit --omit=dev --audit-level=high` (fails on high or critical vulnerabilities in runtime dependencies)
@@ -62,7 +80,7 @@ It always builds the commit that triggered the run. It deliberately has no "buil
 
 | Job | What it does | Blocks the preview? |
 |---|---|---|
-| `1 · Quality gate` | The reusable gate above | yes |
+| `1 · Quality gate` | The quality gate above | yes |
 | `2 · E2E tests (Chromium, Firefox, WebKit)` | Playwright smoke tests against the built `dist/` | yes |
 | `2 · Lighthouse audit` | Accessibility and SEO must score ≥ 0.9 (error); performance and best practices are warnings | no |
 | `3 · Deploy preview (Firebase channel, 7 days)` | Uploads the build to a temporary channel and comments its URL on the PR | — |
@@ -79,7 +97,7 @@ SonarCloud does **not** run on pull requests: only `master` is analysed, after e
 
 | Job | What it does |
 |---|---|
-| `1 · Quality gate` | The reusable gate, on the commit being released |
+| `1 · Quality gate` | The quality gate, on the commit being released |
 | `2 · SonarCloud analysis (master)` | The only SonarCloud analysis: quality and coverage of `master` (does not block the deploy) |
 | `3 · Deploy to production (live channel)` | Uploads the gate's `dist` artifact to the Firebase `live` channel. Recorded as a deployment of the `production` environment |
 | `4 · Smoke test production` | Requests `/`, `/rules`, `/awards` and `/registration` on the live domain, with retries |
@@ -104,7 +122,7 @@ Repository secrets used:
 | `FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540` | preview and production deploys |
 | `SONAR_TOKEN` | SonarCloud analysis of `master` (skipped if empty) |
 
-The Firebase CLI version used by both deploys is pinned (`firebaseToolsVersion` in the workflows) so a new CLI release cannot break deploys without notice. Since 15.34 the CLI also queries the Service Usage API; to upgrade, first grant the deploy service account the *Service Usage Consumer* role in Google Cloud IAM, then bump the version in a PR and check that the preview deploy works.
+The Firebase CLI version used by both deploys is pinned (`firebase-tools-version` input of the shared Firebase workflows, default `15.33.0`) so a new CLI release cannot break deploys without notice. Since 15.34 the CLI also queries the Service Usage API; to upgrade, first grant the deploy service account the *Service Usage Consumer* role in Google Cloud IAM, then pass `firebase-tools-version` in this repo's workflows (or bump the default in the shared repo) in a PR and check that the preview deploy works.
 
 `FIREBASE_TOKEN_LIVE` and `CHANNEL_ID` are leftovers from the old token-based deploy and are no longer referenced.
 
@@ -153,6 +171,6 @@ This skips every check and is not recorded in GitHub's deployment history. Prefe
 
 ## 7. Dependency updates
 
-Dependabot ([`.github/dependabot.yml`](../.github/dependabot.yml)) opens PRs every Monday: Angular packages grouped, dev dependencies grouped (minor and patch), and GitHub Actions. They go through the same PR pipeline as any other change.
+Dependabot ([`.github/dependabot.yml`](../.github/dependabot.yml)) opens PRs every Monday: Angular packages grouped, dev dependencies grouped (minor and patch), and GitHub Actions, including the pinned shared workflows from `reusable-workflows`. They go through the same PR pipeline as any other change.
 
 If `npm audit` blocks the gate on a transitive dependency without an upstream fix, pin a patched version under `overrides` in `package.json` (currently `vite`, which `@angular/build` pins to a vulnerable 8.3.0).
