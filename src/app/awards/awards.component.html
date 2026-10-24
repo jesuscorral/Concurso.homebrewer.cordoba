@@ -8,6 +8,33 @@
 
   <section class="page-body">
     <div class="container narrow">
+      @if (specialAwards.length > 0) {
+        <!-- Premios especiales y regalos -->
+        <h2 class="section-title">Premios especiales <span class="new-tag">Novedad</span></h2>
+        <div class="special-grid">
+          @for (award of specialAwards; track award.title) {
+            <article class="glass-card special-card">
+              <i class="fa fa-{{award.icon}} special-icon" aria-hidden="true"></i>
+              <h3>{{award.title}}</h3>
+              <p>{{award.description}}</p>
+              @if (award.sponsor) {
+                <p class="special-sponsor">
+                  Cortesía de
+                  @if (award.sponsorUrl) {
+                    <a [href]="award.sponsorUrl" target="_blank" rel="noopener">{{award.sponsor}}</a>
+                  } @else {
+                    {{award.sponsor}}
+                  }
+                </p>
+              }
+              @if (award.detail) {
+                <p class="special-detail">{{award.detail}}</p>
+              }
+            </article>
+          }
+        </div>
+      }
+
       <!-- Premios de los patrocinadores -->
       <h2 class="section-title">Premios de los patrocinadores</h2>
 
@@ -16,7 +43,7 @@
           <i class="fa fa-hourglass-half pending-icon" aria-hidden="true"></i>
           <p>
             Los premios de los patrocinadores del {{edition}} Concurso Homebrewer Córdoba
-            <b>aún no están confirmados</b>.
+            <b>aún no están todos confirmados</b>. ¡Pronto se irán conociendo más premios!
           </p>
           <p>
             Iremos actualizando esta página conforme nuestros
@@ -39,6 +66,10 @@
             }
           </div>
         }
+        <p class="more-coming">
+          <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+          Aún no están todos los premios confirmados. ¡Pronto se irán conociendo más premios!
+        </p>
       }
     </div>
   </section>

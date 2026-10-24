@@ -28,3 +28,37 @@ export interface AwardCategory {
 }
 
 export const SPONSOR_AWARDS: AwardCategory[] = [];
+
+/**
+ * Premios especiales y regalos que no dependen del puesto en una categoría
+ * (p. ej. "Rookie del Año"). Se muestran en la página de premios y en la portada.
+ * `detail` es opcional: úsalo para indicar novedades pendientes ("Pronto más detalles").
+ */
+export interface SpecialAward {
+  icon: string; // Clase de Font Awesome 4.7 sin el prefijo "fa-" (p. ej. 'star')
+  title: string;
+  description: string;
+  sponsor?: string;
+  sponsorUrl?: string;
+  detail?: string;
+}
+
+export const SPECIAL_AWARDS: SpecialAward[] = [
+  {
+    icon: 'star',
+    title: 'Rookie del Año',
+    description:
+      'Nuevo premio especial para animar a quienes están empezando: lo recibirá la cerveza mejor ' +
+      'clasificada entre los cerveceros que participan por primera vez en nuestro concurso.',
+  },
+  {
+    icon: 'gift',
+    title: 'Regalo para todos los participantes',
+    description:
+      'Todos los participantes recibirán una invitación a un webinar exclusivo sobre elaboración ' +
+      'de cervezas históricas.',
+    sponsor: 'Libros de Guarda',
+    sponsorUrl: 'https://es.librosdeguarda.com/',
+    detail: 'Pronto facilitaremos todos los detalles.',
+  },
+];

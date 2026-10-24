@@ -1,0 +1,219 @@
+/* La sección hereda fondo y padding de .home-section (lo pone la portada en el host). */
+:host {
+  display: block;
+}
+
+.container {
+  max-width: 880px;
+}
+
+.section-title {
+  margin: 0 0 34px;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.5vw, 2.9rem);
+  letter-spacing: 0.06em;
+  color: var(--brew-cream);
+  text-align: center;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 14px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brew-amber), var(--brew-amber-deep));
+}
+
+.news-flag {
+  display: inline-block;
+  align-self: flex-start;
+  margin: 0 0 14px;
+  padding: 0.4em 1.1em;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+  color: #221507;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+strong {
+  color: var(--brew-cream);
+}
+
+a:not([class]) {
+  color: var(--brew-amber);
+  font-weight: 600;
+}
+
+/* ---------- Tarjeta destacada de premios ---------- */
+.news-awards {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 36px 40px 40px;
+  border-radius: 22px;
+  border: 2px solid var(--brew-gold);
+  background:
+    radial-gradient(ellipse at top right, rgba(240, 168, 50, 0.22) 0%, transparent 60%),
+    rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 40px rgba(240, 168, 50, 0.18), 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.news-awards-title {
+  margin: 0 0 22px;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.6vw, 3rem);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--brew-gold);
+}
+
+.news-awards-list {
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.news-awards-list li {
+  display: flex;
+  gap: 18px;
+  padding: 16px 0;
+  border-top: 1px solid var(--brew-glass-border);
+}
+
+.news-awards-list .fa {
+  flex: 0 0 2.4rem;
+  font-size: 2rem;
+  text-align: center;
+  color: var(--brew-amber);
+}
+
+.news-awards-list strong {
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+
+.news-awards-list p {
+  margin: 6px 0 0;
+  line-height: 1.7;
+}
+
+.news-sponsor {
+  color: var(--brew-amber);
+  font-weight: 600;
+}
+
+.news-teaser {
+  margin: 0 0 24px;
+  font-style: italic;
+  color: var(--brew-gold);
+}
+
+.news-cta {
+  display: inline-block;
+  padding: 14px 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brew-amber) 0%, var(--brew-amber-deep) 100%);
+  color: #221507;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(201, 123, 30, 0.4);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.news-cta:hover,
+.news-cta:focus-visible {
+  color: #221507;
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+}
+
+/* ---------- Tarjetas secundarias ---------- */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 24px;
+}
+
+.news-card {
+  display: flex;
+  flex-direction: column;
+  padding: 30px 32px 32px;
+  border-radius: 22px;
+  border: 1px solid var(--brew-glass-border);
+  border-top: 3px solid var(--brew-amber);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.3);
+}
+
+.news-card--urgent {
+  border: 2px solid var(--brew-amber);
+  background: linear-gradient(160deg, rgba(240, 168, 50, 0.16) 0%, rgba(255, 255, 255, 0.03) 70%);
+}
+
+.news-title {
+  margin: 0 0 14px;
+  font-family: var(--brew-font-display);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 3.6vw, 2.2rem);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--brew-gold);
+}
+
+.news-text {
+  flex: 1;
+  margin: 0 0 22px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+}
+
+.news-text s {
+  opacity: 0.6;
+}
+
+.news-link {
+  align-self: flex-start;
+  padding: 10px 26px;
+  border-radius: 999px;
+  border: 2px solid var(--brew-amber);
+  color: var(--brew-amber);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.news-link:hover,
+.news-link:focus-visible {
+  background: var(--brew-amber);
+  color: #221507;
+}
+
+.news-cta:focus-visible,
+.news-link:focus-visible {
+  outline: 3px solid var(--brew-gold);
+  outline-offset: 3px;
+}
+
+@media (max-width: 575px) {
+  .news-awards,
+  .news-card {
+    padding: 28px 22px 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-cta,
+  .news-link {
+    transition: none;
+  }
+}

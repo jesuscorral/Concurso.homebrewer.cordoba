@@ -2,6 +2,30 @@
     <header class="hero" style="background-image: url('assets/img/homepage/bg.webp')">
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="hero-content container">
+            <div class="hero-alerts">
+                @if (registrationExtended && !registrationClosed()) {
+                    <a routerLink="/registration" class="hero-alert">
+                        <span class="hero-alert-tag">
+                            <span class="pulse-dot" aria-hidden="true"></span>
+                            ¡Plazo ampliado!
+                        </span>
+                        <span class="hero-alert-text">
+                            Inscripciones abiertas hasta el <b>{{ endRegistrationDate }}</b>
+                        </span>
+                        <span class="hero-alert-arrow" aria-hidden="true">→</span>
+                    </a>
+                }
+                @if (specialAwardTitles.length > 0) {
+                    <a routerLink="/awards" class="hero-alert hero-alert--awards">
+                        <span class="hero-alert-tag">
+                            <i class="fa fa-trophy" aria-hidden="true"></i>
+                            Nuevos premios
+                        </span>
+                        <span class="hero-alert-text">{{ specialAwardTitles.join(' · ') }}</span>
+                        <span class="hero-alert-arrow" aria-hidden="true">→</span>
+                    </a>
+                }
+            </div>
             <p class="edition-badge">
                 <span class="badge-star" aria-hidden="true">✦</span>
                 10ª edición
@@ -13,10 +37,14 @@
                 <a routerLink="/registration" class="btn-cta">Inscríbete</a>
             </div>
         </div>
-        <a class="scroll-cue" href="#novedad" aria-label="Bajar al contenido">
+        <a class="scroll-cue" [href]="hasNews ? '#novedades' : '#novedad'" aria-label="Bajar al contenido">
             <span class="chevron" aria-hidden="true"></span>
         </a>
     </header>
+
+    @if (hasNews) {
+        <app-home-news class="home-section news" [registrationClosed]="registrationClosed()" />
+    }
 
     <section class="home-section judges" id="novedad">
         <div class="container">

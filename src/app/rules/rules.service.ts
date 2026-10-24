@@ -61,14 +61,17 @@ export class RulesService {
                         Comprende los estilos de cerveza recogidos en el BJCP en las categorías 27 a la 34
                         (ver anexo 2).<br/>
       
-                        Cada concursante podrá presentar hasta 3 estilos (entradas) al concurso, siempre que las 3 entradas no pertenezcan a la misma categoría. <br/>
-      
                         La cata de las cervezas se realizará siempre en función del estilo declarado
                         (Tipo de cata "Fit to style"), pudiendo entregarse alguna mención honorífica a
                         alguna cerveza que pese a no encontrarse dentro del estilo declarado, resalte por
                         sus características de entre las demás.
                     </li>
                   </ol>
+              </li>
+              <br/>
+              <li>
+                  <b>Novedad en esta edición:</b> cada participante podrá inscribir hasta un máximo de 3 cervezas
+                  (entradas) en total, pudiendo inscribir las 3 en la misma categoría.
               </li>
               <br/>
               <li>
@@ -188,7 +191,13 @@ export class RulesService {
         title:"Plazos",
         content:`<ul>
           <li>
-              Plazo de inscripción del ${GlobalConstants.startRegistrationDate} al ${GlobalConstants.endRegistrationDate}.
+              Plazo de inscripción del ${GlobalConstants.startRegistrationDate} al ${GlobalConstants.endRegistrationDate} de ${GlobalConstants.year}${GlobalConstants.previousEndRegistrationDate ? ` (ampliado; inicialmente finalizaba el ${GlobalConstants.previousEndRegistrationDate})` : ''}.
+          </li>
+          <br/>
+          <li>
+              Durante el plazo de inscripción, cualquier nuevo cervecero podrá registrarse. Quienes ya tengan cervezas
+              inscritas podrán añadir alguna más (respetando el máximo de 3 por participante) o escribir a
+              <a href="mailto:homebrewercordoba@gmail.com">homebrewercordoba@gmail.com</a> si desean modificar sus registros.
           </li>
           <br/>
           <li>
@@ -260,7 +269,19 @@ export class RulesService {
         </li>
         <br/>
         <li>
-          El resto de premios se irán anunciando en redes sociales.    
+          <b>Premio especial "Rookie del Año":</b> se otorgará a la cerveza mejor clasificada entre los cerveceros
+          que participan por primera vez en el concurso.
+        </li>
+        <br/>
+        <li>
+          <b>Regalo para todos los participantes:</b> gracias a nuestro patrocinador
+          <a href="https://es.librosdeguarda.com/" target="_blank" rel="noopener">Libros de Guarda</a>, todos los
+          participantes recibirán una invitación a un webinar exclusivo sobre elaboración de cervezas históricas.
+          Los detalles se comunicarán próximamente.
+        </li>
+        <br/>
+        <li>
+          El resto de premios se irán anunciando en redes sociales y en el <a href="/awards">apartado de premios</a>.
         </li>
       </ul>`
       }),
