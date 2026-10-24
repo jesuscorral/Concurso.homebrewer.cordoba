@@ -29,6 +29,12 @@ export interface AwardCategory {
 
 export const SPONSOR_AWARDS: AwardCategory[] = [];
 
+/** Número de premios de patrocinadores y patrocinadores distintos que los aportan. */
+export function summarizeSponsorAwards(categories: AwardCategory[]): { prizes: number; sponsors: string[] } {
+  const prizes = categories.flatMap(category => category.places.flatMap(place => place.prizes));
+  return { prizes: prizes.length, sponsors: [...new Set(prizes.map(prize => prize.sponsor))] };
+}
+
 /**
  * Premios especiales y regalos que no dependen del puesto en una categoría
  * (p. ej. "Rookie del Año"). Se muestran en la página de premios y en la portada.

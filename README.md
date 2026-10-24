@@ -48,6 +48,7 @@ Public marketing & registration site for the contest: rules, sponsors, organizat
 - **SEO-first**: per-route `<title>`/meta descriptions and JSON-LD structured data managed by a dedicated `SeoService`.
 - **Performance budget enforced in CI**: production bundle capped at 1&nbsp;MB (real-world size ≈925&nbsp;KB), audited automatically by Lighthouse CI on every pull request.
 - **Privacy by design**: GDPR cookie-consent banner — Google Tag Manager/Analytics only loads after explicit visitor consent.
+- **Unit-test coverage gate**: Vitest suite at ~99&nbsp;% line coverage; the build fails if any metric drops below 80&nbsp;%.
 - **Cross-browser E2E coverage** with Playwright (Chromium, Firefox, WebKit) on every pull request.
 - **Supply-chain hardening**: `npm audit` gate on every build, Dependabot grouped updates (npm + GitHub Actions), and third-party Actions pinned to commit SHA.
 - **Zero-downtime, serialized deploys**: production deploys are concurrency-locked so two releases never race each other.
@@ -63,13 +64,12 @@ flowchart LR
         direction LR
         Q["1 · Quality gate<br/>audit · lint · tests · build"] --> E["2 · E2E<br/>Chromium / Firefox / WebKit"]
         Q --> L["2 · Lighthouse CI"]
-        Q --> SC["2 · SonarCloud"]
         E --> P["3 · Firebase preview<br/>channel (7d)"]
     end
     PR -->|review + merge to master| CD
     subgraph CD["Production · Deploy to Firebase Hosting"]
         direction LR
-        Q2["1 · Quality gate"] --> SC2["2 · SonarCloud"]
+        Q2["1 · Quality gate"] --> SC2["2 · SonarCloud<br/>master analysis"]
         Q2 --> D["3 · Deploy<br/>live channel"] --> S["4 · Smoke test<br/>production URL"]
     end
 ```
@@ -78,8 +78,8 @@ flowchart LR
 |---|---|---|
 | Dependency audit | `npm audit --omit=dev` | blocks high-severity vulnerabilities in production deps |
 | Lint | ESLint (TS + Angular templates) | static code quality |
-| Unit tests | Vitest | component/service logic |
-| Static analysis | SonarCloud | code quality & coverage gate, PR decoration |
+| Unit tests | Vitest | component/service logic; build fails below 80&nbsp;% coverage |
+| Static analysis | SonarCloud | code quality & coverage of `master`, analysed on every merge |
 | E2E tests | Playwright | real-browser regression across 3 engines |
 | Performance | Lighthouse CI | accessibility/SEO gate and performance budget |
 | Preview deploys | Firebase Hosting channels | reviewable, shareable preview per PR (auto-expires in 7 days) |

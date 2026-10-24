@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GlobalConstants } from '../../shared/global-constants';
-import { SPECIAL_AWARDS, SPONSOR_AWARDS } from '../../awards/awards.data';
+import { SPECIAL_AWARDS, SPONSOR_AWARDS, summarizeSponsorAwards } from '../../awards/awards.data';
 
 /** Sección "Últimas novedades" de la portada. Cada tarjeta se activa sola según los datos. */
 @Component({
@@ -22,13 +22,9 @@ export class NewsComponent {
 
   registrationExtended = !!GlobalConstants.previousEndRegistrationDate;
   specialAwards = SPECIAL_AWARDS;
-  confirmedPrizes = SPONSOR_AWARDS.reduce(
-    (total, category) => total + category.places.reduce((sum, place) => sum + place.prizes.length, 0),
-    0,
-  );
-  prizeSponsors = [...new Set(
-    SPONSOR_AWARDS.flatMap(category => category.places.flatMap(place => place.prizes.map(prize => prize.sponsor))),
-  )];
+  private readonly sponsorSummary = summarizeSponsorAwards(SPONSOR_AWARDS);
+  confirmedPrizes = this.sponsorSummary.prizes;
+  prizeSponsors = this.sponsorSummary.sponsors;
   hasAwardsNews = this.specialAwards.length > 0 || this.confirmedPrizes > 0;
 }
 

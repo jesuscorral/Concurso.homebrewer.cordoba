@@ -26,13 +26,12 @@ flowchart LR
         direction LR
         Q1["1 · Quality gate<br/>audit · lint · tests · build"] --> E["2 · E2E<br/>3 browsers"]
         Q1 --> L["2 · Lighthouse"]
-        Q1 --> S1["2 · SonarCloud"]
         E --> P["3 · Preview deploy<br/>Firebase channel (7 days)"]
     end
     PR -->|review + merge to master| PROD
     subgraph PROD["Production · Deploy to Firebase Hosting"]
         direction LR
-        Q2["1 · Quality gate"] --> S2["2 · SonarCloud"]
+        Q2["1 · Quality gate"] --> S2["2 · SonarCloud<br/>(master only)"]
         Q2 --> D["3 · Deploy<br/>live channel"] --> SM["4 · Smoke test"]
     end
     SM -.->|fails| RB["Rollback<br/>(see section 5)"]
@@ -51,7 +50,7 @@ Not triggered directly: both pipelines below call it as their first stage, so PR
 1. `npm ci`
 2. `npm audit --omit=dev --audit-level=high` (fails on high or critical vulnerabilities in runtime dependencies)
 3. `npm run lint`
-4. Unit tests with coverage (Vitest)
+4. Unit tests with coverage (Vitest). The run **fails if coverage drops below 80 %** for statements, branches, functions or lines (`coverageThresholds` in `angular.json`). Bootstrap and config files without logic are excluded (`coverageExclude`, mirrored in `sonar.coverage.exclusions`).
 5. Production build (`npm run build`, enforces the bundle budgets in `angular.json`)
 6. Uploads the `dist` and `coverage` artifacts for the next stages
 
@@ -66,10 +65,11 @@ It always builds the commit that triggered the run. It deliberately has no "buil
 | `1 · Quality gate` | The reusable gate above | yes |
 | `2 · E2E tests (Chromium, Firefox, WebKit)` | Playwright smoke tests against the built `dist/` | yes |
 | `2 · Lighthouse audit` | Accessibility and SEO must score ≥ 0.9 (error); performance and best practices are warnings | no |
-| `2 · SonarCloud analysis` | Code quality and coverage, decorates the PR | no |
 | `3 · Deploy preview (Firebase channel, 7 days)` | Uploads the build to a temporary channel and comments its URL on the PR | — |
 
-The preview is a real copy of the site at a temporary URL (shown on the PR and under the `preview` environment), so reviewers can check the change before it goes live. It expires after 7 days. PRs from forks skip SonarCloud and the preview because repository secrets are not available to them.
+The preview is a real copy of the site at a temporary URL (shown on the PR and under the `preview` environment), so reviewers can check the change before it goes live. It expires after 7 days. PRs from forks skip the preview because repository secrets are not available to them.
+
+SonarCloud does **not** run on pull requests: only `master` is analysed, after each merge. Code quality on PRs is covered by lint, the unit tests and the coverage threshold below.
 
 ### `deploy-production.yml` — Production · Deploy to Firebase Hosting
 
@@ -80,7 +80,7 @@ The preview is a real copy of the site at a temporary URL (shown on the PR and u
 | Job | What it does |
 |---|---|
 | `1 · Quality gate` | The reusable gate, on the commit being released |
-| `2 · SonarCloud analysis (master)` | Updates the `master` analysis (push only, does not block the deploy) |
+| `2 · SonarCloud analysis (master)` | The only SonarCloud analysis: quality and coverage of `master` (does not block the deploy) |
 | `3 · Deploy to production (live channel)` | Uploads the gate's `dist` artifact to the Firebase `live` channel. Recorded as a deployment of the `production` environment |
 | `4 · Smoke test production` | Requests `/`, `/rules`, `/awards` and `/registration` on the live domain, with retries |
 
@@ -102,7 +102,7 @@ Repository secrets used:
 | Secret | Used by |
 |---|---|
 | `FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540` | preview and production deploys |
-| `SONAR_TOKEN` | SonarCloud jobs (skipped if empty) |
+| `SONAR_TOKEN` | SonarCloud analysis of `master` (skipped if empty) |
 
 The Firebase CLI version used by both deploys is pinned (`firebaseToolsVersion` in the workflows) so a new CLI release cannot break deploys without notice. Since 15.34 the CLI also queries the Service Usage API; to upgrade, first grant the deploy service account the *Service Usage Consumer* role in Google Cloud IAM, then bump the version in a PR and check that the preview deploy works.
 

@@ -23,6 +23,7 @@ jobs:
     name: 1 · Quality gate
     uses: ./.github/workflows/quality-gate.yml
 
+  # SonarCloud only analyses master (PR analysis is disabled, see docs/DEPLOYMENT.md).
   sonarcloud:
     name: 2 · SonarCloud analysis (master)
     needs: quality
