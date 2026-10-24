@@ -157,3 +157,6 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
           projectId: concursohomebrewercordob-6d540
           expires: 7d
+          # Pinned: firebase-tools >=15.34 needs extra GCP permissions (serviceusage)
+          # that the deploy service account does not have. Bump deliberately.
+          firebaseToolsVersion: 15.33.0

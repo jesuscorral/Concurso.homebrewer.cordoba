@@ -88,6 +88,9 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
           projectId: concursohomebrewercordob-6d540
           channelId: live
+          # Pinned: firebase-tools >=15.34 needs extra GCP permissions (serviceusage)
+          # that the deploy service account does not have. Bump deliberately.
+          firebaseToolsVersion: 15.33.0
 
   smoke:
     name: 4 · Smoke test production

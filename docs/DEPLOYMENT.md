@@ -104,6 +104,8 @@ Repository secrets used:
 | `FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540` | preview and production deploys |
 | `SONAR_TOKEN` | SonarCloud jobs (skipped if empty) |
 
+The Firebase CLI version used by both deploys is pinned (`firebaseToolsVersion` in the workflows) so a new CLI release cannot break deploys without notice. Since 15.34 the CLI also queries the Service Usage API; to upgrade, first grant the deploy service account the *Service Usage Consumer* role in Google Cloud IAM, then bump the version in a PR and check that the preview deploy works.
+
 `FIREBASE_TOKEN_LIVE` and `CHANNEL_ID` are leftovers from the old token-based deploy and are no longer referenced.
 
 **Optional hardening** (repo *Settings → Environments → production*):
