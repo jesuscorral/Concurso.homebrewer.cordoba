@@ -1,6 +1,6 @@
 # Stage 2 of the deployment strategy: every merge to master is released to
 # production automatically. It can also be run by hand (Actions → Run workflow)
-# to redeploy any commit or tag, which is how a rollback is done.
+# to redeploy the current master. Rollbacks: see docs/DEPLOYMENT.md.
 # See docs/DEPLOYMENT.md.
 name: Production · Deploy to Firebase Hosting
 
@@ -9,12 +9,6 @@ on:
     branches:
       - master
   workflow_dispatch:
-    inputs:
-      ref:
-        description: Commit SHA or tag already on master to deploy (leave empty for the latest master). Use an older commit to roll back.
-        type: string
-        required: false
-        default: ''
 
 permissions:
   contents: read
@@ -28,14 +22,10 @@ jobs:
   quality:
     name: 1 · Quality gate
     uses: ./.github/workflows/quality-gate.yml
-    with:
-      ref: ${{ inputs.ref }}
 
   sonarcloud:
     name: 2 · SonarCloud analysis (master)
     needs: quality
-    # Only for regular merges: analysing a rollback commit would rewrite master's history in SonarCloud.
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -72,7 +62,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
         with:
-          ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
 
       - name: Download build
@@ -112,5 +101,5 @@ jobs:
       - name: Rollback hint
         if: failure()
         run: |
-          echo "::error::Production smoke test failed. Roll back from the Firebase console (Hosting → Release history → Roll back)"
-          echo "::error::or re-run this workflow with 'Run workflow' and the last good commit SHA as 'ref'."
+          echo "::error::Production smoke test failed. Roll back now from the Firebase console (Hosting → Release history → Roll back),"
+          echo "::error::then open a PR with 'git revert' of the faulty commit (see docs/DEPLOYMENT.md, Rollback)."

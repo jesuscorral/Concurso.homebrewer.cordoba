@@ -17,7 +17,7 @@ The site is a static Angular build (every route prerendered to HTML) hosted on *
 | **Build once** | Each pipeline builds `dist/` a single time; tests, previews and the deploy all use that same artifact. |
 | **Serialized releases** | Only one production deploy runs at a time (`concurrency: production-deploy`). |
 | **Verification** | After every production deploy, a smoke test requests the key pages of the live site. |
-| **Rollback** | Firebase console (instant) or re-run the production workflow on the last good commit. |
+| **Rollback** | Firebase console (instant), then a `git revert` PR so `master` matches production again. |
 
 ```mermaid
 flowchart LR
@@ -55,7 +55,7 @@ Not triggered directly: both pipelines below call it as their first stage, so PR
 5. Production build (`npm run build`, enforces the bundle budgets in `angular.json`)
 6. Uploads the `dist` and `coverage` artifacts for the next stages
 
-It accepts an optional `ref` input so the production pipeline can build an older commit for a rollback. For safety, such a run only accepts commits that are already part of `master`, and it skips the shared npm cache so an old commit can never poison it.
+It always builds the commit that triggered the run. It deliberately has no "build this other commit" input: running arbitrary old code with the shared npm cache is a cache-poisoning risk (flagged by CodeQL), and rollbacks don't need it (see section 5).
 
 ### `pull-request.yml` — PR · Validate & preview
 
@@ -75,7 +75,7 @@ The preview is a real copy of the site at a temporary URL (shown on the PR and u
 
 **Triggers:**
 - every push to `master` (that is, every merged PR);
-- manually from *Actions → Production · Deploy to Firebase Hosting → Run workflow*, with an optional `ref` (commit SHA or tag already on `master`) to redeploy or roll back.
+- manually from *Actions → Production · Deploy to Firebase Hosting → Run workflow*, to redeploy the current `master` (for example after a failed run caused by an outage).
 
 | Job | What it does |
 |---|---|
@@ -127,15 +127,13 @@ Annual edition changes (dates, prizes, sponsors) follow the same flow. Dates liv
 
 ## 5. Rollback
 
-Pick whichever is faster:
+Two steps: stop the damage first, then fix `master`.
 
-**A. Firebase console (instant, no build).** Firebase console → Hosting → *Release history* → choose the last good release → *Roll back*. Use this when production is broken right now.
+**1. Restore the previous version (instant, no build).** Firebase console → Hosting → *Release history* → choose the last good release → *Roll back*. The live site is back in seconds. Firebase keeps every release, so this works for any past deploy.
 
-**B. Redeploy a known good commit.** *Actions → Production · Deploy to Firebase Hosting → Run workflow*, with `ref` set to the last good commit SHA (from the *Deployments* list or `git log`). This runs the full gate on that commit and redeploys it.
+**2. Bring `master` back in line.** Open a PR with `git revert <bad commit>` (or a fix) and merge it as usual. The pipeline runs all the checks and deploys it, so production and `master` match again.
 
-After either option, fix the problem on a branch and merge it normally. The next merge to `master` deploys again on top of the rollback.
-
-**C. Revert.** `git revert <bad commit>` in a PR. This is the clean long-term fix, because it keeps `master` and production in sync.
+Until step 2 is merged, production runs an older release than `master`. Don't merge other PRs in the meantime: the next merge would deploy `master`, bad commit included.
 
 ---
 
@@ -149,7 +147,7 @@ npm run build
 firebase deploy --only hosting --project concursohomebrewercordob-6d540
 ```
 
-This skips every check and is not recorded in GitHub's deployment history. Prefer option 5B.
+This skips every check and is not recorded in GitHub's deployment history. Prefer the rollback in section 5.
 
 ---
 

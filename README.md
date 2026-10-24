@@ -83,7 +83,7 @@ flowchart LR
 | E2E tests | Playwright | real-browser regression across 3 engines |
 | Performance | Lighthouse CI | accessibility/SEO gate and performance budget |
 | Preview deploys | Firebase Hosting channels | reviewable, shareable preview per PR (auto-expires in 7 days) |
-| Production deploy | Firebase Hosting + smoke check | automatic on every merge to `master`; manual re-run on any commit for rollbacks |
+| Production deploy | Firebase Hosting + smoke check | automatic on every merge to `master`; one-click rollback from Firebase release history |
 
 Both pipelines share one reusable gate and **build once**: the artifact that passed the tests is the one deployed.
 
