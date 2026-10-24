@@ -1,5 +1,8 @@
 # Stage 1 of the deployment strategy: validate every pull request and publish
 # a temporary preview of the site. Nothing here touches production.
+#
+# Every job calls a shared workflow from jesuscorral/reusable-workflows,
+# pinned to a release commit (Dependabot proposes upgrades).
 # See docs/DEPLOYMENT.md.
 name: PR · Validate & preview
 
@@ -19,111 +22,30 @@ concurrency:
 jobs:
   quality:
     name: 1 · Quality gate
-    uses: ./.github/workflows/quality-gate.yml
+    uses: jesuscorral/reusable-workflows/.github/workflows/node-quality-gate.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
 
   e2e:
     name: 2 · E2E tests (Chromium, Firefox, WebKit)
     needs: quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Download build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: dist
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
-      - name: Run e2e tests
-        run: npm run e2e
-
-      - name: Upload Playwright report
-        if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: playwright-report
-          path: playwright-report
-          retention-days: 7
+    uses: jesuscorral/reusable-workflows/.github/workflows/node-playwright-e2e.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
 
   lighthouse:
     name: 2 · Lighthouse audit
     needs: quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: .nvmrc
-
-      - name: Download build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: dist
-
-      - name: Run Lighthouse CI
-        run: npx --yes @lhci/cli@0.15.1 autorun
-
-      - name: Upload Lighthouse reports
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: lighthouse-reports
-          path: .lighthouseci/reports
-          retention-days: 7
+    uses: jesuscorral/reusable-workflows/.github/workflows/web-lighthouse-audit.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
 
   preview:
     name: 3 · Deploy preview (Firebase channel, 7 days)
     needs: [quality, e2e]
     # Secrets are not available to PRs from forks.
     if: github.event.pull_request.head.repo.fork == false
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    environment:
-      name: preview
-      url: ${{ steps.deploy.outputs.details_url }}
     permissions:
       contents: read
       checks: write
       pull-requests: write
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
-
-      - name: Download build
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: dist
-          path: dist
-
-      # Without channelId the action creates/updates a channel per PR
-      # and comments its URL on the PR.
-      - name: Deploy preview channel
-        id: deploy
-        uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}'
-          projectId: concursohomebrewercordob-6d540
-          expires: 7d
-          # Pinned: firebase-tools >=15.34 needs extra GCP permissions (serviceusage)
-          # that the deploy service account does not have. Bump deliberately.
-          firebaseToolsVersion: 15.33.0
+    uses: jesuscorral/reusable-workflows/.github/workflows/firebase-hosting-deploy-preview.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    with:
+      firebase-project-id: concursohomebrewercordob-6d540
+      expires: 7d
+    secrets:
+      FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CONCURSOHOMEBREWERCORDOB_6D540 }}
