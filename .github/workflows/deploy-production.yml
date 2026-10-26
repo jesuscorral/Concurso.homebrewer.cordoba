@@ -47,7 +47,7 @@ jobs:
   smoke:
     name: 4 · Smoke test production
     needs: deploy
-    uses: jesuscorral/reusable-workflows/.github/workflows/http-smoke-test.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    uses: jesuscorral/reusable-workflows/.github/workflows/http-smoke-test.yml@507a5046f317e76b3e0b6a5faf5db72d4c51f0c2 # feat/web-delivery-workflows
     with:
       base-url: https://www.concursohomebrewercordoba.es
       paths: / /rules /awards /registration
