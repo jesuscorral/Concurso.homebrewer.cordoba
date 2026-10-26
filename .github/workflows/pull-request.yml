@@ -27,7 +27,7 @@ jobs:
   e2e:
     name: 2 · E2E tests (Chromium, Firefox, WebKit)
     needs: quality
-    uses: jesuscorral/reusable-workflows/.github/workflows/node-playwright-e2e.yml@ccdb32501d50552508779281fdbd13e61c193a54 # feat/web-delivery-workflows
+    uses: jesuscorral/reusable-workflows/.github/workflows/node-playwright-e2e.yml@507a5046f317e76b3e0b6a5faf5db72d4c51f0c2 # feat/web-delivery-workflows
 
   lighthouse:
     name: 2 · Lighthouse audit
